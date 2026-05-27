@@ -1,21 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-function isOpenAIConfigured() {
-  return process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key';
+function getAIConfig() {
+  // Support DeepSeek or OpenAI
+  const apiKey = process.env.OPENAI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
+  const baseURL = process.env.DEEPSEEK_API_KEY 
+    ? 'https://api.deepseek.com' 
+    : 'https://api.openai.com/v1';
+  const model = process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'gpt-4o-mini';
+  return { apiKey, baseURL, model };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isOpenAIConfigured()) {
+    const { apiKey, baseURL, model } = getAIConfig();
+
+    if (!apiKey || apiKey === 'your-openai-api-key') {
       return NextResponse.json(
-        { error: 'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.' },
+        { error: 'AI API key is not configured. Please add OPENAI_API_KEY or DEEPSEEK_API_KEY to your environment variables.' },
         { status: 500 }
       );
     }
-
-    // 动态导入以避免构建时错误
-    const OpenAI = (await import('openai')).default;
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     const body = await request.json();
     const { name, first_visit_date, how_heard, interests, church_name, pastor_name } = body;
@@ -33,14 +37,28 @@ Return as JSON: {"emails": [{"week": 1, "subject": "Subject", "body": "Body"}...
 Week 1: Welcome immediately, Week 2: Check-in, Week 3: Community story, Week 4: Event invite, Week 5: Testimony, Week 6: Personal invite.
 Return ONLY valid JSON.`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
-      response_format: { type: 'json_object' },
-      temperature: 0.7,
+    // Use fetch directly for DeepSeek compatibility
+    const response = await fetch(`${baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
+        response_format: { type: 'json_object' },
+        temperature: 0.7,
+      }),
     });
 
-    const content = response.choices[0].message.content;
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
     const emails = JSON.parse(content || '{"emails": []}').emails || [];
 
     return NextResponse.json({ success: true, emails, visitor: { name, first_visit_date, how_heard, interests } });

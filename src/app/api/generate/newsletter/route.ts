@@ -1,50 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-function isOpenAIConfigured() {
-  return process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key';
+function getAIConfig() {
+  const apiKey = process.env.OPENAI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
+  const baseURL = process.env.DEEPSEEK_API_KEY 
+    ? 'https://api.deepseek.com' 
+    : 'https://api.openai.com/v1';
+  const model = process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'gpt-4o-mini';
+  return { apiKey, baseURL, model };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isOpenAIConfigured()) {
+    const { apiKey, baseURL, model } = getAIConfig();
+
+    if (!apiKey || apiKey === 'your-openai-api-key') {
       return NextResponse.json(
-        { error: 'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.' },
+        { error: 'AI API key is not configured. Please add OPENAI_API_KEY or DEEPSEEK_API_KEY to your environment variables.' },
         { status: 500 }
       );
     }
 
-    // 动态导入以避免构建时错误
-    const OpenAI = (await import('openai')).default;
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
     const body = await request.json();
-    const { week_date, sermon_title, sermon_notes, upcoming_events, prayer_requests, announcements, other_notes, church_name } = body;
+    const { highlights, church_name, pastor_name, upcoming_events, prayer_requests } = body;
 
-    if (!week_date) {
-      return NextResponse.json({ error: 'Week date is required' }, { status: 400 });
+    if (!highlights) {
+      return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
     }
 
-    const systemPrompt = `You are an AI assistant helping a church pastor create weekly newsletters.
-Create professional, warm newsletters. The church name is ${church_name || 'our church'}.
-Include: warm greeting, sermon summary, upcoming events, prayer requests, announcements, and warm closing.`;
+    const systemPrompt = `You are an AI assistant helping a church pastor create a weekly newsletter. 
+The church name is ${church_name || 'our church'} and the pastor is ${pastor_name || 'our pastor'}.
+Create a warm, engaging newsletter that feels personal and community-focused.
+Return as JSON: {"newsletter": {"title": "Newsletter Title", "content": "Full newsletter content with sections"}}`;
 
-    const userPrompt = `Create a weekly church newsletter for week of ${week_date}.
-${sermon_title ? `Sermon Title: ${sermon_title}` : ''}
-${sermon_notes ? `Sermon Notes: ${sermon_notes}` : ''}
-${upcoming_events ? `Events: ${upcoming_events}` : ''}
-${prayer_requests ? `Prayer Requests: ${prayer_requests}` : ''}
-${announcements ? `Announcements: ${announcements}` : ''}
-${other_notes ? `Other: ${other_notes}` : ''}`;
+    const userPrompt = `Create a weekly newsletter based on these highlights: ${highlights}.${upcoming_events ? ` Upcoming events: ${upcoming_events}.` : ''}${prayer_requests ? ` Prayer requests: ${prayer_requests}.` : ''}
+Include sections for: Welcome message, Highlights, Upcoming Events, Prayer Requests, Closing.
+Return ONLY valid JSON.`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
-      temperature: 0.7,
+    const response = await fetch(`${baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
+        response_format: { type: 'json_object' },
+        temperature: 0.7,
+      }),
     });
 
-    const content = response.choices[0].message.content || '';
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API request failed with status ${response.status}`);
+    }
 
-    return NextResponse.json({ success: true, content, input: { week_date, sermon_title, sermon_notes, upcoming_events, prayer_requests, announcements, other_notes } });
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    const newsletter = JSON.parse(content || '{}').newsletter || {};
+
+    return NextResponse.json({ success: true, newsletter });
   } catch (error: any) {
     console.error('Error:', error);
     return NextResponse.json({ error: error.message || 'Failed to generate newsletter' }, { status: 500 });
