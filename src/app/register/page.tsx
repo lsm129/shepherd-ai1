@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase, isSupabaseConfigured } from '@/lib/auth';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -10,6 +12,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,8 +24,25 @@ export default function RegisterPage() {
       setError('Password must be at least 6 characters');
       return;
     }
-    setError('Supabase not configured. Please set up your .env.local file.');
-    setLoading(false);
+
+    setError('');
+    setLoading(true);
+
+    if (!isSupabaseConfigured()) {
+      setError('System is not configured yet. Please try again later.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+      setSuccess(true);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create account');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (success) {
@@ -30,6 +50,7 @@ export default function RegisterPage() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>
         <div style={{ width: '100%', maxWidth: '420px', padding: '24px' }}>
           <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>✉️</div>
             <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Check Your Email</h1>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>We&apos;ve sent a confirmation link to <strong>{email}</strong>. Please click the link to activate your account.</p>
             <Link href="/login" className="btn-primary">Back to Login</Link>
@@ -56,11 +77,6 @@ export default function RegisterPage() {
         <div className="card" style={{ padding: '32px' }}>
           <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>Create Your Account</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '32px' }}>Start free, upgrade anytime</p>
-
-          <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', marginBottom: '24px', fontSize: '14px', color: '#92400e' }}>
-            <strong>⚠️ Configuration Required</strong>
-            <p style={{ marginTop: '8px' }}>Supabase is not configured. Please add your credentials to <code>.env.local</code> to enable authentication.</p>
-          </div>
 
           {error && (
             <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '12px', marginBottom: '24px', fontSize: '14px', color: '#dc2626' }}>

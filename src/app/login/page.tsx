@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase, isSupabaseConfigured } from '@/lib/auth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,8 +14,24 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('Supabase not configured. Please set up your .env.local file.');
-    setLoading(false);
+    setError('');
+    setLoading(true);
+
+    if (!isSupabaseConfigured()) {
+      setError('System is not configured yet. Please try again later.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,11 +51,6 @@ export default function LoginPage() {
         <div className="card" style={{ padding: '32px' }}>
           <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>Welcome Back</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '32px' }}>Sign in to your account</p>
-
-          <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', marginBottom: '24px', fontSize: '14px', color: '#92400e' }}>
-            <strong>⚠️ Configuration Required</strong>
-            <p style={{ marginTop: '8px' }}>Supabase is not configured. Please add your credentials to <code>.env.local</code> to enable authentication.</p>
-          </div>
 
           {error && (
             <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '12px', marginBottom: '24px', fontSize: '14px', color: '#dc2626' }}>
