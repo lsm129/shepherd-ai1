@@ -56,7 +56,7 @@ export default function Home() {
     },
     {
       q: 'How much does it cost?',
-      a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. The Pro plan is $49/mo for unlimited generations and all 6 AI tools. The Church plan is $99/mo for multi-campus support and priority assistance. No credit card required to start.',
+      a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. Starter is $29/mo for 50 generations and 3 core tools. Pro is $49/mo for 200 generations and all 7 AI tools. Growth is $99/mo for unlimited generations, multi-campus support, and priority assistance. No credit card required to start.',
     },
     {
       q: 'Can I cancel anytime?',
@@ -258,7 +258,7 @@ export default function Home() {
               </div>
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Small churches (&lt;50 members)</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['50 AI generations/month', 'All 6 AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
+                {['50 AI generations/month', '3 core AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
@@ -274,7 +274,7 @@ export default function Home() {
               </div>
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Growing churches (50-200)</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['Unlimited AI generations', 'All 6 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
+                {['200 AI generations/month', 'All 7 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
@@ -289,7 +289,7 @@ export default function Home() {
               </div>
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Large churches (200+)</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
+                {['Unlimited AI generations', 'Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>

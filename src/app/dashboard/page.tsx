@@ -9,6 +9,7 @@ export default function DashboardPage() {
   const [churchName, setChurchName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [totalTimeSaved, setTotalTimeSaved] = useState(0);
+  const [genCount, setGenCount] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +29,10 @@ export default function DashboardPage() {
           if (data && data.church_name) setChurchName(data.church_name);
         } catch (e) {}
         try {
-          const { count } = await supabase.from('generations').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id);
+          const now = new Date();
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+          const { count } = await supabase.from('generations').select('*', { count: 'exact', head: true }).eq('user_id', session.user.id).gte('created_at', startOfMonth);
+          setGenCount(count || 0);
           setTotalTimeSaved((count || 0) * 2.5);
         } catch (e) {}
       } catch (e) { console.error('Auth error:', e); }
@@ -137,11 +141,11 @@ export default function DashboardPage() {
           <div style={{ color: '#666', fontSize: '14px' }}>Total Time Saved</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>0</div>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>{genCount}</div>
           <div style={{ color: '#666', fontSize: '14px' }}>AI Generations Used</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>10</div>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: genCount >= 10 ? '#ef4444' : '#1e3a5f' }}>{Math.max(0, 10 - genCount)}</div>
           <div style={{ color: '#666', fontSize: '14px' }}>Remaining This Month</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>

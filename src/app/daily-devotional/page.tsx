@@ -24,6 +24,7 @@ export default function DailyDevotionalPage() {
   const [error, setError] = useState('');
   const [devotional, setDevotional] = useState<Devotional | null>(null);
   const [copied, setCopied] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
@@ -40,12 +41,13 @@ export default function DailyDevotionalPage() {
     try {
       const response = await fetch('/api/generate/devotional', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
         body: JSON.stringify({ topic: selectedTopic, custom_topic: customTopic }),
       });
 
       const data = await response.json();
 
+      if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate devotional');
       }

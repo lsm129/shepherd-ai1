@@ -1,3 +1,4 @@
+import { checkQuota, recordGeneration } from '@/lib/quota';
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
@@ -74,6 +75,11 @@ Return ONLY valid JSON.`;
     const content = data.choices?.[0]?.message?.content;
     const emails = JSON.parse(content || '{"emails": []}').emails || [];
 
+    
+    // Record this generation for quota tracking
+    if (userId) {
+      await recordGeneration(userId, 'visitor_followup', JSON.stringify(body).substring(0, 200));
+    }
     return NextResponse.json({ success: true, emails, visitor: { name, first_visit_date, how_heard, interests } });
   } catch (error: any) {
     console.error('Error:', error);

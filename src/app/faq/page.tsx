@@ -32,7 +32,7 @@ export default function FAQPage() {
     },
     {
       q: 'How much does it cost?',
-      a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. The Pro plan is $49/mo for unlimited generations and all 6 AI tools. The Church plan is $99/mo for multi-campus support and priority assistance. No credit card required to start.',
+      a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. Starter is $29/mo for 50 generations and 3 core tools. Pro is $49/mo for 200 generations and all 7 AI tools. Growth is $99/mo for unlimited generations, multi-campus support, and priority assistance. No credit card required to start.',
     },
     {
       q: 'Can I cancel anytime?',

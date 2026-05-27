@@ -24,6 +24,7 @@ export default function PrayerRequestsPage() {
   const [showResult, setShowResult] = useState(false);
   const [prayerList, setPrayerList] = useState<PrayerRequest[]>([]);
   const [copied, setCopied] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
@@ -40,12 +41,13 @@ export default function PrayerRequestsPage() {
     try {
       const response = await fetch('/api/generate/prayer-response', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
         body: JSON.stringify({ name, request: requestText, anonymous }),
       });
 
       const data = await response.json();
 
+      if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate prayer response');
       }

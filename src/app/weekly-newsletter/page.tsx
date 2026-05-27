@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function WeeklyNewsletterPage() {
   const [step, setStep] = useState<'form' | 'preview' | 'sent'>('form');
@@ -14,6 +14,7 @@ export default function WeeklyNewsletterPage() {
   const [editedContent, setEditedContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState<string>('');
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +24,7 @@ export default function WeeklyNewsletterPage() {
     try {
       const response = await fetch('/api/generate/newsletter', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
         body: JSON.stringify({
           highlights,
           church_name: churchName,
@@ -35,6 +36,7 @@ export default function WeeklyNewsletterPage() {
 
       const data = await response.json();
 
+      if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate newsletter');
       }

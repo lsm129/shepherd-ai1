@@ -16,6 +16,7 @@ export default function SermonSocialPage() {
   const [error, setError] = useState('');
   const [socialContent, setSocialContent] = useState<SocialContent | null>(null);
   const [copiedField, setCopiedField] = useState('');
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
@@ -32,12 +33,13 @@ export default function SermonSocialPage() {
     try {
       const response = await fetch('/api/generate/sermon-social', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
         body: JSON.stringify({ sermon_notes: sermonNotes, church_name: churchName }),
       });
 
       const data = await response.json();
 
+      if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate social media content');
       }

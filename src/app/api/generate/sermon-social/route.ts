@@ -1,3 +1,4 @@
+import { checkQuota, recordGeneration } from '@/lib/quota';
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {

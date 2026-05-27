@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Email {
   week: number;
@@ -20,6 +20,7 @@ export default function VisitorFollowupPage() {
   const [editedEmails, setEditedEmails] = useState<Email[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState<string>('');
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +30,7 @@ export default function VisitorFollowupPage() {
     try {
       const response = await fetch('/api/generate/visitor-sequence', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
         body: JSON.stringify({
           name: visitorName,
           first_visit_date: firstVisitDate,
@@ -40,6 +41,7 @@ export default function VisitorFollowupPage() {
 
       const data = await response.json();
 
+      if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
       if (!response.ok) {
         throw new Error(data.error || 'Failed to generate email sequence');
       }
