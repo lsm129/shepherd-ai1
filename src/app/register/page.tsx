@@ -1,17 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function RegisterPage() {
+  const [mounted, setMounted] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [refCode, setRefCode] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+    // Check for referral code in URL
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      setRefCode(ref);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +44,37 @@ export default function RegisterPage() {
       }
 
       const supabase = createClient(supabaseUrl, supabaseKey);
-      const { error } = await supabase.auth.signUp({ email, password });
+      
+      // Sign up with referral metadata
+      const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            referred_by: refCode || null,
+          }
+        }
+      });
+      
       if (error) throw error;
+
+      // If there's a referral code, record it
+      if (refCode && data.user) {
+        try {
+          // Find the referrer by their referral code
+          const { data: referrer } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', refCode).single();
+          if (referrer) {
+            await supabase.from('referrals').update({
+              referred_email: email,
+              referred_id: data.user.id,
+              status: 'pending',
+            }).eq('referral_code', refCode).is('referred_id', null);
+          }
+        } catch (e) {
+          console.error('Referral tracking error:', e);
+        }
+      }
+
       setSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
@@ -41,6 +82,8 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+
+  if (!mounted) return null;
 
   if (success) {
     return (
@@ -73,6 +116,12 @@ export default function RegisterPage() {
         <div className="card" style={{ padding: '32px' }}>
           <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>Create Your Account</h1>
           <p style={{ textAlign: 'center', color: '#666', marginBottom: '32px' }}>Start free, upgrade anytime</p>
+
+          {refCode && (
+            <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '12px', marginBottom: '20px', textAlign: 'center', fontSize: '14px', color: '#92400e' }}>
+              🎁 You were referred! You and your friend will each get <strong>1 month free</strong>.
+            </div>
+          )}
 
           {error && (
             <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '12px', marginBottom: '24px', fontSize: '14px', color: '#dc2626' }}>
