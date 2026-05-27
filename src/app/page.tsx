@@ -234,51 +234,66 @@ export default function Home() {
             Start free, upgrade when you need more
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', maxWidth: '1100px', margin: '0 auto' }}>
             {/* Free */}
             <div className="pricing-card">
-              <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Free</h3>
-              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $0<span style={{ fontSize: '16px', color: '#666' }}>/mo</span>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Free</h3>
+              <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                $0<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '24px' }}>For getting started</p>
-              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '32px' }}>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For trying it out</p>
+              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['10 AI generations/month', 'Visitor follow-up', 'Weekly newsletter', 'Prayer requests'].map((item, i) => (
-                  <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: '14px' }}>✓ {item}</li>
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none' }}>Get Started</Link>
+              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Get Started</Link>
             </div>
 
-            {/* Pro */}
-            <div className="pricing-card featured">
-              <div className="badge badge-primary" style={{ marginBottom: '16px' }}>Most Popular</div>
-              <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Pro</h3>
-              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $49<span style={{ fontSize: '16px', color: '#666' }}>/mo</span>
-              </div>
-              <p style={{ color: '#666', marginBottom: '24px' }}>For growing churches</p>
-              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '32px' }}>
-                {['Unlimited AI generations', 'All 6 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
-                  <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: '14px' }}>✓ {item}</li>
-                ))}
-              </ul>
-              <Link href={registerHref} className="btn-primary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none' }}>Start Free Trial</Link>
-            </div>
-
-            {/* Church */}
+            {/* Starter */}
             <div className="pricing-card">
-              <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Church</h3>
-              <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $99<span style={{ fontSize: '16px', color: '#666' }}>/mo</span>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Starter</h3>
+              <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                $29<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '24px' }}>For multi-campus ministries</p>
-              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '32px' }}>
-                {['Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
-                  <li key={i} style={{ padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: '14px' }}>✓ {item}</li>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Small churches (&lt;50 members)</p>
+              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
+                {['50 AI generations/month', 'All 6 AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none' }}>Contact Us</Link>
+              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Start Free Trial</Link>
+            </div>
+
+            {/* Pro - Most Popular */}
+            <div className="pricing-card featured">
+              <div className="badge badge-primary" style={{ marginBottom: '12px' }}>Most Popular</div>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Pro</h3>
+              <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                $49<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+              </div>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Growing churches (50-200)</p>
+              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
+                {['Unlimited AI generations', 'All 6 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
+                ))}
+              </ul>
+              <Link href={registerHref} className="btn-primary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Start Free Trial</Link>
+            </div>
+
+            {/* Growth */}
+            <div className="pricing-card">
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Growth</h3>
+              <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                $99<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+              </div>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Large churches (200+)</p>
+              <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
+                {['Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
+                ))}
+              </ul>
+              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Contact Us</Link>
             </div>
           </div>
 
