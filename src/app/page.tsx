@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div style={{ minHeight: '100vh' }}>
-      {/* 导航栏 */}
+      {/* Navigation */}
       <nav style={{
         position: 'fixed',
         top: 0,
@@ -99,8 +99,8 @@ export default function Home() {
             </p>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px' }}>
-            {/* Feature 1 */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px' }}>
+            {/* Feature 1 - Visitor Follow-up */}
             <div className="dashboard-card" style={{ textAlign: 'left' }}>
               <div style={{
                 width: '56px',
@@ -111,12 +111,9 @@ export default function Home() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '20px',
+                fontSize: '28px',
               }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 22V8L14 4L24 8V22L14 26L4 22Z" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M10 12L14 14L18 10" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M14 14V22" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                📧
               </div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
                 Visitor Follow-Up Agent
@@ -138,7 +135,7 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Feature 2 */}
+            {/* Feature 2 - Newsletter */}
             <div className="dashboard-card" style={{ textAlign: 'left' }}>
               <div style={{
                 width: '56px',
@@ -149,67 +146,166 @@ export default function Home() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '20px',
+                fontSize: '28px',
               }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="4" y="6" width="20" height="18" rx="2" stroke="#4a90a4" strokeWidth="2"/>
-                  <path d="M4 10H24" stroke="#4a90a4" strokeWidth="2"/>
-                  <circle cx="7" cy="8" r="1" fill="#4a90a4"/>
-                  <circle cx="10" cy="8" r="1" fill="#4a90a4"/>
-                  <path d="M8 14H20M8 18H16" stroke="#4a90a4" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+                📰
               </div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
                 Weekly Newsletter Agent
               </h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
-                Just share your weekly highlights — sermon points, events, prayer requests. 
-                Our AI transforms them into beautiful, professional newsletters in seconds.
+                Transform weekly highlights into professional newsletters. Include events, prayer requests, 
+                and community updates in a beautiful format.
               </p>
               <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', listStyle: 'none', padding: 0 }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Professional formatting
+                  <span style={{ color: 'var(--success)' }}>✓</span> Auto-generated sections
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Event highlights
+                  <span style={{ color: 'var(--success)' }}>✓</span> Editable content
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Ready to send
+                  <span style={{ color: 'var(--success)' }}>✓</span> One-click send
                 </li>
               </ul>
             </div>
 
-            {/* Feature 3 */}
+            {/* Feature 3 - Prayer Requests */}
             <div className="dashboard-card" style={{ textAlign: 'left' }}>
               <div style={{
                 width: '56px',
                 height: '56px',
-                background: 'rgba(245, 166, 35, 0.1)',
+                background: 'rgba(139, 92, 246, 0.1)',
                 borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '20px',
+                fontSize: '28px',
               }}>
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14 4L18 10H24L19 14L21 21L14 17L7 21L9 14L4 10H10L14 4Z" stroke="#f5a623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                🙏
               </div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
-                Made for Small Churches
+                Prayer Requests
               </h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
-                Built specifically for pastors of 50-300 member churches. 
-                No complex features you&apos;ll never use. Just the tools that actually matter.
+                Submit prayer requests and receive AI-generated warm prayer responses with relevant Bible verses. 
+                Support for anonymous submissions.
               </p>
               <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', listStyle: 'none', padding: 0 }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Simple & intuitive
+                  <span style={{ color: 'var(--success)' }}>✓</span> AI-generated prayer responses
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> No training needed
+                  <span style={{ color: 'var(--success)' }}>✓</span> Relevant Bible verses included
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Affordable pricing
+                  <span style={{ color: 'var(--success)' }}>✓</span> Anonymous option available
+                </li>
+              </ul>
+            </div>
+
+            {/* Feature 4 - Sermon Social */}
+            <div className="dashboard-card" style={{ textAlign: 'left' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                background: 'rgba(236, 72, 153, 0.1)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '28px',
+              }}>
+                📱
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
+                Sermon to Social Media
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
+                Transform your sermon notes into engaging content for Facebook, Instagram, and Twitter/X. 
+                Reach your community where they are.
+              </p>
+              <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', listStyle: 'none', padding: 0 }}>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Facebook posts
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Instagram captions with hashtags
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Twitter/X tweets
+                </li>
+              </ul>
+            </div>
+
+            {/* Feature 5 - Church Announcement */}
+            <div className="dashboard-card" style={{ textAlign: 'left' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                background: 'rgba(245, 158, 11, 0.1)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '28px',
+              }}>
+                📢
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
+                Church Announcement Generator
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
+                Generate polished church announcements for Sunday services, special events, or urgent notices. 
+                Professional and welcoming.
+              </p>
+              <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', listStyle: 'none', padding: 0 }}>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Multiple announcement types
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Editable content
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> One-click copy
+                </li>
+              </ul>
+            </div>
+
+            {/* Feature 6 - Daily Devotional */}
+            <div className="dashboard-card" style={{ textAlign: 'left' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                background: 'rgba(16, 185, 129, 0.1)',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '20px',
+                fontSize: '28px',
+              }}>
+                📖
+              </div>
+              <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>
+                Daily Devotional
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '16px' }}>
+                Generate daily devotionals with Bible verses, meditation, practical application, 
+                and guided prayer. Choose from preset topics or create your own.
+              </p>
+              <ul style={{ color: 'var(--text-secondary)', fontSize: '14px', listStyle: 'none', padding: 0 }}>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Bible verse with reference
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Meditation & application
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{ color: 'var(--success)' }}>✓</span> Guided closing prayer
                 </li>
               </ul>
             </div>
@@ -245,7 +341,7 @@ export default function Home() {
                 margin: '0 auto 16px',
               }}>1</div>
               <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Enter Your Info</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Fill in visitor details or weekly highlights in our simple forms</p>
+              <p style={{ color: 'var(--text-secondary)' }}>Fill in visitor details, sermon notes, or prayer requests in our simple forms</p>
             </div>
             
             <div style={{ textAlign: 'center', flex: '1', minWidth: '250px' }}>
@@ -280,8 +376,8 @@ export default function Home() {
                 fontWeight: 'bold',
                 margin: '0 auto 16px',
               }}>3</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Review & Send</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Edit if needed, then send with one click</p>
+              <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>Review & Share</h3>
+              <p style={{ color: 'var(--text-secondary)' }}>Edit if needed, then share with one click</p>
             </div>
           </div>
         </div>
@@ -316,7 +412,7 @@ export default function Home() {
                   <span style={{ color: 'var(--success)' }}>✓</span> Newsletter generator
                 </li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', color: 'var(--text-secondary)' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span> Email editing
+                  <span style={{ color: 'var(--success)' }}>✓</span> Prayer requests & devotionals
                 </li>
               </ul>
               <Link href="/register" className="btn-secondary" style={{ width: '100%' }}>Get Started</Link>
