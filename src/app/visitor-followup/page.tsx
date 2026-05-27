@@ -25,8 +25,37 @@ export default function VisitorFollowupPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setError('OpenAI API key not configured. Please add OPENAI_API_KEY to your .env.local file.');
-    setLoading(false);
+
+    try {
+      const response = await fetch('/api/generate/visitor-sequence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: visitorName,
+          first_visit_date: firstVisitDate,
+          how_heard: howHeard,
+          interests: interests,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate email sequence');
+      }
+
+      if (data.emails && data.emails.length > 0) {
+        setEmails(data.emails);
+        setEditedEmails(data.emails);
+        setStep('preview');
+      } else {
+        setError('AI generated no emails. Please try again.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleSend() {
@@ -42,15 +71,22 @@ export default function VisitorFollowupPage() {
     setStep('form');
     setEmails([]);
     setEditedEmails([]);
+    setError('');
   }
 
   if (step === 'form') {
     return (
       <div>
         <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text)', marginBottom: '8px' }}>📧 Visitor Follow-up Agent</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Enter visitor information and let AI create a personalized 6-week follow-up sequence.</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Visitor Follow-up Agent</h1>
+          <p style={{ color: '#666' }}>Enter visitor information and let AI create a personalized 6-week follow-up sequence.</p>
         </div>
+
+        {error && (
+          <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: '#dc2626' }}>
+            {error}
+          </div>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
           <div className="card">
@@ -81,19 +117,29 @@ export default function VisitorFollowupPage() {
                 <textarea className="input textarea" value={interests} onChange={(e) => setInterests(e.target.value)} placeholder="Any interests or needs they mentioned..." />
               </div>
               <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-                {loading ? <><span className="spinner"></span> Generating...</> : '✨ Generate Email Sequence'}
+                {loading ? 'Generating...' : 'Generate Email Sequence'}
               </button>
             </form>
           </div>
 
           <div>
-            <div className="card" style={{ background: 'var(--surface)', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>What You&apos;ll Get</h3>
+            <div className="card" style={{ background: '#f5f5f5', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>What You'll Get</h3>
               <ul style={{ listStyle: 'none', padding: 0 }}>
-                {[{ week: 1, title: 'Welcome Email', desc: 'Sent immediately' }, { week: 2, title: 'Check-in', desc: 'Ask about experience' }, { week: 3, title: 'Community Story', desc: 'Share about groups' }, { week: 4, title: 'Event Invite', desc: 'Invite to service/event' }, { week: 5, title: 'Testimony', desc: 'Share community story' }, { week: 6, title: 'Personal Invite', desc: 'Encourage connection' }].map((item) => (
+                {[
+                  { week: 1, title: 'Welcome Email', desc: 'Sent immediately' },
+                  { week: 2, title: 'Check-in', desc: 'Ask about experience' },
+                  { week: 3, title: 'Community Story', desc: 'Share about groups' },
+                  { week: 4, title: 'Event Invite', desc: 'Invite to service/event' },
+                  { week: 5, title: 'Testimony', desc: 'Share community story' },
+                  { week: 6, title: 'Personal Invite', desc: 'Encourage connection' }
+                ].map((item) => (
                   <li key={item.week} style={{ display: 'flex', gap: '12px', marginBottom: '12px', alignItems: 'flex-start' }}>
-                    <span style={{ width: '24px', height: '24px', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 }}>{item.week}</span>
-                    <div><div style={{ fontWeight: '600' }}>{item.title}</div><div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.desc}</div></div>
+                    <span style={{ width: '24px', height: '24px', background: '#1e3a5f', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 }}>{item.week}</span>
+                    <div>
+                      <div style={{ fontWeight: '600' }}>{item.title}</div>
+                      <div style={{ fontSize: '13px', color: '#666' }}>{item.desc}</div>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -108,16 +154,17 @@ export default function VisitorFollowupPage() {
     return (
       <div>
         <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text)', marginBottom: '8px' }}>📧 Review Email Sequence</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Review and edit the generated emails before sending to {visitorName} ({visitorEmail})</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Review Email Sequence</h1>
+          <p style={{ color: '#666' }}>Review and edit the generated emails for {visitorName} ({visitorEmail})</p>
         </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
           <div>
             {editedEmails.map((email) => (
-              <div key={email.week} className="email-preview">
-                <div className="email-preview-header" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                  <span style={{ width: '32px', height: '32px', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{email.week}</span>
-                  <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Week {email.week}</span>
+              <div key={email.week} className="card" style={{ marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                  <span style={{ width: '32px', height: '32px', background: '#1e3a5f', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{email.week}</span>
+                  <span style={{ fontSize: '14px', color: '#666' }}>Week {email.week}</span>
                 </div>
                 <div className="form-group">
                   <label className="form-label">Subject Line</label>
@@ -130,15 +177,16 @@ export default function VisitorFollowupPage() {
               </div>
             ))}
           </div>
+
           <div className="card" style={{ position: 'sticky', top: '32px' }}>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options</h3>
             <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Recipient</div>
+              <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Recipient</div>
               <div style={{ fontWeight: '600' }}>{visitorName}</div>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{visitorEmail}</div>
+              <div style={{ fontSize: '14px', color: '#666' }}>{visitorEmail}</div>
             </div>
-            <button onClick={handleSend} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>📤 Send All Emails</button>
-            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>← Start Over</button>
+            <button onClick={handleSend} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>Send All Emails</button>
+            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over</button>
           </div>
         </div>
       </div>
@@ -148,11 +196,8 @@ export default function VisitorFollowupPage() {
   if (step === 'sending') {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <div style={{ width: '80px', height: '80px', background: 'rgba(30, 58, 95, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <div className="spinner" style={{ width: '40px', height: '40px', borderWidth: '3px' }}></div>
-        </div>
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Sending Emails...</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>Your email sequence is being sent to {visitorName}</p>
+        <p style={{ color: '#666' }}>Your email sequence is being sent to {visitorName}</p>
       </div>
     );
   }
@@ -160,11 +205,8 @@ export default function VisitorFollowupPage() {
   if (step === 'sent') {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <div style={{ width: '80px', height: '80px', background: 'rgba(34, 197, 94, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M10 20L17 27L30 12" stroke="#22c55e" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </div>
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Emails Sent Successfully!</h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Your 6-week follow-up sequence has been sent to {visitorName}</p>
+        <p style={{ color: '#666', marginBottom: '32px' }}>Your 6-week follow-up sequence has been sent to {visitorName}</p>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
           <button onClick={handleBackToForm} className="btn-primary">Follow Up Another Visitor</button>
           <a href="/dashboard" className="btn-secondary">Back to Dashboard</a>
