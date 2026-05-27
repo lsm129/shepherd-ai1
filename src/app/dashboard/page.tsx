@@ -1,39 +1,60 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase, isSupabaseConfigured } from '@/lib/auth';
 
 export default function DashboardPage() {
   const [churchName, setChurchName] = useState('');
   const [generationsUsed] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkAuth() {
+      if (!isSupabaseConfigured()) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          router.push('/login');
+          return;
+        }
+        // Load church settings
+        const { data } = await supabase.from('church_settings').select('church_name').eq('user_id', session.user.id).single();
+        if (data && data.church_name) {
+          setChurchName(data.church_name);
+        }
+      } catch (e) {
+        console.error('Auth check error:', e);
+      }
+      setLoading(false);
+    }
+    checkAuth();
+  }, [router]);
+
+  const handleSignOut = async () => {
+    if (isSupabaseConfigured()) {
+      await supabase.auth.signOut();
+    }
+    router.push('/');
+  };
 
   const features = [
     {
       title: 'Visitor Follow-up Agent',
       description: 'Create personalized 6-week email sequences for new visitors with just a few clicks.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <rect x="4" y="8" width="40" height="32" rx="4" stroke="#1e3a5f" strokeWidth="3"/>
-          <path d="M4 16H44" stroke="#1e3a5f" strokeWidth="3"/>
-          <circle cx="12" cy="12" r="2" fill="#1e3a5f"/>
-          <circle cx="18" cy="12" r="2" fill="#1e3a5f"/>
-          <path d="M12 26L20 32L36 22" stroke="#1e3a5f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
+      emoji: '📧',
       href: '/visitor-followup',
       color: '#1e3a5f',
     },
     {
       title: 'Weekly Newsletter Agent',
       description: 'Transform your weekly highlights into beautiful, professional newsletters instantly.',
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <rect x="6" y="4" width="36" height="40" rx="4" stroke="#4a90a4" strokeWidth="3"/>
-          <path d="M14 16H34M14 24H28M14 32H22" stroke="#4a90a4" strokeWidth="3" strokeLinecap="round"/>
-          <circle cx="36" cy="36" r="10" fill="#4a90a4"/>
-          <path d="M36 32V40M32 36H40" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      ),
+      emoji: '📰',
       href: '/weekly-newsletter',
       color: '#4a90a4',
     },
@@ -45,23 +66,41 @@ export default function DashboardPage() {
     { title: 'Personalize When Possible', tip: 'Edit the AI-generated content to add personal touches — your congregation will appreciate it.' },
   ];
 
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div className="spinner" style={{ margin: '0 auto 16px' }}></div>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      {/* 欢迎横幅 */}
+      {/* Header with sign out */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+        <button onClick={handleSignOut} style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}>
+          Sign Out
+        </button>
+      </div>
+
+      {/* Welcome Banner */}
       <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)', borderRadius: '16px', padding: '40px', color: 'white', marginBottom: '32px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>Welcome{churchName ? `, ${churchName}` : ''}! 👋</h1>
         <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '24px' }}>Your AI-powered church assistant is ready to help you serve better.</p>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <Link href="/visitor-followup" style={{ background: 'white', color: 'var(--primary)', padding: '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <span>📧</span> New Visitor Follow-up
+            📧 New Visitor Follow-up
           </Link>
           <Link href="/weekly-newsletter" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            <span>📰</span> Create Newsletter
+            📰 Create Newsletter
           </Link>
         </div>
       </div>
 
-      {/* 统计卡片 */}
+      {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
         <div className="card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'var(--primary)' }}>{generationsUsed}</div>
@@ -78,27 +117,26 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* AI Agent 卡片 */}
+      {/* AI Agent Cards */}
       <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: 'var(--text)' }}>Your AI Assistants</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px', marginBottom: '40px' }}>
         {features.map((feature) => (
           <Link key={feature.href} href={feature.href} style={{ textDecoration: 'none' }}>
             <div className="dashboard-card" style={{ height: '100%', cursor: 'pointer' }}>
-              <div style={{ marginBottom: '20px' }}>{feature.icon}</div>
+              <div style={{ fontSize: '48px', marginBottom: '20px' }}>{feature.emoji}</div>
               <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: 'var(--text)' }}>{feature.title}</h3>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '20px' }}>{feature.description}</p>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: feature.color, fontWeight: '600' }}>
-                Get Started
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                Get Started →
               </div>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* 提示卡片 */}
+      {/* Tips */}
       <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', color: 'var(--text)' }}>💡 Quick Tips</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '32px' }}>
         {tips.map((tip, index) => (
           <div key={index} className="card" style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%)', border: '1px solid #f59e0b' }}>
             <h4 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '8px', color: '#92400e' }}>{tip.title}</h4>
@@ -107,16 +145,11 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* 配置提示 */}
-      <div style={{ marginTop: '32px', background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '12px', padding: '24px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#92400e', marginBottom: '12px' }}>⚠️ Configuration Required</h3>
-        <p style={{ color: '#a16207', marginBottom: '16px' }}>To enable all features, please configure your environment variables in <code>.env.local</code>:</p>
-        <ul style={{ color: '#a16207', listStyle: 'none', padding: 0, fontSize: '14px' }}>
-          <li style={{ marginBottom: '8px' }}>• <code>NEXT_PUBLIC_SUPABASE_URL</code> - Your Supabase project URL</li>
-          <li style={{ marginBottom: '8px' }}>• <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> - Your Supabase anonymous key</li>
-          <li style={{ marginBottom: '8px' }}>• <code>OPENAI_API_KEY</code> - Your OpenAI API key</li>
-          <li>• <code>RESEND_API_KEY</code> - Your Resend API key (for sending emails)</li>
-        </ul>
+      {/* Settings Link */}
+      <div style={{ textAlign: 'center', marginTop: '24px' }}>
+        <Link href="/settings" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none', fontSize: '16px' }}>
+          ⚙️ Configure Your Church Settings →
+        </Link>
       </div>
     </div>
   );
