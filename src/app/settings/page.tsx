@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SettingsPage() {
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -14,18 +15,84 @@ export default function SettingsPage() {
   const [subscribers, setSubscribers] = useState('');
   const [openaiKey, setOpenaiKey] = useState('');
   const [resendKey, setResendKey] = useState('');
+  const [aiTone, setAiTone] = useState('warm');
+  const [defaultSignoff, setDefaultSignoff] = useState('');
 
-  function handleSave(e: React.FormEvent) {
+  useEffect(() => {
+    setMounted(true);
+    async function loadSettings() {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+        const { data } = await supabase.from('church_settings').select('*').eq('user_id', session.user.id).single();
+        if (data) {
+          if (data.church_name) setChurchName(data.church_name);
+          if (data.pastor_name) setPastorName(data.pastor_name);
+          if (data.email_signature) setEmailSignature(data.email_signature);
+          if (data.website) setWebsite(data.website);
+          if (data.address) setAddress(data.address);
+          if (data.ai_tone) setAiTone(data.ai_tone);
+          if (data.default_signoff) setDefaultSignoff(data.default_signoff);
+        }
+      } catch (e) {}
+      const stored = localStorage.getItem('newsletter_subscribers');
+      if (stored) setSubscribers(stored);
+    }
+    loadSettings();
+  }, []);
+
+  async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setLoading(true);
+    setError('');
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { error: upsertError } = await supabase.from('church_settings').upsert({
+            user_id: session.user.id,
+            church_name: churchName,
+            pastor_name: pastorName,
+            email_signature: emailSignature,
+            website: website,
+            address: address,
+            ai_tone: aiTone,
+            default_signoff: defaultSignoff,
+          }, { onConflict: 'user_id' });
+          if (upsertError) throw upsertError;
+        }
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to save settings');
+    } finally {
+      setLoading(false);
+    }
   }
+
+  if (!mounted) return null;
+
+  const toneOptions = [
+    { value: 'formal', label: 'Formal', desc: 'Professional and reverent tone, ideal for traditional congregations' },
+    { value: 'warm', label: 'Warm & Friendly', desc: 'Approachable and caring, perfect for most churches' },
+    { value: 'youth', label: 'Youth-Friendly', desc: 'Casual and energetic, great for youth groups and modern services' },
+  ];
 
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text)', marginBottom: '8px' }}>⚙️ Settings</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Configure your church information and API settings</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Configure your church information, AI voice, and API settings</p>
       </div>
 
       {saved && (
@@ -35,8 +102,57 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {error && (
+        <div style={{ background: '#fef2f2', border: '1px solid #ef4444', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: '#dc2626' }}>
+          {error}
+        </div>
+      )}
+
       <div style={{ display: 'grid', gap: '24px' }}>
-        {/* 教会信息 */}
+        {/* Voice & Tone Settings */}
+        <div className="card">
+          <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>🎙️ Voice & Tone</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '14px' }}>
+            Control how ShepherdAI writes \u2014 match your church&apos;s personality
+          </p>
+          <div style={{ display: 'grid', gap: '12px', marginBottom: '24px' }}>
+            {toneOptions.map((opt) => (
+              <label
+                key={opt.value}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '12px',
+                  padding: '16px', borderRadius: '12px', cursor: 'pointer',
+                  border: aiTone === opt.value ? '2px solid var(--primary)' : '2px solid var(--border)',
+                  background: aiTone === opt.value ? 'rgba(30,58,95,0.04)' : 'white',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <input
+                  type="radio" name="aiTone" value={opt.value}
+                  checked={aiTone === opt.value}
+                  onChange={(e) => setAiTone(e.target.value)}
+                  style={{ marginTop: '3px', accentColor: 'var(--primary)' }}
+                />
+                <div>
+                  <div style={{ fontWeight: '600', color: 'var(--text)', marginBottom: '4px' }}>{opt.label}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{opt.desc}</div>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Default Sign-off</label>
+            <input
+              type="text" className="input" value={defaultSignoff}
+              onChange={(e) => setDefaultSignoff(e.target.value)}
+              placeholder="Blessings, Pastor John"
+            />
+            <p className="form-hint">Automatically appended to the end of AI-generated emails and newsletters</p>
+          </div>
+        </div>
+
+        {/* Church Information */}
         <div className="card">
           <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Church Information</h2>
           <form onSubmit={handleSave}>
@@ -60,7 +176,7 @@ export default function SettingsPage() {
             </div>
             <div className="form-group">
               <label className="form-label">Email Signature</label>
-              <textarea className="input textarea" value={emailSignature} onChange={(e) => setEmailSignature(e.target.value)} placeholder="Blessings,&#10;Pastor John Smith&#10;Grace Community Church" style={{ minHeight: '100px' }} />
+              <textarea className="input textarea" value={emailSignature} onChange={(e) => setEmailSignature(e.target.value)} placeholder={"Blessings,\nPastor John Smith\nGrace Community Church"} style={{ minHeight: '100px' }} />
               <p className="form-hint">This will be added to the end of your emails</p>
             </div>
             <button type="submit" className="btn-primary" disabled={loading}>
@@ -75,7 +191,7 @@ export default function SettingsPage() {
           <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Add email addresses (one per line) for your newsletter distribution list.</p>
           <div className="form-group">
             <label className="form-label">Subscriber Emails</label>
-            <textarea className="input textarea" value={subscribers} onChange={(e) => setSubscribers(e.target.value)} placeholder="member1@email.com&#10;member2@email.com&#10;member3@email.com" style={{ minHeight: '150px', fontFamily: 'monospace', fontSize: '14px' }} />
+            <textarea className="input textarea" value={subscribers} onChange={(e) => setSubscribers(e.target.value)} placeholder={"member1@email.com\nmember2@email.com\nmember3@email.com"} style={{ minHeight: '150px', fontFamily: 'monospace', fontSize: '14px' }} />
           </div>
           <button className="btn-secondary" onClick={() => { localStorage.setItem('newsletter_subscribers', subscribers); setSaved(true); }}>Save Subscriber List</button>
         </div>
@@ -92,7 +208,7 @@ export default function SettingsPage() {
             </div>
             <div className="form-group">
               <label className="form-label">Resend API Key</label>
-              <input type="password" className="input" value={resendKey} onChange={(e) => setResendKey(e.target.value)} placeholder="re_..." />
+              <input type="password" className="input" value={resendKey} onChange={(e) => setResendKey(e.target.value)} placeholder="re-..." />
               <p className="form-hint">Get your key from <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>resend.com</a></p>
             </div>
           </div>
@@ -116,7 +232,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000`}
             <span style={{ color: 'var(--text-secondary)' }}>10 AI generations per month</span>
           </div>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button className="btn-primary" disabled>Coming Soon: Upgrade to Pro ($19/mo)</button>
+            <button className="btn-primary" disabled>Coming Soon: Upgrade to Pro ($49/mo)</button>
             <button className="btn-secondary" disabled>Coming Soon: Upgrade to Church ($99/mo)</button>
           </div>
         </div>
