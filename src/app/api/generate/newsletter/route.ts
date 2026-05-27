@@ -1,21 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
-  const apiKey = process.env.OPENAI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
-  const baseURL = process.env.DEEPSEEK_API_KEY 
-    ? 'https://api.deepseek.com' 
-    : 'https://api.openai.com/v1';
-  const model = process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'gpt-4o-mini';
-  return { apiKey, baseURL, model };
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (deepseekKey && deepseekKey !== 'your-deepseek-api-key') {
+    return {
+      apiKey: deepseekKey,
+      baseURL: 'https://api.deepseek.com',
+      model: 'deepseek-chat',
+    };
+  }
+
+  if (openaiKey && openaiKey !== 'your-openai-api-key') {
+    return {
+      apiKey: openaiKey,
+      baseURL: 'https://api.openai.com/v1',
+      model: 'gpt-4o-mini',
+    };
+  }
+
+  return { apiKey: '', baseURL: '', model: '' };
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { apiKey, baseURL, model } = getAIConfig();
 
-    if (!apiKey || apiKey === 'your-openai-api-key') {
+    if (!apiKey) {
       return NextResponse.json(
-        { error: 'AI API key is not configured. Please add OPENAI_API_KEY or DEEPSEEK_API_KEY to your environment variables.' },
+        { error: 'AI API key is not configured. Please add DEEPSEEK_API_KEY or OPENAI_API_KEY.' },
         { status: 500 }
       );
     }

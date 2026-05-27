@@ -1,22 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
-  // Support DeepSeek or OpenAI
-  const apiKey = process.env.OPENAI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
-  const baseURL = process.env.DEEPSEEK_API_KEY 
-    ? 'https://api.deepseek.com' 
-    : 'https://api.openai.com/v1';
-  const model = process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'gpt-4o-mini';
-  return { apiKey, baseURL, model };
+  // Prefer DeepSeek (cheaper), fallback to OpenAI
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (deepseekKey && deepseekKey !== 'your-deepseek-api-key') {
+    return {
+      apiKey: deepseekKey,
+      baseURL: 'https://api.deepseek.com',
+      model: 'deepseek-chat',
+    };
+  }
+
+  if (openaiKey && openaiKey !== 'your-openai-api-key') {
+    return {
+      apiKey: openaiKey,
+      baseURL: 'https://api.openai.com/v1',
+      model: 'gpt-4o-mini',
+    };
+  }
+
+  return { apiKey: '', baseURL: '', model: '' };
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { apiKey, baseURL, model } = getAIConfig();
 
-    if (!apiKey || apiKey === 'your-openai-api-key') {
+    if (!apiKey) {
       return NextResponse.json(
-        { error: 'AI API key is not configured. Please add OPENAI_API_KEY or DEEPSEEK_API_KEY to your environment variables.' },
+        { error: 'AI API key is not configured. Please add DEEPSEEK_API_KEY or OPENAI_API_KEY.' },
         { status: 500 }
       );
     }
@@ -37,7 +51,6 @@ Return as JSON: {"emails": [{"week": 1, "subject": "Subject", "body": "Body"}...
 Week 1: Welcome immediately, Week 2: Check-in, Week 3: Community story, Week 4: Event invite, Week 5: Testimony, Week 6: Personal invite.
 Return ONLY valid JSON.`;
 
-    // Use fetch directly for DeepSeek compatibility
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
