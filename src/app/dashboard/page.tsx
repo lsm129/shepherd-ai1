@@ -10,6 +10,7 @@ export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState('');
   const [totalTimeSaved, setTotalTimeSaved] = useState(0);
   const [genCount, setGenCount] = useState(0);
+  const [emailVerified, setEmailVerified] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function DashboardPage() {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { router.push('/login'); return; }
         setUserEmail(session.user.email || '');
+        if (!session.user.email_confirmed_at) { setEmailVerified(false); return; }
         try {
           const { data } = await supabase.from('church_settings').select('church_name').eq('user_id', session.user.id).single();
           if (data && data.church_name) setChurchName(data.church_name);
@@ -54,6 +56,51 @@ export default function DashboardPage() {
   };
 
   if (!mounted) return null;
+
+  // Email not verified - show verification prompt
+  if (!emailVerified) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+        <div style={{ background: 'white', borderRadius: '16px', padding: '48px', maxWidth: '480px', width: '100%', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', textAlign: 'center' }}>
+          <div style={{ fontSize: '64px', marginBottom: '16px' }}>📧</div>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '12px' }}>Verify Your Email</h1>
+          <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '24px' }}>
+            We sent a verification link to <strong>{userEmail}</strong>.<br />
+            Please check your inbox and click the link to activate your account.
+          </p>
+          <p style={{ color: '#999', fontSize: '14px', marginBottom: '24px' }}>
+            Didn&apos;t receive the email? Check your spam folder.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+                await supabase.auth.resend({ type: 'signup', email: userEmail });
+                alert('Verification email resent!');
+              } catch (e) { alert('Failed to resend. Please try again.'); }
+            }}
+            style={{ background: '#1e3a5f', color: 'white', padding: '12px 32px', borderRadius: '8px', border: 'none', fontSize: '16px', fontWeight: '600', cursor: 'pointer', marginRight: '12px' }}
+          >
+            Resend Email
+          </button>
+          <button
+            onClick={async () => {
+              try {
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+                await supabase.auth.signOut();
+              } catch (e) {}
+              window.location.href = '/login';
+            }}
+            style={{ background: 'white', color: '#666', padding: '12px 24px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', cursor: 'pointer' }}
+          >
+            Back to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const features = [
     {

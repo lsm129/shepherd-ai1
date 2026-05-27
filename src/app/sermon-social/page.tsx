@@ -17,6 +17,7 @@ export default function SermonSocialPage() {
   const [socialContent, setSocialContent] = useState<SocialContent | null>(null);
   const [copiedField, setCopiedField] = useState('');
   const [userId, setUserId] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -27,6 +28,7 @@ export default function SermonSocialPage() {
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
     setLoading(true);
     setSocialContent(null);
 

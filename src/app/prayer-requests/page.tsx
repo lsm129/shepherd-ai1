@@ -25,6 +25,7 @@ export default function PrayerRequestsPage() {
   const [prayerList, setPrayerList] = useState<PrayerRequest[]>([]);
   const [copied, setCopied] = useState(false);
   const [userId, setUserId] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +36,7 @@ export default function PrayerRequestsPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
     setLoading(true);
     setShowResult(false);
 

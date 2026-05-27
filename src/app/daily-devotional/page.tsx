@@ -25,6 +25,7 @@ export default function DailyDevotionalPage() {
   const [devotional, setDevotional] = useState<Devotional | null>(null);
   const [copied, setCopied] = useState(false);
   const [userId, setUserId] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +36,7 @@ export default function DailyDevotionalPage() {
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
     setLoading(true);
     setDevotional(null);
 

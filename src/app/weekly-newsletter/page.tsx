@@ -15,10 +15,12 @@ export default function WeeklyNewsletterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState(true);
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
     setLoading(true);
 
     try {

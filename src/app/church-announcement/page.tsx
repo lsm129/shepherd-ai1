@@ -19,6 +19,7 @@ export default function ChurchAnnouncementPage() {
   const [editedContent, setEditedContent] = useState('');
   const [copied, setCopied] = useState(false);
   const [userId, setUserId] = useState<string>('');
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -29,6 +30,7 @@ export default function ChurchAnnouncementPage() {
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
     setLoading(true);
     setAnnouncement(null);
 
