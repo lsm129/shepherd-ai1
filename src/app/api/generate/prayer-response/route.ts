@@ -1,4 +1,5 @@
 import { checkQuota, recordGeneration } from '@/lib/quota';
+import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, request: prayerRequest, anonymous } = body;
+    const { name, request: prayerRequest, anonymous, userId } = body;
 
     if (!prayerRequest) {
       return NextResponse.json({ error: 'Prayer request content is required' }, { status: 400 });
@@ -68,6 +69,12 @@ export async function POST(request: NextRequest) {
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
     const parsed = JSON.parse(content || '{}');
+
+    // Record generation and earn points
+    if (userId) {
+      await recordGeneration(userId, 'prayer_response', prayerRequest.substring(0, 200));
+      await earnPoints(userId, 'generate_prayer').catch(e => console.error('Points error:', e));
+    }
 
     return NextResponse.json({
       success: true,

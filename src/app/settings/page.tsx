@@ -69,6 +69,23 @@ export default function SettingsPage() {
             default_signoff: defaultSignoff,
           }, { onConflict: 'user_id' });
           if (upsertError) throw upsertError;
+
+          // Check if profile_completed is false, if so award points
+          try {
+            const { data: profile } = await supabase.from('profiles').select('profile_completed').eq('id', session.user.id).single();
+            if (profile && !profile.profile_completed) {
+              // Mark profile as completed
+              await supabase.from('profiles').update({ profile_completed: true }).eq('id', session.user.id);
+              // Earn complete_profile points via API
+              await fetch('/api/points/earn', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: session.user.id, action: 'complete_profile' }),
+              });
+            }
+          } catch (ptsErr) {
+            console.error('Profile completion points error:', ptsErr);
+          }
         }
       }
       setSaved(true);
@@ -113,7 +130,7 @@ export default function SettingsPage() {
         <div className="card">
           <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>🎙️ Voice & Tone</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '14px' }}>
-            Control how ShepherdAI writes \u2014 match your church&apos;s personality
+            Control how ShepherdAI writes — match your church&apos;s personality
           </p>
           <div style={{ display: 'grid', gap: '12px', marginBottom: '24px' }}>
             {toneOptions.map((opt) => (

@@ -1,4 +1,5 @@
 import { checkQuota, recordGeneration } from '@/lib/quota';
+import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, first_visit_date, how_heard, interests, church_name, pastor_name } = body;
+    const { name, first_visit_date, how_heard, interests, church_name, pastor_name, userId } = body;
 
     if (!name || !first_visit_date) {
       return NextResponse.json({ error: 'Name and first visit date are required' }, { status: 400 });
@@ -75,11 +76,12 @@ Return ONLY valid JSON.`;
     const content = data.choices?.[0]?.message?.content;
     const emails = JSON.parse(content || '{"emails": []}').emails || [];
 
-    
-    // Record this generation for quota tracking
+    // Record generation and earn points
     if (userId) {
-      await recordGeneration(userId, 'visitor_followup', JSON.stringify(body).substring(0, 200));
+      await recordGeneration(userId, 'visitor_followup', JSON.stringify({ name, first_visit_date }).substring(0, 200));
+      await earnPoints(userId, 'generate_other').catch(e => console.error('Points error:', e));
     }
+
     return NextResponse.json({ success: true, emails, visitor: { name, first_visit_date, how_heard, interests } });
   } catch (error: any) {
     console.error('Error:', error);

@@ -1,4 +1,5 @@
 import { checkQuota, recordGeneration } from '@/lib/quota';
+import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
 function getAIConfig() {
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { highlights, church_name, pastor_name, upcoming_events, prayer_requests } = body;
+    const { highlights, church_name, pastor_name, upcoming_events, prayer_requests, userId } = body;
 
     if (!highlights) {
       return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
@@ -74,11 +75,12 @@ Return ONLY valid JSON.`;
     const content = data.choices?.[0]?.message?.content;
     const newsletter = JSON.parse(content || '{}').newsletter || {};
 
-    
-    // Record this generation for quota tracking
+    // Record generation and earn points
     if (userId) {
-      await recordGeneration(userId, 'newsletter', JSON.stringify(body).substring(0, 200));
+      await recordGeneration(userId, 'newsletter', JSON.stringify({ highlights }).substring(0, 200));
+      await earnPoints(userId, 'generate_other').catch(e => console.error('Points error:', e));
     }
+
     return NextResponse.json({ success: true, newsletter });
   } catch (error: any) {
     console.error('Error:', error);

@@ -72,3 +72,39 @@ DROP TRIGGER IF EXISTS on_user_created ON auth.users;
 CREATE TRIGGER on_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION generate_referral_code();
+
+-- ============================================================
+-- 4. Points System Tables
+-- ============================================================
+
+-- 4a. points_transactions: every earn / spend event
+CREATE TABLE IF NOT EXISTS points_transactions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  action TEXT NOT NULL,           -- 'daily_login','generate_sermon','generate_prayer','generate_other','complete_profile','referral_bonus','redeem_*'
+  points INTEGER NOT NULL,        -- positive = earn, negative = spend
+  balance_after INTEGER NOT NULL, -- balance after this transaction
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE points_transactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own points_transactions" ON points_transactions FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own points_transactions" ON points_transactions FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE INDEX idx_points_tx_user_date ON points_transactions(user_id, created_at);
+CREATE INDEX idx_points_tx_user_action ON points_transactions(user_id, action, created_at);
+
+-- 4b. points_redemptions: every reward claim
+CREATE TABLE IF NOT EXISTS points_redemptions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  reward_type TEXT NOT NULL,      -- 'extra_generations','premium_templates','ai_style_custom','analytics_report'
+  points_cost INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE points_redemptions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own redemptions" ON points_redemptions FOR SELECT USING (auth.uid() = user_id);
+
+-- 4c. Add points columns to profiles
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS points_balance INTEGER DEFAULT 0;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS profile_completed BOOLEAN DEFAULT FALSE;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS extra_generations INTEGER DEFAULT 0;
