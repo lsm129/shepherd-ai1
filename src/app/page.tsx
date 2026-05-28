@@ -133,6 +133,7 @@ export default function Home() {
             <a href="#how-it-works" className="nav-link">How It Works</a>
             <a href="#pricing" className="nav-link">Pricing</a>
             <a href="/faq" className="nav-link">FAQ</a>
+            <a href="/about" className="nav-link">Our Story</a>
             <Link href="/login" className="btn-ghost">Log In</Link>
             <Link href={registerHref} className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
           </div>
@@ -259,7 +260,58 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* Why Choose ShepherdAI */}
+      <section style={{ padding: '100px 0', background: 'white' }}>
+        <div className="page-container">
+          <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
+            Why Choose ShepherdAI?
+          </h2>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
+            Built with purpose. Driven by conviction.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+            {[
+              { emoji: '\u{1f6e1}\ufe0f', title: 'Faith-Neutral by Design', desc: "No denominational bias. Your theology stays yours." },
+              { emoji: '\u{1f411}', title: "We'll Never Compete for Your Flock", desc: "No ministry agenda. We serve your church, not build our own." },
+              { emoji: '\u{1f91d}', title: 'A Culture of Honor', desc: "We respect the sacred and honor pastoral authority \u2014 always." },
+              { emoji: '\u{1f4b0}', title: 'Savings That Serve the Kingdom', desc: "Save $840/year vs. competitors. That's a missionary supported, a community fed, a family helped." },
+              { emoji: '\u{1f512}', title: 'Your Data, Truly Protected', desc: "Zero incentive to monetize your data. No ads. No selling. Period." },
+              { emoji: '\u23f0', title: 'Always Awake When You Need Us', desc: "Our team works while you sleep. Faster fixes, continuous improvement." },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: '#f8fafc', borderRadius: '16px', padding: '28px',
+                border: '1px solid var(--border)', transition: 'all 0.3s ease',
+              }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--primary)';
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 24px rgba(30,58,95,0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)';
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '28px' }}>{item.emoji}</span>
+                  <h3 style={{ fontSize: '17px', fontWeight: '700', color: '#1e3a5f', margin: 0 }}>{item.title}</h3>
+                </div>
+                <p style={{ color: '#555', lineHeight: '1.7', fontSize: '15px', margin: 0 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <Link href="/about" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none', fontSize: '17px' }}>
+              Read Our Full Story →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+{/* Pricing */}
       <section id="pricing" style={{ padding: '100px 0', background: '#f8fafc' }}>
         <div className="page-container">
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
@@ -440,6 +492,7 @@ export default function Home() {
           <span>© 2026 ShepherdAI. All rights reserved.</span>
           <div style={{ display: 'flex', gap: '24px' }}>
             <a href="/faq" style={{ color: '#999', textDecoration: 'none' }}>FAQ</a>
+            <a href="/about" style={{ color: '#999', textDecoration: 'none' }}>Our Story</a>
             <a href="#pricing" style={{ color: '#999', textDecoration: 'none' }}>Pricing</a>
           </div>
         </div>
