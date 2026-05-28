@@ -142,7 +142,7 @@ export default function Home() {
       {/* Referral Banner */}
       {refParam && (
         <div style={{ marginTop: '72px', background: 'linear-gradient(135deg, #f5a623, #f7c948)', color: 'white', textAlign: 'center', padding: '12px', fontWeight: '600', fontSize: '16px' }}>
-          🎁 You were referred by a friend! Sign up and you BOTH get 1 month free!
+          🎁 You were referred by a friend! Sign up and you BOTH get 2,000 bonus points!
         </div>
       )}
 
@@ -369,7 +369,7 @@ export default function Home() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '32px', color: '#f5a623', fontSize: '16px', fontWeight: '600' }}>
-            🎁 Refer a friend and you BOTH get 1 month Pro free!
+            🎁 Refer a friend and you BOTH get 2,000 bonus points!
           </p>
         </div>
       </section>

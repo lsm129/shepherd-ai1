@@ -26,6 +26,9 @@ export default function DashboardPage() {
   const [showRewards, setShowRewards] = useState(false);
   const [redeeming, setRedeeming] = useState<string | null>(null);
   const [redeemMessage, setRedeemMessage] = useState('');
+  const [userPlan, setUserPlan] = useState<string>('free');
+  const [quotaLimit, setQuotaLimit] = useState<number>(10); // default free plan
+  const [isUnlimited, setIsUnlimited] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,6 +49,21 @@ export default function DashboardPage() {
         try {
           const { data } = await supabase.from('church_settings').select('church_name').eq('user_id', session.user.id).single();
           if (data && data.church_name) setChurchName(data.church_name);
+        } catch (e) {}
+
+        // Load user plan and quota
+        try {
+          const { data: profile } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single();
+          const plan = (profile?.plan as string) || 'free';
+          setUserPlan(plan);
+          // Set quota limits based on plan
+          const planLimits: Record<string, number> = { free: 10, starter: 50, pro: 200, growth: -1 };
+          const limit = planLimits[plan] ?? 10;
+          if (limit === -1) {
+            setIsUnlimited(true);
+          } else {
+            setQuotaLimit(limit);
+          }
         } catch (e) {}
 
         // Load generation count
@@ -245,15 +263,15 @@ export default function DashboardPage() {
       color: '#10b981',
       saves: '1.5 hrs/week',
     },
-    {
-      href: '/feedback',
-      icon: '💬',
-      title: 'Suggestion Box',
-      desc: 'Share your feedback, feature suggestions, or bug reports to help us improve.',
-      color: '#6366f1',
-      saves: '',
-    },
   ];
+
+  const feedbackFeature = {
+    href: '/feedback',
+    icon: '💬',
+    title: 'Suggestion Box',
+    desc: 'Share your feedback, feature suggestions, or bug reports to help us improve.',
+    color: '#6366f1',
+  };
 
   return (
     <div>
@@ -361,7 +379,7 @@ export default function DashboardPage() {
           <div style={{ color: '#666', fontSize: '14px' }}>AI Generations Used</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: genCount >= 10 ? '#ef4444' : '#1e3a5f' }}>{Math.max(0, 10 - genCount)}</div>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: isUnlimited ? '#22c55e' : (quotaLimit > 0 && genCount / quotaLimit >= 0.8 ? '#ef4444' : '#1e3a5f') }}>{isUnlimited ? '∞' : Math.max(0, quotaLimit - genCount)}</div>
           <div style={{ color: '#666', fontSize: '14px' }}>Remaining This Month</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
@@ -369,7 +387,7 @@ export default function DashboardPage() {
           <div style={{ color: '#666', fontSize: '14px' }}>Points Balance</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>Free</div>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>{userPlan.charAt(0).toUpperCase() + userPlan.slice(1)}</div>
           <div style={{ color: '#666', fontSize: '14px' }}>Current Plan</div>
         </div>
       </div>
@@ -394,6 +412,14 @@ export default function DashboardPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* Feedback Section */}
+      <div style={{ background: '#f0f4ff', borderRadius: '16px', padding: '32px', marginBottom: '40px', textAlign: 'center', border: '1px dashed #c7d2fe' }}>
+        <span style={{ fontSize: '40px' }}>💬</span>
+        <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>Share Your Feedback</h3>
+        <p style={{ color: '#666', marginBottom: '16px' }}>Help us improve ShepherdAI with your suggestions and bug reports.</p>
+        <Link href="/feedback" style={{ color: '#6366f1', fontWeight: '600', textDecoration: 'none', fontSize: '16px' }}>Open Suggestion Box →</Link>
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '24px' }}>

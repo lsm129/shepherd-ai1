@@ -58,7 +58,7 @@ export default function RegisterPage() {
       
       if (error) throw error;
 
-      // If there's a referral code, record it
+      // If there's a referral code, record it and award referral points
       if (refCode && data.user) {
         try {
           // Find the referrer by their referral code
@@ -67,8 +67,52 @@ export default function RegisterPage() {
             await supabase.from('referrals').update({
               referred_email: email,
               referred_id: data.user.id,
-              status: 'pending',
+              status: 'completed',
             }).eq('referral_code', refCode).is('referred_id', null);
+
+            // Award both referrer and referred user with referral bonus points
+            // Each gets 2000 points (enough to redeem many rewards)
+            const REFERRAL_BONUS_POINTS = 2000;
+            const supabaseAdmin = (await import('@supabase/supabase-js')).createClient(
+              process.env.NEXT_PUBLIC_SUPABASE_URL!,
+              process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+            );
+
+            // Award referrer
+            try {
+              const { data: referrerProfile } = await supabaseAdmin.from('profiles').select('points_balance').eq('id', referrer.referrer_id).single();
+              if (referrerProfile) {
+                const newBalance = (referrerProfile.points_balance || 0) + REFERRAL_BONUS_POINTS;
+                await supabaseAdmin.from('profiles').update({ points_balance: newBalance }).eq('id', referrer.referrer_id);
+                await supabaseAdmin.from('points_transactions').insert({
+                  user_id: referrer.referrer_id,
+                  action: 'referral_bonus',
+                  points: REFERRAL_BONUS_POINTS,
+                  balance_after: newBalance,
+                  description: 'Referral bonus: friend signed up',
+                });
+              }
+            } catch (e) {
+              console.error('Failed to award referrer points:', e);
+            }
+
+            // Award referred user
+            try {
+              const { data: referredProfile } = await supabaseAdmin.from('profiles').select('points_balance').eq('id', data.user.id).single();
+              if (referredProfile) {
+                const newBalance = (referredProfile.points_balance || 0) + REFERRAL_BONUS_POINTS;
+                await supabaseAdmin.from('profiles').update({ points_balance: newBalance }).eq('id', data.user.id);
+                await supabaseAdmin.from('points_transactions').insert({
+                  user_id: data.user.id,
+                  action: 'referral_bonus',
+                  points: REFERRAL_BONUS_POINTS,
+                  balance_after: newBalance,
+                  description: 'Referral bonus: signed up via referral link',
+                });
+              }
+            } catch (e) {
+              console.error('Failed to award referred user points:', e);
+            }
           }
         } catch (e) {
           console.error('Referral tracking error:', e);
@@ -119,7 +163,7 @@ export default function RegisterPage() {
 
           {refCode && (
             <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '12px', marginBottom: '20px', textAlign: 'center', fontSize: '14px', color: '#92400e' }}>
-              🎁 You were referred! You and your friend will each get <strong>1 month free</strong>.
+              🎁 You were referred! You and your friend will each get <strong>2,000 bonus points</strong>.
             </div>
           )}
 

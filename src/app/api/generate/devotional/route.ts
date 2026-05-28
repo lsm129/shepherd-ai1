@@ -39,6 +39,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { topic, custom_topic, userId } = body;
 
+    // Server-side quota check
+    if (userId) {
+      const quota = await checkQuota(userId);
+      if (!quota.allowed) {
+        return NextResponse.json(
+          {
+            error: 'AI generation limit reached',
+            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
+            upgradeUrl: '/settings#billing',
+            remaining: quota.remaining,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+
     const actualTopic = custom_topic || topic || 'Faith';
 
     const systemPrompt = `You are a devotional content creator for a Christian church. Create a daily devotional that includes a Bible verse, a meditation/reflection, and a closing prayer. Be spiritually enriching and practical. Return as JSON: {"title": "devotional title", "verse": {"reference": "Book Chapter:Verse", "text": "full verse text"}, "meditation": "meditation/reflection text", "prayer": "closing prayer", "application": "practical application for today"}`;

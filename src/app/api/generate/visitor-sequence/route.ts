@@ -40,6 +40,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, first_visit_date, how_heard, interests, church_name, pastor_name, userId } = body;
 
+    // Server-side quota check
+    if (userId) {
+      const quota = await checkQuota(userId);
+      if (!quota.allowed) {
+        return NextResponse.json(
+          {
+            error: 'AI generation limit reached',
+            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
+            upgradeUrl: '/settings#billing',
+            remaining: quota.remaining,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+
     if (!name || !first_visit_date) {
       return NextResponse.json({ error: 'Name and first visit date are required' }, { status: 400 });
     }

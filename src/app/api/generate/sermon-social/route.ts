@@ -39,6 +39,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { sermon_notes, church_name, userId } = body;
 
+    // Server-side quota check
+    if (userId) {
+      const quota = await checkQuota(userId);
+      if (!quota.allowed) {
+        return NextResponse.json(
+          {
+            error: 'AI generation limit reached',
+            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
+            upgradeUrl: '/settings#billing',
+            remaining: quota.remaining,
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+
     if (!sermon_notes) {
       return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
     }
