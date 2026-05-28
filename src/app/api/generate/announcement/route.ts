@@ -1,4 +1,5 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -60,6 +61,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Key points are required' }, { status: 400 });
     }
 
+
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
+
+
+    if (!key_points) {
+      return NextResponse.json({ error: 'Key points are required' }, { status: 400 });
+    }
+
     const typeLabels: Record<string, string> = {
       sunday: 'Sunday Service Announcement',
       special: 'Special Event Announcement',
@@ -96,9 +107,9 @@ export async function POST(request: NextRequest) {
     const parsed = JSON.parse(content || '{}');
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'announcement', key_points.substring(0, 200));
-      await earnPoints(userId, 'generate_sermon').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'announcement', key_points.substring(0, 200));
+      await earnPoints(auth.userId, 'generate_sermon').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({

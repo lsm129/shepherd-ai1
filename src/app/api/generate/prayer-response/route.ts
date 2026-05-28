@@ -1,4 +1,5 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -60,6 +61,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prayer request content is required' }, { status: 400 });
     }
 
+
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
+
+
+    if (!prayerRequest) {
+      return NextResponse.json({ error: 'Prayer request content is required' }, { status: 400 });
+    }
+
     const systemPrompt = `You are a compassionate Christian pastoral assistant. When someone submits a prayer request, you generate a warm, empathetic prayer response that includes a relevant Bible verse. Be encouraging and uplifting. Return as JSON: {"response": "prayer text", "verse": {"reference": "Book Chapter:Verse", "text": "verse text"}}`;
 
     const userPrompt = `Generate a warm prayer response for this prayer request${!anonymous && name ? ` from ${name}` : ''}: "${prayerRequest}". Include a relevant Bible verse that speaks to their situation. Return ONLY valid JSON.`;
@@ -88,9 +99,9 @@ export async function POST(request: NextRequest) {
     const parsed = JSON.parse(content || '{}');
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'prayer_response', prayerRequest.substring(0, 200));
-      await earnPoints(userId, 'generate_prayer').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'prayer_response', prayerRequest.substring(0, 200));
+      await earnPoints(auth.userId, 'generate_prayer').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({

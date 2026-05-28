@@ -71,6 +71,24 @@ export default function LoginPage() {
               <label className="form-label">Password</label>
               <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" required />
             </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+            <button type="button" onClick={async () => {
+              if (!email) { setError('Please enter your email first, then click Forgot Password'); return; }
+              try {
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+                const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+                if (supabaseUrl && supabaseKey) {
+                  const supabase = createClient(supabaseUrl, supabaseKey);
+                  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/login` });
+                  setError('');
+                  alert('Password reset email sent! Check your inbox.');
+                }
+              } catch (err: any) { setError(err.message || 'Failed to send reset email'); }
+            }} style={{ background: 'none', border: 'none', color: '#1e3a5f', cursor: 'pointer', fontSize: '14px', fontWeight: '500', padding: 0 }}>
+              Forgot Password?
+            </button>
+          </div>
             <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '8px' }} disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </button>

@@ -1,0 +1,94 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { CREEM_API_KEY, CREEM_PRODUCTS, getCreemBaseUrl } from '@/lib/creem';
+import { PLANS, type PlanId } from '@/lib/pricing';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { planId, userId, email } = body;
+
+    if (!planId || !CREEM_PRODUCTS[planId]) {
+      return NextResponse.json(
+        { error: 'Invalid plan. Choose: starter, pro, or growth.' },
+        { status: 400 }
+      );
+    }
+
+    if (!CREEM_API_KEY) {
+      return NextResponse.json(
+        { error: 'Payment system not configured.' },
+        { status: 500 }
+      );
+    }
+
+    if (!userId) {
+      return NextResponse.json({ error: 'User not authenticated. Please log in first.' }, { status: 401 });
+    }
+
+    // Check if user already has this plan or higher
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAdmin = createClient(
+      supabaseUrl,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('plan')
+      .eq('id', userId)
+      .single();
+
+    const currentPlan = (profile?.plan as PlanId) || 'free';
+    const currentPlanData = PLANS[currentPlan];
+    const targetPlanData = PLANS[planId as PlanId];
+
+    if (currentPlanData && targetPlanData && currentPlanData.price >= targetPlanData.price) {
+      return NextResponse.json(
+        { error: 'You already have this plan or a higher plan.' },
+        { status: 400 }
+      );
+    }
+
+    const productId = CREEM_PRODUCTS[planId];
+    const baseUrl = getCreemBaseUrl();
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shepherd-ai1-ly6j.vercel.app';
+
+    const response = await fetch(`${baseUrl}/checkouts`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': CREEM_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        product_id: productId,
+        request_id: `checkout_${userId}_${Date.now()}`,
+        success_url: `${appUrl}/dashboard?upgraded=true&plan=${planId}`,
+        customer: email ? { email } : undefined,
+        metadata: {
+          userId,
+          planId,
+          source: 'shepherdai-web',
+        },
+      }),
+    });
+
+    const checkout = await response.json();
+
+    if (!response.ok) {
+      console.error('Creem checkout error:', checkout);
+      return NextResponse.json(
+        { error: checkout.message || 'Failed to create checkout session.' },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json({
+      checkoutUrl: checkout.checkout_url,
+      checkoutId: checkout.id,
+    });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Checkout failed';
+    console.error('Checkout error:', error);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

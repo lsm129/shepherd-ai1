@@ -1,4 +1,5 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -60,6 +61,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
     }
 
+
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
+
+
+    if (!sermon_notes) {
+      return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
+    }
+
     const systemPrompt = `You are a social media content creator for a church. Transform sermon notes into engaging social media posts. Return as JSON: {"facebook": {"post": "full facebook post text"}, "instagram": {"caption": "instagram caption with emojis", "hashtags": "#tag1 #tag2 #tag3"}, "twitter": {"tweet": "tweet within 280 characters"}}`;
 
     const userPrompt = `Transform these sermon notes into social media content for ${church_name || 'our church'}: "${sermon_notes}". Create: 1) A Facebook post (engaging, community-focused), 2) An Instagram caption with relevant hashtags, 3) A Twitter/X tweet (under 280 chars). Return ONLY valid JSON.`;
@@ -88,9 +99,9 @@ export async function POST(request: NextRequest) {
     const parsed = JSON.parse(content || '{}');
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'sermon_social', sermon_notes.substring(0, 200));
-      await earnPoints(userId, 'generate_sermon').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'sermon_social', sermon_notes.substring(0, 200));
+      await earnPoints(auth.userId, 'generate_sermon').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({

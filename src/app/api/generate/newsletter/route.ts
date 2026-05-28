@@ -1,4 +1,5 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -60,6 +61,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
     }
 
+
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
+
+
+    if (!highlights) {
+      return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
+    }
+
     const systemPrompt = `You are an AI assistant helping a church pastor create a weekly newsletter. 
 The church name is ${church_name || 'our church'} and the pastor is ${pastor_name || 'our pastor'}.
 Create a warm, engaging newsletter that feels personal and community-focused.
@@ -93,9 +104,9 @@ Return ONLY valid JSON.`;
     const newsletter = JSON.parse(content || '{}').newsletter || {};
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'newsletter', JSON.stringify({ highlights }).substring(0, 200));
-      await earnPoints(userId, 'generate_other').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'newsletter', JSON.stringify({ highlights }).substring(0, 200));
+      await earnPoints(auth.userId, 'generate_other').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({ success: true, newsletter });
