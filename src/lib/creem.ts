@@ -5,7 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 import * as crypto from 'crypto';
 import { PLANS, type PlanId } from './pricing';
 
-const CREEM_API_KEY = process.env.CREEM_API_KEY!;
+export const CREEM_API_KEY = process.env.CREEM_API_KEY!;
+export const CREEM_WEBHOOK_SECRET = process.env.CREEM_WEBHOOK_SECRET!;
 const CREEM_API_BASE = 'https://api.creem.io/v1';
 
 // Creem product IDs for each plan

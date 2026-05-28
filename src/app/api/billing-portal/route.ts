@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { CREEM_API_KEY, getCreemBaseUrl } from '@/lib/creem';
+import { CREEM_API_KEY } from '@/lib/creem';
+
+const CREEM_API_BASE = 'https://api.creem.io/v1';
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,8 +39,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate customer portal link via Creem API
-    const baseUrl = getCreemBaseUrl();
-    const response = await fetch(`${baseUrl}/customers/billing`, {
+    
+    const response = await fetch(`CREEM_API_BASE/customers/billing`, {
       method: 'POST',
       headers: {
         'x-api-key': CREEM_API_KEY,

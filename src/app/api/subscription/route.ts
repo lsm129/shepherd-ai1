@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { CREEM_API_KEY, getCreemBaseUrl } from '@/lib/creem';
+const CREEM_API_KEY = process.env.CREEM_API_KEY!;
+const CREEM_API_BASE = 'https://api.creem.io/v1';
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,8 +33,8 @@ export async function GET(request: NextRequest) {
 
     // If user has a Creem subscription, fetch details
     if (CREEM_API_KEY && subscriptionId) {
-      const baseUrl = getCreemBaseUrl();
-      const response = await fetch(`${baseUrl}/subscriptions?subscription_id=${subscriptionId}`, {
+      
+      const response = await fetch(`CREEM_API_BASE/subscriptions?subscription_id=${subscriptionId}`, {
         method: 'GET',
         headers: {
           'x-api-key': CREEM_API_KEY,

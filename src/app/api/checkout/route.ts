@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { CREEM_API_KEY, CREEM_PRODUCTS, getCreemBaseUrl } from '@/lib/creem';
+import { CREEM_PRODUCTS } from '@/lib/creem';
+
+const CREEM_API_KEY = process.env.CREEM_API_KEY!;
+const CREEM_API_BASE = 'https://api.creem.io/v1';
 import { PLANS, type PlanId } from '@/lib/pricing';
 
 export async function POST(request: NextRequest) {
@@ -50,10 +53,10 @@ export async function POST(request: NextRequest) {
     }
 
     const productId = CREEM_PRODUCTS[planId];
-    const baseUrl = getCreemBaseUrl();
+    
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shepherd-ai1-ly6j.vercel.app';
 
-    const response = await fetch(`${baseUrl}/checkouts`, {
+    const response = await fetch(`CREEM_API_BASE/checkouts`, {
       method: 'POST',
       headers: {
         'x-api-key': CREEM_API_KEY,
