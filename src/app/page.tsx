@@ -7,6 +7,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [refParam, setRefParam] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -40,7 +41,7 @@ export default function Home() {
   const faqs = [
     {
       q: 'Will AI replace my pastor role?',
-      a: 'Absolutely not. ShepherdAI is designed to handle administrative busywork \u2014 follow-up emails, newsletters, announcements \u2014 so pastors can spend more time on shepherding, counseling, and ministry. AI is a tool that serves your mission, not a replacement for the human heart of pastoral care.',
+      a: 'Absolutely not. ShepherdAI is designed to handle administrative busywork — follow-up emails, newsletters, announcements — so pastors can spend more time on shepherding, counseling, and ministry. AI is a tool that serves your mission, not a replacement for the human heart of pastoral care.',
     },
     {
       q: 'Is my data safe?',
@@ -64,9 +65,51 @@ export default function Home() {
     },
     {
       q: 'What about theological accuracy?',
-      a: 'ShepherdAI is trained to reference scripture accurately and generate content that respects theological nuance. You always review and edit before anything is sent. Pastors remain in full control of the message \u2014 AI just does the heavy lifting of drafting.',
+      a: 'ShepherdAI is trained to reference scripture accurately and generate content that respects theological nuance. You always review and edit before anything is sent. Pastors remain in full control of the message — AI just does the heavy lifting of drafting.',
     },
   ];
+
+  async function handleSubscribe(planId: string) {
+    setCheckoutLoading(planId);
+    try {
+      // Get current user session
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      let userEmail = '';
+
+      if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+          userEmail = session.user.email;
+        }
+      }
+
+      const response = await fetch('/api/creem/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId,
+          userId: 'guest', // Will be properly set in checkout metadata when user is logged in
+          userEmail: userEmail || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        alert(data.error || 'Failed to create checkout session. Please try again.');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -138,50 +181,42 @@ export default function Home() {
             <Link href={registerHref} className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px', textDecoration: 'none' }}>
               Start Free — No credit card required →
             </Link>
-            <a href="#how-it-works" style={{ background: 'white', color: '#1e3a5f', padding: '16px 32px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '18px', border: '2px solid #1e3a5f', transition: 'all 0.2s' }}>
-              See How It Works
+            <a href="#pricing" className="btn-ghost" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px' }}>
+              View Pricing
             </a>
           </div>
-        </div>
-      </section>
 
-      {/* Social Proof */}
-      <section style={{ padding: '60px 0', background: 'white', borderTop: '1px solid var(--border)' }}>
-        <div className="page-container" style={{ textAlign: 'center' }}>
-          <p style={{ color: '#999', fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '32px' }}>
-            Trusted by pastors at churches of all sizes
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', flexWrap: 'wrap', alignItems: 'center' }}>
-            {churchLogos.map((name, i) => (
-              <span key={i} style={{ fontSize: '16px', fontWeight: '700', color: '#cbd5e1', letterSpacing: '0.5px' }}>
-                {name}
-              </span>
-            ))}
+          {/* Trusted by */}
+          <div style={{ marginTop: '80px' }}>
+            <p style={{ color: '#999', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '20px' }}>
+              Trusted by churches across the country
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', opacity: 0.5 }}>
+              {churchLogos.map((name, i) => (
+                <span key={i} style={{ fontSize: '14px', fontWeight: '600', color: '#999' }}>{name}</span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* AI Agent Showcase */}
+      {/* Features */}
       <section id="features" style={{ padding: '100px 0', background: '#f8fafc' }}>
         <div className="page-container">
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
-            Your AI Church Assistants
+            Your AI Church Staff
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
-            Each agent is purpose-built for church ministry — and tells you exactly how much time you save
+            6 AI-powered agents that handle your weekly busywork
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             {agents.map((agent, i) => (
-              <div key={i} className="card" style={{ textAlign: 'left', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '40px' }}>{agent.emoji}</span>
-                  <span className="badge badge-success" style={{ fontSize: '13px', padding: '6px 14px', fontWeight: '700' }}>
-                    Saves {agent.saves}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>{agent.title}</h3>
-                <p style={{ color: '#666', lineHeight: '1.6', fontSize: '15px' }}>{agent.desc}</p>
+              <div key={i} className="card" style={{ padding: '24px' }}>
+                <div style={{ fontSize: '32px', marginBottom: '12px' }}>{agent.emoji}</div>
+                <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>{agent.title}</h3>
+                <p style={{ color: '#666', fontSize: '14px', lineHeight: '1.5', marginBottom: '12px' }}>{agent.desc}</p>
+                <span className="badge badge-primary" style={{ fontSize: '12px' }}>Saves {agent.saves}</span>
               </div>
             ))}
           </div>
@@ -262,7 +297,14 @@ export default function Home() {
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Start Free Trial</Link>
+              <button
+                onClick={() => handleSubscribe('starter')}
+                disabled={checkoutLoading === 'starter'}
+                className="btn-secondary"
+                style={{ width: '100%', justifyContent: 'center', fontSize: '14px', cursor: checkoutLoading === 'starter' ? 'wait' : 'pointer' }}
+              >
+                {checkoutLoading === 'starter' ? 'Redirecting...' : 'Subscribe'}
+              </button>
             </div>
 
             {/* Pro - Most Popular */}
@@ -278,7 +320,14 @@ export default function Home() {
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-primary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Start Free Trial</Link>
+              <button
+                onClick={() => handleSubscribe('pro')}
+                disabled={checkoutLoading === 'pro'}
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center', fontSize: '14px', cursor: checkoutLoading === 'pro' ? 'wait' : 'pointer' }}
+              >
+                {checkoutLoading === 'pro' ? 'Redirecting...' : 'Subscribe'}
+              </button>
             </div>
 
             {/* Growth */}
@@ -293,7 +342,14 @@ export default function Home() {
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Contact Us</Link>
+              <button
+                onClick={() => handleSubscribe('growth')}
+                disabled={checkoutLoading === 'growth'}
+                className="btn-secondary"
+                style={{ width: '100%', justifyContent: 'center', fontSize: '14px', cursor: checkoutLoading === 'growth' ? 'wait' : 'pointer' }}
+              >
+                {checkoutLoading === 'growth' ? 'Redirecting...' : 'Subscribe'}
+              </button>
             </div>
           </div>
 

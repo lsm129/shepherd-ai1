@@ -11,6 +11,7 @@ export interface Plan {
   features: string[];
   maxTools: number; // how many AI tools they can access (7 total)
   highlight?: string;
+  creemProductId?: string; // Creem product ID for paid plans
 }
 
 export const PLANS: Record<PlanId, Plan> = {
@@ -33,6 +34,7 @@ export const PLANS: Record<PlanId, Plan> = {
     price: 29,
     generationsPerMonth: 50,
     maxTools: 3,
+    creemProductId: 'prod_89GZ0Mr4cUbRkaH1guqcD',
     features: [
       '50 AI generations/month',
       '3 core AI tools',
@@ -47,6 +49,7 @@ export const PLANS: Record<PlanId, Plan> = {
     generationsPerMonth: 200,
     maxTools: 7,
     highlight: 'Most Popular',
+    creemProductId: 'prod_6mHoeoWBuxR3qsJdAfQWo0',
     features: [
       '200 AI generations/month',
       'All 7 AI tools',
@@ -62,6 +65,7 @@ export const PLANS: Record<PlanId, Plan> = {
     price: 99,
     generationsPerMonth: -1, // unlimited
     maxTools: 7,
+    creemProductId: 'prod_LtkwTRkzN7R7brJIoCh5Q',
     features: [
       'Unlimited AI generations',
       'Everything in Pro',

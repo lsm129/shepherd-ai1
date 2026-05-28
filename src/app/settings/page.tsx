@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { PLANS, type PlanId } from '@/lib/pricing';
 
 export default function SettingsPage() {
   const [mounted, setMounted] = useState(false);
@@ -18,6 +19,13 @@ export default function SettingsPage() {
   const [aiTone, setAiTone] = useState('warm');
   const [defaultSignoff, setDefaultSignoff] = useState('');
 
+  // Subscription state
+  const [currentPlan, setCurrentPlan] = useState<PlanId>('free');
+  const [creemCustomerId, setCreemCustomerId] = useState<string | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
   useEffect(() => {
     setMounted(true);
     async function loadSettings() {
@@ -29,6 +37,24 @@ export default function SettingsPage() {
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;
+
+        setUserId(session.user.id);
+
+        // Load profile/plan info
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('plan, creem_customer_id')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile) {
+          setCurrentPlan((profile.plan as PlanId) || 'free');
+          if (profile.creem_customer_id) {
+            setCreemCustomerId(profile.creem_customer_id);
+          }
+        }
+
+        // Load church settings
         const { data } = await supabase.from('church_settings').select('*').eq('user_id', session.user.id).single();
         if (data) {
           if (data.church_name) setChurchName(data.church_name);
@@ -74,9 +100,7 @@ export default function SettingsPage() {
           try {
             const { data: profile } = await supabase.from('profiles').select('profile_completed').eq('id', session.user.id).single();
             if (profile && !profile.profile_completed) {
-              // Mark profile as completed
               await supabase.from('profiles').update({ profile_completed: true }).eq('id', session.user.id);
-              // Earn complete_profile points via API
               await fetch('/api/points/earn', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -97,6 +121,71 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleSubscribe(planId: string) {
+    if (!userId) {
+      window.location.href = '/login';
+      return;
+    }
+    setCheckoutLoading(planId);
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      let userEmail = '';
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) userEmail = session.user.email;
+      }
+
+      const response = await fetch('/api/creem/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId,
+          userId,
+          userEmail: userEmail || undefined,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        setError(data.error || 'Failed to create checkout session');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
+
+  async function handleManageSubscription() {
+    if (!userId) return;
+    setPortalLoading(true);
+    try {
+      const response = await fetch('/api/creem/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await response.json();
+      if (data.portalUrl) {
+        window.location.href = data.portalUrl;
+      } else {
+        setError(data.error || 'Failed to open subscription management');
+      }
+    } catch (err) {
+      console.error('Portal error:', err);
+      setError('Failed to open subscription management');
+    } finally {
+      setPortalLoading(false);
+    }
+  }
+
   if (!mounted) return null;
 
   const toneOptions = [
@@ -104,6 +193,8 @@ export default function SettingsPage() {
     { value: 'warm', label: 'Warm & Friendly', desc: 'Approachable and caring, perfect for most churches' },
     { value: 'youth', label: 'Youth-Friendly', desc: 'Casual and energetic, great for youth groups and modern services' },
   ];
+
+  const currentPlanData = PLANS[currentPlan];
 
   return (
     <div>
@@ -126,6 +217,80 @@ export default function SettingsPage() {
       )}
 
       <div style={{ display: 'grid', gap: '24px' }}>
+        {/* Subscription Plan */}
+        <div className="card">
+          <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Subscription Plan</h2>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+            <span className="badge badge-primary" style={{ fontSize: '16px', padding: '8px 16px' }}>
+              {currentPlanData.name} Plan
+            </span>
+            <span style={{ color: 'var(--text-secondary)' }}>
+              {currentPlanData.generationsPerMonth === -1
+                ? 'Unlimited AI generations per month'
+                : `${currentPlanData.generationsPerMonth} AI generations per month`}
+            </span>
+          </div>
+
+          {/* Current plan details */}
+          {currentPlan !== 'free' && creemCustomerId && (
+            <div style={{ marginBottom: '20px' }}>
+              <button
+                onClick={handleManageSubscription}
+                disabled={portalLoading}
+                className="btn-secondary"
+                style={{ cursor: portalLoading ? 'wait' : 'pointer' }}
+              >
+                {portalLoading ? 'Opening...' : '🔄 Manage Subscription'}
+              </button>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '8px' }}>
+                Cancel, upgrade/downgrade, or update your payment method
+              </p>
+            </div>
+          )}
+
+          {/* Plan upgrade options */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+            {Object.values(PLANS).map((plan) => {
+              const isCurrent = plan.id === currentPlan;
+              const isFree = plan.id === 'free';
+              return (
+                <div
+                  key={plan.id}
+                  style={{
+                    padding: '16px',
+                    borderRadius: '12px',
+                    border: isCurrent ? '2px solid var(--primary)' : '2px solid var(--border)',
+                    background: isCurrent ? 'rgba(30,58,95,0.04)' : 'white',
+                    opacity: isCurrent ? 0.7 : 1,
+                  }}
+                >
+                  <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text)' }}>
+                    {plan.name} {plan.highlight && <span className="badge badge-primary" style={{ fontSize: '10px', padding: '2px 6px', marginLeft: '6px' }}>{plan.highlight}</span>}
+                  </div>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                    {isFree ? 'Free' : `$${plan.price}/mo`}
+                  </div>
+                  {isCurrent ? (
+                    <button className="btn-secondary" disabled style={{ width: '100%', fontSize: '13px' }}>Current Plan</button>
+                  ) : isFree ? (
+                    <button className="btn-secondary" disabled style={{ width: '100%', fontSize: '13px' }}>Free</button>
+                  ) : (
+                    <button
+                      onClick={() => handleSubscribe(plan.id)}
+                      disabled={checkoutLoading === plan.id}
+                      className={plan.highlight ? 'btn-primary' : 'btn-secondary'}
+                      style={{ width: '100%', fontSize: '13px', cursor: checkoutLoading === plan.id ? 'wait' : 'pointer' }}
+                    >
+                      {checkoutLoading === plan.id ? 'Redirecting...' : `Subscribe $${plan.price}/mo`}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Voice & Tone Settings */}
         <div className="card">
           <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>🎙️ Voice & Tone</h2>
@@ -236,21 +401,10 @@ export default function SettingsPage() {
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 OPENAI_API_KEY=sk-your-openai-key
 RESEND_API_KEY=re-your-resend-key
+CREEM_API_KEY=your-creem-api-key
+CREEM_WEBHOOK_SECRET=your-webhook-secret
 NEXT_PUBLIC_APP_URL=http://localhost:3000`}
             </pre>
-          </div>
-        </div>
-
-        {/* Subscription */}
-        <div className="card">
-          <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Subscription Plan</h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-            <span className="badge badge-primary" style={{ fontSize: '16px', padding: '8px 16px' }}>Free Plan</span>
-            <span style={{ color: 'var(--text-secondary)' }}>10 AI generations per month</span>
-          </div>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <button className="btn-primary" disabled>Coming Soon: Upgrade to Pro ($49/mo)</button>
-            <button className="btn-secondary" disabled>Coming Soon: Upgrade to Church ($99/mo)</button>
           </div>
         </div>
       </div>
