@@ -232,35 +232,35 @@ export default function AboutPage() {
               border: '1px solid var(--border)', boxShadow: '0 4px 24px rgba(30,58,95,0.06)',
             }}>
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                In the ancient city of Foshan, China \u2014 a place where thousand-year traditions of craftsmanship and community still breathe in every street \u2014 a young boy named Shuming grew up watching his grandfather.
+                Shuming grew up in Foshan, China — a city with over a thousand years of history, where craftsmanship and community are not just traditions, but a way of life.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                His grandfather was known throughout the neighborhood as <em>&ldquo;Xiansheng&rdquo;</em> \u2014 the respected one. Not a man of wealth or titles, but a man people turned to when life got hard. A broken marriage, a business on the edge of collapse, a family torn by disagreement \u2014 neighbors came to his small courtyard, and he would listen, advise, and stay until things were better. He never charged a single yuan. When people tried to pay, he would smile and say: <strong>&ldquo;Helping others is the best reward there is.&rdquo;</strong>
+                His grandfather was known in the neighborhood as &ldquo;Xiānsheng&rdquo; — the Teacher. Not because he taught in a school, but because people came to him when they needed wisdom. A family in conflict. A business in trouble. A neighbor in despair. He never charged a single coin. &ldquo;Helping others is the best reward,&rdquo; he would say.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                Young Shuming didn&rsquo;t understand it then. Why work so hard for nothing? But as he grew, the answer became clear: <em>service itself was the reward</em>. His grandfather wasn&rsquo;t poor because he gave freely \u2014 he was rich in something money couldn&rsquo;t buy.
+                Shuming watched his grandfather give without counting, serve without expecting, and lead without demanding. He learned that true leadership is not about power — it&apos;s about lifting others up.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                As an adult, Shuming built a career in business consulting, helping companies navigate crises and find their footing. He was good at it. But something was missing. The businesses he helped would grow, profits would rise \u2014 and yet, the ache in his chest never went away. He wanted to serve people whose work truly mattered. People who gave of themselves, not for profit, but for purpose.
+                As an adult, Shuming built a career in business consulting, helping companies find their way through difficult seasons. He was good at it. But something was missing. He wanted his work to serve people who truly served others — people whose impact couldn&apos;t be measured in profit, but in lives changed.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                Then one evening, a friend who worked with American churches shared something that changed everything. He described the life of a typical small-church pastor in America: working 60 to 80 hours a week, juggling sermon preparation, pastoral care, administration, community outreach, and family life \u2014 all while earning barely enough to get by. And when it came to tools that could help, the software they needed was either unaffordable or designed for megachurch budgets.
+                Then a friend told him about church pastors in America — men and women working 60-80 hours a week, pouring their hearts into their congregations, yet consumed by administrative tasks. Church management software existed, but it was bloated, overpriced, and designed without real consideration for the pastors who&apos;d actually use it. Too few products truly cared about pastors&apos; needs. Even fewer respected their time.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                Shuming sat in silence for a long time. These pastors reminded him of someone \u2014 his grandfather. People who poured themselves out for others, day after day, with little support and less recognition. The very people most deserving of help, often the last to receive it.
+                Shuming was deeply moved. These pastors reminded him of his grandfather — people who gave everything for others, yet didn&apos;t have the tools and support they deserved.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                That night, he made a decision. He would build something for them \u2014 an AI assistant that was affordable, reliable, and deeply respectful of the sacred work pastors do. Not to replace the shepherd, but to carry the load so the shepherd could focus on what matters most: tending to souls.
+                That night, he made a decision: he would build an AI-powered platform designed for every pastor — simple, intelligent, and fairly priced — so they could spend less time on paperwork and more time on what truly matters: shepherding souls.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                He assembled a small team in Foshan \u2014 people who shared his belief that great technology should not be a privilege of the wealthy, and that serving those who serve others is the highest form of craftsmanship.
+                Today, ShepherdAI serves churches across America and beyond. And the mission remains the same as the lesson Shuming learned at his grandfather&apos;s knee:
               </p>
 
               <div style={{
@@ -272,13 +272,9 @@ export default function AboutPage() {
                   &ldquo;My grandfather taught me that the greatest calling is to serve those who serve others. ShepherdAI is my heritage.&rdquo;
                 </p>
                 <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginTop: '12px', marginBottom: 0 }}>
-                  \u2014 Shuming, Founder of ShepherdAI
+                  — Shuming, Founder of ShepherdAI
                 </p>
               </div>
-
-              <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: 0 }}>
-                ShepherdAI isn&rsquo;t just software. It&rsquo;s a bridge between cultures, built on the belief that service transcends borders, and that the best technology is the kind you barely notice \u2014 because it simply works, quietly, faithfully, so you can do what you were called to do.
-              </p>
             </div>
           </FadeInOnScroll>
         </div>
