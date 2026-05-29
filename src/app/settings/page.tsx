@@ -25,6 +25,7 @@ export default function SettingsPage() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
 
   useEffect(() => {
     setMounted(true);
@@ -145,6 +146,7 @@ export default function SettingsPage() {
           planId,
           userId,
           userEmail: userEmail || undefined,
+          billingCycle,
         }),
       });
 
@@ -249,11 +251,36 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {/* Billing cycle toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px' }}>
+            <span style={{ fontSize: '14px', fontWeight: billingCycle === 'monthly' ? '600' : '400', color: billingCycle === 'monthly' ? 'var(--primary)' : 'var(--text-secondary)' }}>Monthly</span>
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
+              style={{
+                width: '48px', height: '26px', borderRadius: '13px', border: 'none', cursor: 'pointer',
+                background: billingCycle === 'annual' ? 'var(--primary)' : '#d1d5db', position: 'relative', transition: 'all 0.2s',
+              }}
+            >
+              <div style={{
+                width: '22px', height: '22px', borderRadius: '11px', background: 'white', position: 'absolute', top: '2px',
+                left: billingCycle === 'annual' ? '24px' : '2px', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+              }} />
+            </button>
+            <span style={{ fontSize: '14px', fontWeight: billingCycle === 'annual' ? '600' : '400', color: billingCycle === 'annual' ? 'var(--primary)' : 'var(--text-secondary)' }}>
+              Annual <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '600' }}>Save 20%</span>
+            </span>
+          </div>
+
           {/* Plan upgrade options */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
             {Object.values(PLANS).map((plan) => {
               const isCurrent = plan.id === currentPlan;
               const isFree = plan.id === 'free';
+              const isAnnual = billingCycle === 'annual';
+              const displayPrice = isFree ? 0 : (isAnnual && plan.annualPrice ? plan.annualPrice : plan.price);
+              const priceSuffix = isFree ? '' : isAnnual ? '/yr' : '/mo';
+              const annualSavings = plan.annualPrice ? plan.price * 12 - plan.annualPrice : 0;
+              const annualAvailable = isAnnual && !isFree && plan.annualCreemProductId === '';
               return (
                 <div
                   key={plan.id}
@@ -262,19 +289,32 @@ export default function SettingsPage() {
                     borderRadius: '12px',
                     border: isCurrent ? '2px solid var(--primary)' : '2px solid var(--border)',
                     background: isCurrent ? 'rgba(30,58,95,0.04)' : 'white',
-                    opacity: isCurrent ? 0.7 : 1,
+                    opacity: isCurrent ? 0.7 : annualAvailable ? 0.5 : 1,
+                    position: 'relative',
                   }}
                 >
+                  {isAnnual && !isFree && annualSavings > 0 && (
+                    <div style={{ position: 'absolute', top: '-8px', right: '12px', background: '#16a34a', color: 'white', fontSize: '11px', fontWeight: '600', padding: '2px 8px', borderRadius: '10px' }}>
+                      Save ${annualSavings}/yr
+                    </div>
+                  )}
                   <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text)' }}>
                     {plan.name} {plan.highlight && <span className="badge badge-primary" style={{ fontSize: '10px', padding: '2px 6px', marginLeft: '6px' }}>{plan.highlight}</span>}
                   </div>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                    {isFree ? 'Free' : `$${plan.price}/mo`}
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '4px' }}>
+                    {isFree ? 'Free' : `$${displayPrice}${priceSuffix}`}
                   </div>
+                  {isAnnual && !isFree && (
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                      ≈ ${plan.price}/mo billed annually
+                    </div>
+                  )}
                   {isCurrent ? (
                     <button className="btn-secondary" disabled style={{ width: '100%', fontSize: '13px' }}>Current Plan</button>
                   ) : isFree ? (
                     <button className="btn-secondary" disabled style={{ width: '100%', fontSize: '13px' }}>Free</button>
+                  ) : annualAvailable ? (
+                    <button className="btn-secondary" disabled style={{ width: '100%', fontSize: '13px' }} title="Annual plan coming soon">Coming Soon</button>
                   ) : (
                     <button
                       onClick={() => handleSubscribe(plan.id)}
@@ -282,7 +322,7 @@ export default function SettingsPage() {
                       className={plan.highlight ? 'btn-primary' : 'btn-secondary'}
                       style={{ width: '100%', fontSize: '13px', cursor: checkoutLoading === plan.id ? 'wait' : 'pointer' }}
                     >
-                      {checkoutLoading === plan.id ? 'Redirecting...' : `Subscribe $${plan.price}/mo`}
+                      {checkoutLoading === plan.id ? 'Redirecting...' : `Subscribe $${displayPrice}${priceSuffix}`}
                     </button>
                   )}
                 </div>

@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
-import { CREEM_WEBHOOK_SECRET, CREEM_PRODUCTS } from '@/lib/creem';
+import { CREEM_WEBHOOK_SECRET, CREEM_PRODUCTS, CREEM_ANNUAL_PRODUCTS } from '@/lib/creem';
 import { earnPoints } from '@/lib/points';
 
-// Reverse map: Creem product ID -> plan ID
+// Reverse map: Creem product ID -> plan ID (both monthly and annual)
 const PRODUCT_TO_PLAN: Record<string, string> = {};
 for (const [plan, productId] of Object.entries(CREEM_PRODUCTS)) {
   PRODUCT_TO_PLAN[productId] = plan;
+}
+for (const [plan, productId] of Object.entries(CREEM_ANNUAL_PRODUCTS)) {
+  if (productId) PRODUCT_TO_PLAN[productId] = plan;
 }
 
 function verifySignature(payload: string, signature: string, secret: string): boolean {

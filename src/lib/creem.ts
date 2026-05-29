@@ -9,16 +9,26 @@ export const CREEM_API_KEY = process.env.CREEM_API_KEY!;
 export const CREEM_WEBHOOK_SECRET = process.env.CREEM_WEBHOOK_SECRET!;
 const CREEM_API_BASE = 'https://api.creem.io/v1';
 
-// Creem product IDs for each plan
+// Creem product IDs for each plan (monthly)
 export const CREEM_PRODUCTS: Record<Exclude<PlanId, 'free'>, string> = {
   starter: 'prod_89GZ0Mr4cUbRkaH1guqcD',
   pro: 'prod_6mHoeoWBuxR3qsJdAfQWo0',
   growth: 'prod_LtkwTRkzN7R7brJIoCh5Q',
 };
 
-// Map Creem product ID back to plan ID
+// Creem product IDs for annual plans (20% off)
+export const CREEM_ANNUAL_PRODUCTS: Record<Exclude<PlanId, 'free'>, string> = {
+  starter: '', // TODO: Fill in after creating annual product in Creem
+  pro: '', // TODO: Fill in after creating annual product in Creem
+  growth: '', // TODO: Fill in after creating annual product in Creem
+};
+
+// Map Creem product ID back to plan ID (checks both monthly and annual)
 export function getPlanByProductId(productId: string): PlanId | null {
   for (const [planId, prodId] of Object.entries(CREEM_PRODUCTS)) {
+    if (prodId === productId) return planId as PlanId;
+  }
+  for (const [planId, prodId] of Object.entries(CREEM_ANNUAL_PRODUCTS)) {
     if (prodId === productId) return planId as PlanId;
   }
   return null;

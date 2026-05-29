@@ -9,7 +9,7 @@ import { PLANS, type PlanId } from '@/lib/pricing';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { planId, userId, email } = body;
+    const { planId, userId, email, billingCycle } = body;
 
     if (!planId || !CREEM_PRODUCTS[planId]) {
       return NextResponse.json(

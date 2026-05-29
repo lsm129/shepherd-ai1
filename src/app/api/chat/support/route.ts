@@ -42,7 +42,7 @@ ShepherdAI is an AI-powered church management platform that helps small church p
 - **Starter Plan**: $29/month — 50 AI generations/month, email sending, custom AI tone
 - **Pro Plan**: $49/month (Most Popular) — 200 AI generations/month, all 7 AI tools, email sending, priority support, referral program, custom AI tone
 - **Growth Plan**: $99/month — Unlimited AI generations, multi-campus support, team accounts (5), onboarding, API access, custom integrations
-- Annual billing: 20% discount on all paid plans
+- Annual billing: 20% discount on all paid plans. Starter $278/yr (save $70), Pro $470/yr (save $118), Growth $950/yr (save $238). Customers can toggle between monthly and annual on the pricing page or settings page.
 - No setup fees, no hidden costs
 
 ### AI Tools Available
@@ -105,7 +105,7 @@ Q: How do I cancel?
 A: Go to Settings → Manage Subscription → Cancel. Your access continues until the end of your billing period.
 
 Q: Do you offer discounts for small churches?
-A: Our Starter plan at $29/month is already designed for small churches. We also offer annual billing with 20% off.
+A: Our Starter plan at $29/month (or $278/year with 20% off) is a great starting point. You can toggle between monthly and annual billing on the pricing page.
 
 Q: Is there a mobile app?
 A: Not yet, but our website is fully responsive and works great on mobile browsers.

@@ -8,6 +8,7 @@ export default function Home() {
   const [refParam, setRefParam] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -134,6 +135,7 @@ export default function Home() {
           planId,
           userId: session.user.id,
           userEmail: session.user.email,
+          billingCycle,
         }),
       });
 
@@ -346,9 +348,29 @@ export default function Home() {
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
             Simple Pricing
           </h2>
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '24px' }}>
             Start free, upgrade when you need more
           </p>
+
+          {/* Billing cycle toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '48px' }}>
+            <span style={{ fontSize: '15px', fontWeight: billingCycle === 'monthly' ? '600' : '400', color: billingCycle === 'monthly' ? '#1e3a5f' : '#999' }}>Monthly</span>
+            <button
+              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
+              style={{
+                width: '52px', height: '28px', borderRadius: '14px', border: 'none', cursor: 'pointer',
+                background: billingCycle === 'annual' ? '#1e3a5f' : '#d1d5db', position: 'relative', transition: 'all 0.2s',
+              }}
+            >
+              <div style={{
+                width: '24px', height: '24px', borderRadius: '12px', background: 'white', position: 'absolute', top: '2px',
+                left: billingCycle === 'annual' ? '26px' : '2px', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+              }} />
+            </button>
+            <span style={{ fontSize: '15px', fontWeight: billingCycle === 'annual' ? '600' : '400', color: billingCycle === 'annual' ? '#1e3a5f' : '#999' }}>
+              Annual <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '700', background: '#dcfce7', padding: '2px 6px', borderRadius: '4px' }}>SAVE 20%</span>
+            </span>
+          </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', maxWidth: '1100px', margin: '0 auto' }}>
             {/* Free */}
@@ -370,9 +392,10 @@ export default function Home() {
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Starter</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $29<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '278' : '29'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Small churches (&lt;50 members)</p>
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $278/year · Save $70</p>}
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For getting started</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['50 AI generations/month', '3 core AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
@@ -393,9 +416,10 @@ export default function Home() {
               <div className="badge badge-primary" style={{ marginBottom: '12px' }}>Most Popular</div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Pro</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $49<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '470' : '49'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Growing churches (50-200)</p>
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $470/year · Save $118</p>}
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For growing churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['200 AI generations/month', 'All 7 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
@@ -415,9 +439,10 @@ export default function Home() {
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Growth</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                $99<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '950' : '99'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Large churches (200+)</p>
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $950/year · Save $238</p>}
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For large churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['Unlimited AI generations', 'Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>

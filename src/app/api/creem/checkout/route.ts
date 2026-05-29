@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createCheckout, CREEM_PRODUCTS } from '@/lib/creem';
-import type { PlanId } from '@/lib/pricing';
+import { createCheckout, CREEM_PRODUCTS, CREEM_ANNUAL_PRODUCTS } from '@/lib/creem';
+import type { PlanId, BillingCycle } from '@/lib/pricing';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { planId, userId, userEmail } = body;
+    const { planId, userId, userEmail, billingCycle } = body;
 
     if (!planId || !userId) {
       return NextResponse.json(
@@ -23,10 +23,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const productId = CREEM_PRODUCTS[planId as keyof typeof CREEM_PRODUCTS];
+    // Determine product ID based on billing cycle
+    const isAnnual = billingCycle === 'annual';
+    const productId = isAnnual
+      ? CREEM_ANNUAL_PRODUCTS[planId as keyof typeof CREEM_ANNUAL_PRODUCTS]
+      : CREEM_PRODUCTS[planId as keyof typeof CREEM_PRODUCTS];
+
     if (!productId) {
       return NextResponse.json(
-        { error: 'Product not configured for this plan' },
+        { error: isAnnual ? 'Annual plan not yet available' : 'Product not configured for this plan' },
         { status: 500 }
       );
     }
@@ -41,6 +46,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         userId,
         planId,
+        billingCycle: isAnnual ? 'annual' : 'monthly',
       },
     });
 
