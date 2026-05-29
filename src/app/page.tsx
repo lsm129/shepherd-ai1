@@ -304,10 +304,10 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
             {[
               { emoji: '\u23f0', title: 'Save 10+ Hours Per Week', desc: "AI handles your admin work so you can focus on shepherding souls." },
-              { emoji: '\ud83d\ude4f', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals \u2014 everything a pastor needs." },
+              { emoji: '🙏', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals \u2014 everything a pastor needs." },
               { emoji: '\ud83c\udfaf', title: 'Smart & Simple', desc: "No bloated features. No steep learning curve. Just tools that work." },
-              { emoji: '\ud83d\udcb0', title: 'Fair, Transparent Pricing', desc: "No hidden fees. No per-member charges. Plans start at $29/month." },
-              { emoji: '\ud83d\udd12', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don\u2019t monetize your data." },
+              { emoji: '💰', title: 'Fair, Transparent Pricing', desc: "No hidden fees. No per-member charges. Plans start at $29/month." },
+              { emoji: '🔒', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don\u2019t monetize your data." },
               { emoji: '\ud83e\udd1d', title: 'Built for Pastors, Not Corporations', desc: "Designed by people who respect your calling and your time." },
             ].map((item, i) => (
               <div key={i} style={{
@@ -353,23 +353,30 @@ export default function Home() {
           </p>
 
           {/* Billing cycle toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '48px' }}>
-            <span style={{ fontSize: '15px', fontWeight: billingCycle === 'monthly' ? '600' : '400', color: billingCycle === 'monthly' ? '#1e3a5f' : '#999' }}>Monthly</span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
-              style={{
-                width: '52px', height: '28px', borderRadius: '14px', border: 'none', cursor: 'pointer',
-                background: billingCycle === 'annual' ? '#1e3a5f' : '#d1d5db', position: 'relative', transition: 'all 0.2s',
-              }}
-            >
-              <div style={{
-                width: '24px', height: '24px', borderRadius: '12px', background: 'white', position: 'absolute', top: '2px',
-                left: billingCycle === 'annual' ? '26px' : '2px', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-              }} />
-            </button>
-            <span style={{ fontSize: '15px', fontWeight: billingCycle === 'annual' ? '600' : '400', color: billingCycle === 'annual' ? '#1e3a5f' : '#999' }}>
-              Annual <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '700', background: '#dcfce7', padding: '2px 6px', borderRadius: '4px' }}>SAVE 20%</span>
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '48px' }}>
+            <div style={{ display: 'inline-flex', background: '#e2e8f0', borderRadius: '12px', padding: '4px', gap: '4px' }}>
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                style={{
+                  padding: '10px 28px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '15px', fontWeight: '600',
+                  background: billingCycle === 'monthly' ? 'white' : 'transparent', color: billingCycle === 'monthly' ? '#1e3a5f' : '#64748b',
+                  boxShadow: billingCycle === 'monthly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.2s',
+                }}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBillingCycle('annual')}
+                style={{
+                  padding: '10px 28px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '15px', fontWeight: '600',
+                  background: billingCycle === 'annual' ? 'white' : 'transparent', color: billingCycle === 'annual' ? '#1e3a5f' : '#64748b',
+                  boxShadow: billingCycle === 'annual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.2s',
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                }}
+              >
+                Annual <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: '700', background: '#dcfce7', padding: '2px 8px', borderRadius: '6px' }}>SAVE 20%</span>
+              </button>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', maxWidth: '1100px', margin: '0 auto' }}>
@@ -392,9 +399,9 @@ export default function Home() {
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Starter</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                ${billingCycle === 'annual' ? '278' : '29'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '23' : '29'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $278/year · Save $70</p>}
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$278 billed annually · Save $70/yr</p>}
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For getting started</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['50 AI generations/month', '3 core AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
@@ -416,9 +423,9 @@ export default function Home() {
               <div className="badge badge-primary" style={{ marginBottom: '12px' }}>Most Popular</div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Pro</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                ${billingCycle === 'annual' ? '470' : '49'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '39' : '49'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $470/year · Save $118</p>}
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$470 billed annually · Save $118/yr</p>}
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For growing churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['200 AI generations/month', 'All 7 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
@@ -439,9 +446,9 @@ export default function Home() {
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Growth</h3>
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
-                ${billingCycle === 'annual' ? '950' : '99'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
+                ${billingCycle === 'annual' ? '79' : '99'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>Billed $950/year · Save $238</p>}
+              {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$950 billed annually · Save $238/yr</p>}
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For large churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['Unlimited AI generations', 'Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
@@ -461,7 +468,7 @@ export default function Home() {
 
           {/* ROI Calculator */}
           <div style={{ background: 'white', borderRadius: '16px', border: '2px solid var(--accent)', padding: '32px', maxWidth: '600px', margin: '40px auto 0', textAlign: 'center' }}>
-            <div style={{ fontSize: '24px', marginBottom: '8px' }}>\ud83d\udcb0</div>
+            <div style={{ fontSize: '24px', marginBottom: '8px' }}>💰</div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#1e3a5f' }}>ROI Calculator</h3>
             <p style={{ color: '#666', marginBottom: '16px', fontSize: '15px' }}>
               If your time is worth $25/hour:

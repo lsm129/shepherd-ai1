@@ -252,23 +252,30 @@ export default function SettingsPage() {
           )}
 
           {/* Billing cycle toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px' }}>
-            <span style={{ fontSize: '14px', fontWeight: billingCycle === 'monthly' ? '600' : '400', color: billingCycle === 'monthly' ? 'var(--primary)' : 'var(--text-secondary)' }}>Monthly</span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
-              style={{
-                width: '48px', height: '26px', borderRadius: '13px', border: 'none', cursor: 'pointer',
-                background: billingCycle === 'annual' ? 'var(--primary)' : '#d1d5db', position: 'relative', transition: 'all 0.2s',
-              }}
-            >
-              <div style={{
-                width: '22px', height: '22px', borderRadius: '11px', background: 'white', position: 'absolute', top: '2px',
-                left: billingCycle === 'annual' ? '24px' : '2px', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-              }} />
-            </button>
-            <span style={{ fontSize: '14px', fontWeight: billingCycle === 'annual' ? '600' : '400', color: billingCycle === 'annual' ? 'var(--primary)' : 'var(--text-secondary)' }}>
-              Annual <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '600' }}>Save 20%</span>
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ display: 'inline-flex', background: '#e2e8f0', borderRadius: '10px', padding: '3px', gap: '3px' }}>
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                style={{
+                  padding: '8px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '600',
+                  background: billingCycle === 'monthly' ? 'white' : 'transparent', color: billingCycle === 'monthly' ? '#1e3a5f' : '#64748b',
+                  boxShadow: billingCycle === 'monthly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.2s',
+                }}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBillingCycle('annual')}
+                style={{
+                  padding: '8px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '600',
+                  background: billingCycle === 'annual' ? 'white' : 'transparent', color: billingCycle === 'annual' ? '#1e3a5f' : '#64748b',
+                  boxShadow: billingCycle === 'annual' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.2s',
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                }}
+              >
+                Annual <span style={{ fontSize: '10px', color: '#16a34a', fontWeight: '700', background: '#dcfce7', padding: '2px 6px', borderRadius: '4px' }}>SAVE 20%</span>
+              </button>
+            </div>
           </div>
 
           {/* Plan upgrade options */}
