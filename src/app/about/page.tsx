@@ -60,7 +60,7 @@ const advantages = {
       {
         emoji: '🤝',
         title: 'A Promise Is Everything',
-        desc: "In Chinese culture, your word is your bond. We built ShepherdAI to serve churches for decades, not for a quick exit. When we make a commitment, we honor it \u2014 completely.",
+        desc: "In our culture, your word is your bond. We built ShepherdAI to serve churches for decades, not for a quick exit. When we make a commitment, we honor it \u2014 completely.",
       },
       {
         emoji: '🔒',
@@ -81,7 +81,7 @@ const advantages = {
       {
         emoji: '🙏',
         title: 'Reverence for the Sacred',
-        desc: "In Chinese culture, even those who don't practice religion hold deep respect for the divine. We never take sacred things lightly. Your faith is honored here.",
+        desc: "In our culture, even those who don't practice religion hold deep respect for the divine. We never take sacred things lightly. Your faith is honored here.",
       },
       {
         emoji: '⛪',
@@ -91,17 +91,17 @@ const advantages = {
       {
         emoji: '🏮',
         title: 'Understanding Heritage',
-        desc: "China's 5,000-year civilization shares something with the church: a deep commitment to passing wisdom from generation to generation. We understand the weight of tradition.",
+        desc: "Our 5,000-year heritage shares something with the church: a deep commitment to passing wisdom from generation to generation. We understand the weight of tradition.",
       },
       {
         emoji: '👨\u200d👩\u200d👧\u200d👦',
         title: 'Community-First Mindset',
-        desc: 'Chinese culture values the collective over the individual \u2014 just like the church values the body over one member. Our product is designed for congregations, not just individuals.',
+        desc: 'Our culture values the collective over the individual \u2014 just like the church values the body over one member. Our product is designed for congregations, not just individuals.',
       },
       {
         emoji: '💪',
         title: 'The Spirit of Perseverance',
-        desc: "When challenges arise, we don't give up. We work through them. That's the Chinese way \u2014 and it's what your church deserves. We are committed for the long haul.",
+        desc: "When challenges arise, we don't give up. We work through them. That's how we were raised \u2014 and it's what your church deserves. We are committed for the long haul.",
       },
       {
         emoji: '❤️',
@@ -132,7 +132,7 @@ const advantages = {
       {
         emoji: '⚡',
         title: 'Relentless Improvement',
-        desc: 'Chinese developers are known for speed and dedication. Bugs get fixed fast. Features ship weekly. We treat your feedback as a gift \u2014 and act on it immediately.',
+        desc: 'Our team is known for speed and dedication. Bugs get fixed fast. Features ship weekly. We treat your feedback as a gift \u2014 and act on it immediately.',
       },
       {
         emoji: '🌍',
@@ -141,8 +141,8 @@ const advantages = {
       },
       {
         emoji: '🔧',
-        title: 'From "Made in China" to "Crafted with Purpose"',
-        desc: 'Just as Huawei and BYD evolved from budget to premium, ShepherdAI represents the new chapter: world-class software built with Chinese craftsmanship and global heart.',
+        title: 'From Budget to Premium: Crafted with Purpose',
+        desc: 'Just as Huawei and BYD evolved from budget to premium, ShepherdAI represents the new chapter: world-class software built with purposeful craftsmanship and global heart.',
       },
     ],
   },
@@ -206,7 +206,7 @@ export default function AboutPage() {
             maxWidth: '720px', marginLeft: 'auto', marginRight: 'auto',
             lineHeight: '1.7',
           }}>
-            The story behind ShepherdAI \u2014 and why a team from China is uniquely positioned to serve the global church.
+            The story behind ShepherdAI \u2014 and the heritage that drives us to serve the global church.
           </p>
         </div>
       </section>
@@ -232,7 +232,7 @@ export default function AboutPage() {
               border: '1px solid var(--border)', boxShadow: '0 4px 24px rgba(30,58,95,0.06)',
             }}>
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>
-                Shuming grew up in Foshan, China — a city with over a thousand years of history, where craftsmanship and community are not just traditions, but a way of life.
+                Shuming grew up in Foshan — a city with over a thousand years of history, where craftsmanship and community are not just traditions, but a way of life.
               </p>
 
               <p style={{ fontSize: '17px', lineHeight: '1.9', color: '#444', marginBottom: '20px' }}>

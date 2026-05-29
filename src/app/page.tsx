@@ -272,12 +272,12 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
             {[
-              { emoji: '\u{1f6e1}\ufe0f', title: 'Faith-Neutral by Design', desc: "No denominational bias. Your theology stays yours." },
-              { emoji: '\u{1f411}', title: "We'll Never Compete for Your Flock", desc: "No ministry agenda. We serve your church, not build our own." },
-              { emoji: '\u{1f91d}', title: 'A Culture of Honor', desc: "We respect the sacred and honor pastoral authority \u2014 always." },
-              { emoji: '\u{1f4b0}', title: 'Savings That Serve the Kingdom', desc: "Save $840/year vs. competitors. That's a missionary supported, a community fed, a family helped." },
-              { emoji: '\u{1f512}', title: 'Your Data, Truly Protected', desc: "Zero incentive to monetize your data. No ads. No selling. Period." },
-              { emoji: '\u23f0', title: 'Always Awake When You Need Us', desc: "Our team works while you sleep. Faster fixes, continuous improvement." },
+              { emoji: '\u23f0', title: 'Save 10+ Hours Per Week', desc: "AI handles your admin work so you can focus on shepherding souls." },
+              { emoji: '\u{1f64f}', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals \u2014 everything a pastor needs." },
+              { emoji: '\u{1f3af}', title: 'Smart & Simple', desc: "No bloated features. No steep learning curve. Just tools that work." },
+              { emoji: '\u{1f4b0}', title: 'Fair, Transparent Pricing', desc: "No hidden fees. No per-member charges. Plans start at $29/month." },
+              { emoji: '\u{1f512}', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don\u2019t monetize your data." },
+              { emoji: '\u{1f91d}', title: 'Built for Pastors, Not Corporations', desc: "Designed by people who respect your calling and your time." },
             ].map((item, i) => (
               <div key={i} style={{
                 background: '#f8fafc', borderRadius: '16px', padding: '28px',
@@ -305,7 +305,7 @@ export default function Home() {
 
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <Link href="/about" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none', fontSize: '17px' }}>
-              Read Our Full Story →
+              Learn More About Us →
             </Link>
           </div>
         </div>
