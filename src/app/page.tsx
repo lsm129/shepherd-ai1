@@ -83,20 +83,28 @@ export default function Home() {
   ];
 
   async function handleSubscribe(planId: string) {
+    // If not logged in, redirect to register first
+    if (!isLoggedIn) {
+      window.location.href = `/register?plan=${planId}`;
+      return;
+    }
     setCheckoutLoading(planId);
     try {
-      // Get current user session
       const { createClient } = await import('@supabase/supabase-js');
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      let userEmail = '';
 
-      if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user?.email) {
-          userEmail = session.user.email;
-        }
+      if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') {
+        alert('Configuration error. Please contact support.');
+        return;
+      }
+
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.user) {
+        window.location.href = `/register?plan=${planId}`;
+        return;
       }
 
       const response = await fetch('/api/creem/checkout', {
@@ -104,8 +112,8 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           planId,
-          userId: 'guest', // Will be properly set in checkout metadata when user is logged in
-          userEmail: userEmail || undefined,
+          userId: session.user.id,
+          userEmail: session.user.email,
         }),
       });
 
