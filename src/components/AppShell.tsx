@@ -71,7 +71,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           zIndex: 100,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
               <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="14" fill="#1e3a5f"/>
                 <path d="M16 8C12.686 8 10 10.686 10 14C10 17.314 12.686 20 16 20C19.314 20 22 17.314 22 14C22 10.686 19.314 8 16 8Z" fill="white"/>
