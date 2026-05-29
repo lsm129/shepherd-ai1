@@ -62,9 +62,33 @@ export default function VisitorFollowupPage() {
     }
   }
 
-  function handleSend() {
+  async function handleSend() {
     setStep('sending');
-    setTimeout(() => setStep('sent'), 2000);
+    setError('');
+    try {
+      const response = await fetch('/api/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emails: editedEmails,
+          recipientEmail: visitorEmail,
+          recipientName: visitorName,
+          fromName: undefined, // will use default
+          userId: userId || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send emails');
+      }
+
+      setStep('sent');
+    } catch (err: any) {
+      setError(err.message || 'Failed to send emails');
+      setStep('preview'); // Go back to preview so user can retry
+    }
   }
 
   function updateEmail(week: number, field: 'subject' | 'body', value: string) {
@@ -209,8 +233,19 @@ export default function VisitorFollowupPage() {
   if (step === 'sent') {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Emails Sent Successfully!</h2>
-        <p style={{ color: '#666', marginBottom: '32px' }}>Your 6-week follow-up sequence has been sent to {visitorName}</p>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>&#10003;</div>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#16a34a' }}>Email Sequence Started!</h2>
+        <p style={{ color: '#666', marginBottom: '8px' }}>Week 1 email sent immediately to {visitorName}</p>
+        <p style={{ color: '#666', marginBottom: '32px' }}>Weeks 2-6 are scheduled to send automatically every 7 days</p>
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', maxWidth: '400px', margin: '0 auto 32px', textAlign: 'left' }}>
+          <div style={{ fontWeight: '600', marginBottom: '12px', color: '#16a34a' }}>Schedule:</div>
+          {editedEmails.map((email, i) => (
+            <div key={email.week} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '14px', color: '#333' }}>
+              <span>Week {email.week}: {email.subject.substring(0, 30)}{email.subject.length > 30 ? '...' : ''}</span>
+              <span style={{ color: i === 0 ? '#16a34a' : '#64748b', fontWeight: i === 0 ? '600' : '400' }}>{i === 0 ? 'Sent!' : `+${i * 7} days`}</span>
+            </div>
+          ))}
+        </div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
           <button onClick={handleBackToForm} className="btn-primary">Follow Up Another Visitor</button>
           <a href="/dashboard" className="btn-secondary">Back to Dashboard</a>
