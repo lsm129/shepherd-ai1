@@ -120,13 +120,14 @@ export default function Home() {
         borderBottom: '1px solid var(--border)', zIndex: 100,
       }}>
         <div className="page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <circle cx="16" cy="16" r="14" fill="#1e3a5f"/>
               <path d="M16 8C12.686 8 10 10.686 10 14C10 17.314 12.686 20 16 20C19.314 20 22 17.314 22 14C22 10.686 19.314 8 16 8Z" fill="white"/>
               <path d="M16 22V26M12 24H20" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             </svg>
             <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f' }}>ShepherdAI</span>
+          </Link>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <a href="#features" className="nav-link">Features</a>
@@ -134,10 +135,9 @@ export default function Home() {
             <a href="#pricing" className="nav-link">Pricing</a>
             <a href="/faq" className="nav-link">FAQ</a>
             <a href="/about" className="nav-link">Our Story</a>
-            <Link href="/login" className="btn-ghost">Log In</Link>
+            <Link href="/dashboard" className="btn-ghost">Dashboard</Link>
             <Link href={registerHref} className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
           </div>
-        </div>
       </nav>
 
       {/* Referral Banner */}
