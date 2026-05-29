@@ -45,32 +45,32 @@ const advantages = {
       {
         emoji: '🛡️',
         title: 'Faith-Neutral by Design',
-        desc: 'No denominational bias. We serve Baptist, Methodist, Pentecostal, and non-denominational churches with equal dedication. Your theology stays yours \u2014 we never try to shape it.',
+        desc: 'No denominational bias. We serve Baptist, Methodist, Pentecostal, and non-denominational churches with equal dedication. Your theology stays yours — we never try to shape it.',
       },
       {
         emoji: '🐑',
         title: "We'll Never Compete for Your Flock",
-        desc: "Some church tech companies have their own ministry agendas. We don't. We're here to serve your ministry, not build our own. Your congregation is yours \u2014 always.",
+        desc: "Some church tech companies have their own ministry agendas. We don't. We're here to serve your ministry, not build our own. Your congregation is yours — always.",
       },
       {
         emoji: '🏛️',
         title: 'No Church Politics',
-        desc: "We're not part of any denomination, network, or church headquarters. We'll never get caught in American church politics. Our loyalty is to serving you \u2014 period.",
+        desc: "We're not part of any denomination, network, or church headquarters. We'll never get caught in American church politics. Our loyalty is to serving you — period.",
       },
       {
         emoji: '🤝',
         title: 'A Promise Is Everything',
-        desc: "In our culture, your word is your bond. We built ShepherdAI to serve churches for decades, not for a quick exit. When we make a commitment, we honor it \u2014 completely.",
+        desc: "In our culture, your word is your bond. We built ShepherdAI to serve churches for decades, not for a quick exit. When we make a commitment, we honor it — completely.",
       },
       {
         emoji: '🔒',
         title: 'Your Data, Truly Protected',
-        desc: 'We have zero incentive to monetize your church data. No ads, no data selling, no conflicts of interest. Your trust is not our product \u2014 it is our foundation.',
+        desc: 'We have zero incentive to monetize your church data. No ads, no data selling, no conflicts of interest. Your trust is not our product — it is our foundation.',
       },
       {
         emoji: '🕊️',
         title: 'No Culture Wars',
-        desc: "American companies often pick sides. We don't. Your church will never be \"canceled\" by our platform. We serve all churches \u2014 without exception, without judgment.",
+        desc: "American companies often pick sides. We don't. Your church will never be \"canceled\" by our platform. We serve all churches — without exception, without judgment.",
       },
     ],
   },
@@ -86,7 +86,7 @@ const advantages = {
       {
         emoji: '⛪',
         title: 'Respect for Pastoral Authority',
-        desc: "Our AI is designed to assist, never replace. The pastor is always the spiritual leader. That's non-negotiable. Technology serves the shepherd \u2014 never the other way around.",
+        desc: "Our AI is designed to assist, never replace. The pastor is always the spiritual leader. That's non-negotiable. Technology serves the shepherd — never the other way around.",
       },
       {
         emoji: '🏮',
@@ -94,19 +94,19 @@ const advantages = {
         desc: "Our 5,000-year heritage shares something with the church: a deep commitment to passing wisdom from generation to generation. We understand the weight of tradition.",
       },
       {
-        emoji: '👨\u200d👩\u200d👧\u200d👦',
+        emoji: '👨‍👩‍👧‍👦',
         title: 'Community-First Mindset',
-        desc: 'Our culture values the collective over the individual \u2014 just like the church values the body over one member. Our product is designed for congregations, not just individuals.',
+        desc: 'Our culture values the collective over the individual — just like the church values the body over one member. Our product is designed for congregations, not just individuals.',
       },
       {
         emoji: '💪',
         title: 'The Spirit of Perseverance',
-        desc: "When challenges arise, we don't give up. We work through them. That's how we were raised \u2014 and it's what your church deserves. We are committed for the long haul.",
+        desc: "When challenges arise, we don't give up. We work through them. That's how we were raised — and it's what your church deserves. We are committed for the long haul.",
       },
       {
         emoji: '❤️',
         title: 'Honoring Sacrifice',
-        desc: 'We know pastors sacrifice daily for their congregations. We sacrifice for you in return \u2014 with affordable pricing and relentless dedication. Your service inspires ours.',
+        desc: 'We know pastors sacrifice daily for their congregations. We sacrifice for you in return — with affordable pricing and relentless dedication. Your service inspires ours.',
       },
     ],
   },
@@ -117,7 +117,7 @@ const advantages = {
       {
         emoji: '📊',
         title: 'Better Pricing Through Efficiency',
-        desc: 'Our lean operation means enterprise-grade AI tools at a fraction of the cost. Small churches deserve great tools too \u2014 and we make that possible.',
+        desc: 'Our lean operation means enterprise-grade AI tools at a fraction of the cost. Small churches deserve great tools too — and we make that possible.',
       },
       {
         emoji: '💰',
@@ -126,18 +126,18 @@ const advantages = {
       },
       {
         emoji: '🌙',
-        title: '7\u00d724 Watchfulness',
+        title: '7×24 Watchfulness',
         desc: "While you sleep, we're maintaining, improving, and guarding your system. Cross-timezone means non-stop protection. Your church never goes unwatched.",
       },
       {
         emoji: '⚡',
         title: 'Relentless Improvement',
-        desc: 'Our team is known for speed and dedication. Bugs get fixed fast. Features ship weekly. We treat your feedback as a gift \u2014 and act on it immediately.',
+        desc: 'Our team is known for speed and dedication. Bugs get fixed fast. Features ship weekly. We treat your feedback as a gift — and act on it immediately.',
       },
       {
         emoji: '🌍',
         title: 'A Global Perspective',
-        desc: "We understand ministry looks different across cultures. We're ready to serve English-speaking churches today \u2014 and the world tomorrow. Ministry is universal.",
+        desc: "We understand ministry looks different across cultures. We're ready to serve English-speaking churches today — and the world tomorrow. Ministry is universal.",
       },
       {
         emoji: '🔧',
@@ -206,7 +206,7 @@ export default function AboutPage() {
             maxWidth: '720px', marginLeft: 'auto', marginRight: 'auto',
             lineHeight: '1.7',
           }}>
-            The story behind ShepherdAI \u2014 and the heritage that drives us to serve the global church.
+            The story behind ShepherdAI — and the heritage that drives us to serve the global church.
           </p>
         </div>
       </section>
@@ -360,7 +360,7 @@ export default function AboutPage() {
             Ready to let us serve your ministry?
           </h2>
           <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '40px' }}>
-            Start for free \u2014 and experience the difference purpose-driven technology makes.
+            Start for free — and experience the difference purpose-driven technology makes.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/register" style={{
@@ -368,7 +368,7 @@ export default function AboutPage() {
               padding: '16px 32px', borderRadius: '8px',
               fontWeight: '600', textDecoration: 'none', fontSize: '18px',
             }}>
-              Start Free Today \u2192
+              Start Free Today →
             </Link>
             <a href="mailto:hello@shepherdai.app" style={{
               background: 'transparent', color: 'white',
@@ -380,7 +380,7 @@ export default function AboutPage() {
             </a>
           </div>
           <p style={{ marginTop: '16px', opacity: 0.7, fontSize: '14px' }}>
-            Free plan available forever \u2022 No credit card required
+            Free plan available forever • No credit card required
           </p>
         </div>
       </section>
@@ -388,7 +388,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer style={{ padding: '40px 0', borderTop: '1px solid var(--border)', textAlign: 'center', color: '#999', fontSize: '14px' }}>
         <div className="page-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <span>\u00a9 2026 ShepherdAI. All rights reserved.</span>
+          <span>© 2026 ShepherdAI. All rights reserved.</span>
           <div style={{ display: 'flex', gap: '24px' }}>
             <a href="/" style={{ color: '#999', textDecoration: 'none' }}>Home</a>
             <a href="/faq" style={{ color: '#999', textDecoration: 'none' }}>FAQ</a>

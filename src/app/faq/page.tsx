@@ -6,10 +6,25 @@ import Link from 'next/link';
 export default function FAQPage() {
   const [mounted, setMounted] = useState(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    async function checkAuth() {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsLoggedIn(!!session);
+      } catch (e) {}
+    }
+    checkAuth();
   }, []);
+
+  const ctaHref = isLoggedIn ? '/dashboard' : '/register';
 
   if (!mounted) return null;
 

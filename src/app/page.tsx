@@ -55,7 +55,7 @@ export default function Home() {
   const faqs = [
     {
       q: 'Will AI replace my pastor role?',
-      a: 'Absolutely not. ShepherdAI is designed to handle administrative busywork \u2014 follow-up emails, newsletters, announcements \u2014 so pastors can spend more time on shepherding, counseling, and ministry. AI is a tool that serves your mission, not a replacement for the human heart of pastoral care.',
+      a: 'Absolutely not. ShepherdAI is designed to handle administrative busywork — follow-up emails, newsletters, announcements — so pastors can spend more time on shepherding, counseling, and ministry. AI is a tool that serves your mission, not a replacement for the human heart of pastoral care.',
     },
     {
       q: 'Is my data safe?',
@@ -79,7 +79,7 @@ export default function Home() {
     },
     {
       q: 'What about theological accuracy?',
-      a: 'ShepherdAI is trained to reference scripture accurately and generate content that respects theological nuance. You always review and edit before anything is sent. Pastors remain in full control of the message \u2014 AI just does the heavy lifting of drafting.',
+      a: 'ShepherdAI is trained to reference scripture accurately and generate content that respects theological nuance. You always review and edit before anything is sent. Pastors remain in full control of the message — AI just does the heavy lifting of drafting.',
     },
     {
       q: 'What denominations does ShepherdAI support?',
@@ -99,7 +99,7 @@ export default function Home() {
     },
     {
       q: 'How is ShepherdAI different from Planning Center or Church Community Builder?',
-      a: 'Those tools focus on church administration (scheduling, attendance, giving). ShepherdAI focuses on content creation \u2014 generating emails, newsletters, social posts, and devotionals. Think of us as a complement, not a competitor.',
+      a: 'Those tools focus on church administration (scheduling, attendance, giving). ShepherdAI focuses on content creation — generating emails, newsletters, social posts, and devotionals. Think of us as a complement, not a competitor.',
     },
   ];
 
@@ -207,7 +207,7 @@ export default function Home() {
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href={ctaHref} className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px', textDecoration: 'none' }}>
-              {isLoggedIn ? "Go to Dashboard \u2192" : "Start Free \u2014 No credit card required \u2192"}
+              {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}
             </Link>
             <a href="#pricing" className="btn-ghost" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px' }}>
               View Pricing
@@ -265,11 +265,11 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
             {[
-              { step: '1', icon: '\u270f\ufe0f', title: 'Sign Up Free', desc: 'No credit card required. Create your account in under 2 minutes.' },
-              { step: '2', icon: '\u26ea', title: 'Set Your Church Profile', desc: 'Enter your church name, denomination, and preferred communication style.' },
-              { step: '3', icon: '\ud83e\udd16', title: 'Choose Your AI Tool', desc: 'Pick from 6 AI-powered tools: visitor follow-up, newsletter, prayer responses, social media, announcements, or devotionals.' },
-              { step: '4', icon: '\u2728', title: 'AI Generates Content', desc: "ShepherdAI creates polished, on-brand content in seconds \u2014 tailored to your church's voice." },
-              { step: '5', icon: '\u2705', title: 'Review & Share', desc: 'You always have the final say. Review, tweak, and send with confidence.' },
+              { step: '1', icon: '✏️', title: 'Sign Up Free', desc: 'No credit card required. Create your account in under 2 minutes.' },
+              { step: '2', icon: '⛪', title: 'Set Your Church Profile', desc: 'Enter your church name, denomination, and preferred communication style.' },
+              { step: '3', icon: '🤖', title: 'Choose Your AI Tool', desc: 'Pick from 6 AI-powered tools: visitor follow-up, newsletter, prayer responses, social media, announcements, or devotionals.' },
+              { step: '4', icon: '✨', title: 'AI Generates Content', desc: "ShepherdAI creates polished, on-brand content in seconds — tailored to your church's voice." },
+              { step: '5', icon: '✅', title: 'Review & Share', desc: 'You always have the final say. Review, tweak, and send with confidence.' },
             ].map((item, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
                 <div style={{
@@ -303,12 +303,12 @@ export default function Home() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
             {[
-              { emoji: '\u23f0', title: 'Save 10+ Hours Per Week', desc: "AI handles your admin work so you can focus on shepherding souls." },
-              { emoji: '🙏', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals \u2014 everything a pastor needs." },
-              { emoji: '\ud83c\udfaf', title: 'Smart & Simple', desc: "No bloated features. No steep learning curve. Just tools that work." },
+              { emoji: '⏰', title: 'Save 10+ Hours Per Week', desc: "AI handles your admin work so you can focus on shepherding souls." },
+              { emoji: '🙏', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals — everything a pastor needs." },
+              { emoji: '🎯', title: 'Smart & Simple', desc: "No bloated features. No steep learning curve. Just tools that work." },
               { emoji: '💰', title: 'Fair, Transparent Pricing', desc: "No hidden fees. No per-member charges. Plans start at $29/month." },
-              { emoji: '🔒', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don\u2019t monetize your data." },
-              { emoji: '\ud83e\udd1d', title: 'Built for Pastors, Not Corporations', desc: "Designed by people who respect your calling and your time." },
+              { emoji: '🔒', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don't monetize your data." },
+              { emoji: '🤝', title: 'Built for Pastors, Not Corporations', desc: "Designed by people who respect your calling and your time." },
             ].map((item, i) => (
               <div key={i} style={{
                 background: '#f8fafc', borderRadius: '16px', padding: '28px',
@@ -336,7 +336,7 @@ export default function Home() {
 
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <Link href="/about" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none', fontSize: '17px' }}>
-              Learn More About Us \u2192
+              Learn More About Us →
             </Link>
           </div>
         </div>
@@ -389,7 +389,7 @@ export default function Home() {
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For trying it out</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['10 AI generations/month', 'Visitor follow-up', 'Weekly newsletter', 'Prayer requests'].map((item, i) => (
-                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
               <Link href={ctaHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>{isLoggedIn ? "Go to Dashboard" : "Get Started"}</Link>
@@ -405,7 +405,7 @@ export default function Home() {
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For getting started</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['50 AI generations/month', '3 core AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
-                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
               <button
@@ -429,7 +429,7 @@ export default function Home() {
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For growing churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['200 AI generations/month', 'All 7 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
-                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
               <button
@@ -452,7 +452,7 @@ export default function Home() {
               <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For large churches</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
                 {['Unlimited AI generations', 'Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
-                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>\u2713 {item}</li>
+                  <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
               <button
@@ -474,7 +474,7 @@ export default function Home() {
               If your time is worth $25/hour:
             </p>
             <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#22c55e', marginBottom: '4px' }}>
-              15 hrs/week \u00d7 $25/hr = $19,500/year
+              15 hrs/week × $25/hr = $19,500/year
             </div>
             <p style={{ color: '#999', fontSize: '14px', marginTop: '8px' }}>
               ShepherdAI pays for itself in the first week
@@ -482,7 +482,7 @@ export default function Home() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '32px', color: '#f5a623', fontSize: '16px', fontWeight: '600' }}>
-            \ud83c\udf81 Refer a friend and you BOTH get 2,000 bonus points!
+            🎁 Refer a friend and you BOTH get 2,000 bonus points!
           </p>
         </div>
       </section>
@@ -525,7 +525,7 @@ export default function Home() {
 
           <div style={{ textAlign: 'center', marginTop: '32px' }}>
             <a href="/faq" style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none' }}>
-              View all FAQ \u2192
+              View all FAQ →
             </a>
           </div>
         </div>
@@ -541,16 +541,16 @@ export default function Home() {
             Join pastors who focus on ministry, not busywork
           </p>
           <Link href={ctaHref} style={{ background: 'white', color: '#1e3a5f', padding: '16px 32px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '18px' }}>
-            {isLoggedIn ? "Go to Dashboard \u2192" : "Start Free \u2014 No credit card required \u2192"}
+            {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}
           </Link>
-          <p style={{ marginTop: '16px', opacity: 0.7, fontSize: '14px' }}>Free plan available forever \u2022 Cancel anytime</p>
+          <p style={{ marginTop: '16px', opacity: 0.7, fontSize: '14px' }}>Free plan available forever • Cancel anytime</p>
         </div>
       </section>
 
       {/* Footer */}
       <footer style={{ padding: '40px 0', borderTop: '1px solid var(--border)', textAlign: 'center', color: '#999', fontSize: '14px' }}>
         <div className="page-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <span>\u00a9 2026 ShepherdAI. All rights reserved.</span>
+          <span>© 2026 ShepherdAI. All rights reserved.</span>
           <div style={{ display: 'flex', gap: '24px' }}>
             <a href="/faq" style={{ color: '#999', textDecoration: 'none' }}>FAQ</a>
             <a href="/about" style={{ color: '#999', textDecoration: 'none' }}>Our Story</a>
