@@ -379,7 +379,7 @@ export default function AboutPage() {
             Start for free — and experience the difference purpose-driven technology makes.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/register" style={{
+            <Link href={ctaHref} style={{
               background: 'white', color: '#1e3a5f',
               padding: '16px 32px', borderRadius: '8px',
               fontWeight: '600', textDecoration: 'none', fontSize: '18px',

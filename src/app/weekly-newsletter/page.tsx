@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function WeeklyNewsletterPage() {
   const [step, setStep] = useState<'form' | 'preview' | 'sent'>('form');
+  const [sending, setSending] = useState(false);
   const [highlights, setHighlights] = useState('');
   const [churchName, setChurchName] = useState('');
   const [pastorName, setPastorName] = useState('');
@@ -130,7 +131,7 @@ export default function WeeklyNewsletterPage() {
 
           <div className="card" style={{ position: 'sticky', top: '32px' }}>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options</h3>
-            <button onClick={() => { setStep('sent'); }} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>Send Newsletter</button>
+            <button onClick={handleSendNewsletter} disabled={sending} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>{sending ? 'Sending...' : 'Send Newsletter'}</button>
             <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over</button>
           </div>
         </div>
