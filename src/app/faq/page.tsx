@@ -63,7 +63,7 @@ export default function FAQPage() {
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <Link href="/login" className="btn-ghost">Log In</Link>
-            <Link href="/register" className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
+            <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? 'Go to Dashboard' : 'Get Started Free'}</Link>
           </div>
         </div>
       </nav>

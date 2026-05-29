@@ -179,7 +179,7 @@ export default function AboutPage() {
             <a href="/#features" className="nav-link">Features</a>
             <a href="/#pricing" className="nav-link">Pricing</a>
             <a href="/faq" className="nav-link">FAQ</a>
-            <Link href="/register" className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
+            <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? 'Go to Dashboard' : 'Get Started Free'}</Link>
           </div>
         </div>
       </nav>
