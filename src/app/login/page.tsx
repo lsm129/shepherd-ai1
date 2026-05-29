@@ -80,7 +80,7 @@ export default function LoginPage() {
                 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
                 if (supabaseUrl && supabaseKey) {
                   const supabase = createClient(supabaseUrl, supabaseKey);
-                  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/login` });
+                  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
                   setError('');
                   alert('Password reset email sent! Check your inbox.');
                 }
