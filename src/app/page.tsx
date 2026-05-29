@@ -31,7 +31,7 @@ export default function Home() {
 
   if (!mounted) return null;
 
-  const registerHref = refParam ? `/register?ref=${refParam}` : '/register';
+  const ctaHref = isLoggedIn ? '/dashboard' : (refParam ? `/register?ref=${refParam}` : '/register');
 
   const agents = [
     { emoji: '📧', title: 'Visitor Follow-up', desc: 'AI-generated 6-week email sequences for new visitors', saves: '3 hrs/week' },
@@ -149,7 +149,7 @@ export default function Home() {
             <a href="/faq" className="nav-link">FAQ</a>
             <a href="/about" className="nav-link">Our Story</a>
             <Link href={isLoggedIn ? "/dashboard" : "/login"} className="btn-ghost">{isLoggedIn ? "Dashboard" : "Log In"}</Link>
-            <Link href={registerHref} className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
+            <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? "Go to Dashboard" : "Get Started Free"}</Link>
           </div>
       </nav>
 
@@ -192,8 +192,8 @@ export default function Home() {
           </div>
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href={registerHref} className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px', textDecoration: 'none' }}>
-              Start Free — No credit card required →
+            <Link href={ctaHref} className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px', textDecoration: 'none' }}>
+              {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}
             </Link>
             <a href="#pricing" className="btn-ghost" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px' }}>
               View Pricing
@@ -347,7 +347,7 @@ export default function Home() {
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>✓ {item}</li>
                 ))}
               </ul>
-              <Link href={registerHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>Get Started</Link>
+              <Link href={ctaHref} className="btn-secondary" style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', fontSize: '14px' }}>{isLoggedIn ? "Go to Dashboard" : "Get Started"}</Link>
             </div>
 
             {/* Starter */}
@@ -492,8 +492,8 @@ export default function Home() {
           <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '40px' }}>
             Join pastors who focus on ministry, not busywork
           </p>
-          <Link href={registerHref} style={{ background: 'white', color: '#1e3a5f', padding: '16px 32px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '18px' }}>
-            Start Free — No credit card required →
+          <Link href={ctaHref} style={{ background: 'white', color: '#1e3a5f', padding: '16px 32px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '18px' }}>
+            {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}
           </Link>
           <p style={{ marginTop: '16px', opacity: 0.7, fontSize: '14px' }}>Free plan available forever • Cancel anytime</p>
         </div>
