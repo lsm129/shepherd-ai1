@@ -8,12 +8,25 @@ export default function Home() {
   const [refParam, setRefParam] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref) setRefParam(ref);
+
+    // Check login status
+    (async () => {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsLoggedIn(!!session);
+      }
+    })();
   }, []);
 
   if (!mounted) return null;
@@ -135,7 +148,7 @@ export default function Home() {
             <a href="#pricing" className="nav-link">Pricing</a>
             <a href="/faq" className="nav-link">FAQ</a>
             <a href="/about" className="nav-link">Our Story</a>
-            <Link href="/dashboard" className="btn-ghost">Dashboard</Link>
+            <Link href={isLoggedIn ? "/dashboard" : "/login"} className="btn-ghost">{isLoggedIn ? "Dashboard" : "Log In"}</Link>
             <Link href={registerHref} className="btn-primary" style={{ textDecoration: 'none' }}>Get Started Free</Link>
           </div>
       </nav>
