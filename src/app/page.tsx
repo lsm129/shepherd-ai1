@@ -523,6 +523,8 @@ export default function Home() {
             <a href="/faq" style={{ color: '#999', textDecoration: 'none' }}>FAQ</a>
             <a href="/about" style={{ color: '#999', textDecoration: 'none' }}>Our Story</a>
             <a href="#pricing" style={{ color: '#999', textDecoration: 'none' }}>Pricing</a>
+            <a href="/privacy" style={{ color: '#999', textDecoration: 'none' }}>Privacy Policy</a>
+            <a href="/terms" style={{ color: '#999', textDecoration: 'none' }}>Terms of Service</a>
           </div>
         </div>
       </footer>
