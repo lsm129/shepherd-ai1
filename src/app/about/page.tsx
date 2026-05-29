@@ -150,10 +150,25 @@ const advantages = {
 
 export default function AboutPage() {
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    async function checkAuth() {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsLoggedIn(!!session);
+      } catch (e) {}
+    }
+    checkAuth();
   }, []);
+
+  const ctaHref = isLoggedIn ? '/dashboard' : '/register';
 
   if (!mounted) return null;
 
@@ -179,6 +194,7 @@ export default function AboutPage() {
             <a href="/#features" className="nav-link">Features</a>
             <a href="/#pricing" className="nav-link">Pricing</a>
             <a href="/faq" className="nav-link">FAQ</a>
+            {!isLoggedIn && <Link href="/login" className="btn-ghost">Log In</Link>}
             <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? 'Go to Dashboard' : 'Get Started Free'}</Link>
           </div>
         </div>
@@ -368,7 +384,7 @@ export default function AboutPage() {
               padding: '16px 32px', borderRadius: '8px',
               fontWeight: '600', textDecoration: 'none', fontSize: '18px',
             }}>
-              Start Free Today →
+              {isLoggedIn ? 'Go to Dashboard' : 'Start Free Today'} →
             </Link>
             <a href="mailto:hello@shepherdai.app" style={{
               background: 'transparent', color: 'white',
