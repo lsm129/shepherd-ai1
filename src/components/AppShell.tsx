@@ -354,25 +354,29 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           position: 'fixed',
           bottom: chatBtnBottom,
           right: '24px',
-          background: '#1e3a5f',
+          background: chatOpen ? '#0f2744' : '#1e3a5f',
           color: 'white',
           border: 'none',
-          borderRadius: '50%',
-          width: '60px',
-          height: '60px',
-          fontSize: '24px',
+          borderRadius: '28px',
+          padding: '14px 20px',
+          fontSize: '15px',
+          fontWeight: '600',
           cursor: 'pointer',
           boxShadow: '0 4px 20px rgba(30,58,95,0.4)',
           zIndex: 1400,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform 0.2s',
+          gap: '8px',
+          transition: 'all 0.2s',
+          whiteSpace: 'nowrap',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
         onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
       >
-        💬
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        {chatOpen ? 'Close' : 'Help'}
       </button>
 
       {/* Referral Modal */}
