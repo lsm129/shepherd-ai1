@@ -28,7 +28,7 @@ export async function sendBrevoEmail(params: SendEmailParams): Promise<{ message
       'api-key': BREVO_API_KEY!,
     },
     body: JSON.stringify({
-      sender: params.from || { name: 'ShepherdAI', email: 'lsm1986129@outlook.com' },
+      sender: params.from || { name: 'ShepherdAI', email: 'hello@shepherdaitech.com' },
       to: params.to,
       subject: params.subject,
       htmlContent: params.htmlContent,
@@ -80,7 +80,7 @@ export async function sendEmailSequence(params: {
         to: [{ email: params.recipientEmail, name: params.recipientName }],
         subject: email.subject,
         htmlContent,
-        from: { name: params.fromName || 'ShepherdAI', email: 'lsm1986129@outlook.com' },
+        from: { name: params.fromName || 'ShepherdAI', email: 'hello@shepherdaitech.com' },
         scheduledAt,
       });
 
@@ -124,7 +124,7 @@ export async function sendNewsletter(params: {
         to: [{ email: recipient }],
         subject: params.subject,
         htmlContent: params.htmlContent,
-        from: { name: params.fromName || 'ShepherdAI', email: 'lsm1986129@outlook.com' },
+        from: { name: params.fromName || 'ShepherdAI', email: 'hello@shepherdaitech.com' },
       });
       sent++;
     } catch (err) {
