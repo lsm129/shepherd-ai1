@@ -30,6 +30,10 @@ export default function Home() {
     })();
   }, []);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => { const check = () => setMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check); }, []);
+
   if (!mounted) return null;
 
   const ctaHref = isLoggedIn ? '/dashboard' : (refParam ? `/register?ref=${refParam}` : '/register');
@@ -172,7 +176,8 @@ export default function Home() {
             <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f' }}>ShepherdAI</span>
           </Link>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          {/* Desktop nav */}
+          <div style={{ display: mobile ? 'none' : 'flex', alignItems: 'center', gap: '24px' }}>
             <a href="#features" className="nav-link">Features</a>
             <a href="#how-it-works" className="nav-link">How It Works</a>
             <a href="#pricing" className="nav-link">Pricing</a>
@@ -180,6 +185,10 @@ export default function Home() {
             <a href="/about" className="nav-link">Our Story</a>
             <Link href={isLoggedIn ? "/dashboard" : "/login"} className="btn-ghost">{isLoggedIn ? "Dashboard" : "Log In"}</Link>
             <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? "Go to Dashboard" : "Get Started Free"}</Link>
+          </div>
+          {/* Mobile: only CTA button */}
+          <div style={{ display: mobile ? 'flex' : 'none', alignItems: 'center', gap: '8px' }}>
+            <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none', fontSize: '14px', padding: '8px 16px' }}>{isLoggedIn ? "Dashboard" : "Start Free"}</Link>
           </div>
       </nav>
 
@@ -194,18 +203,18 @@ export default function Home() {
       <section style={{
         paddingTop: refParam ? '140px' : '72px',
         background: 'linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%)',
-        color: 'white', textAlign: 'center', padding: '140px 0 100px',
+        color: 'white', textAlign: 'center', padding: mobile ? '80px 16px 60px' : '140px 0 100px',
       }}>
         <div className="page-container">
-          <div style={{ fontSize: '56px', marginBottom: '24px' }}>⛪🤖</div>
-          <h1 style={{ fontSize: '52px', fontWeight: 'bold', marginBottom: '24px', lineHeight: '1.1' }}>
+          <div style={{ fontSize: mobile ? '40px' : '56px', marginBottom: '16px' }}>⛪🤖</div>
+          <h1 style={{ fontSize: mobile ? '28px' : '52px', fontWeight: 'bold', marginBottom: '24px', lineHeight: '1.1' }}>
             An AI Assistant That<br/>Grows With Your Church
           </h1>
-          <p style={{ fontSize: '22px', opacity: 0.9, marginBottom: '40px', maxWidth: '680px', margin: '0 auto 40px' }}>
+          <p style={{ fontSize: mobile ? '16px' : '22px', opacity: 0.9, marginBottom: mobile ? '24px' : '40px', maxWidth: '680px', margin: '0 auto', padding: mobile ? '0 8px' : '0' }}>
             Not just another tool — ShepherdAI learns your church, understands your denomination, and proactively handles your ministry busywork.
           </p>
 
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', flexDirection: mobile ? 'column' : 'row', padding: mobile ? '0 16px' : '0' }}>
             <Link href={ctaHref} className="btn-primary" style={{ padding: '16px 32px', fontSize: '18px', borderRadius: '8px', textDecoration: 'none' }}>
               {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}
             </Link>
@@ -229,16 +238,16 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section id="features" style={{ padding: '100px 0', background: '#f8fafc' }}>
+      <section id="features" style={{ padding: mobile ? '48px 16px' : '100px 0', background: '#f8fafc' }}>
         <div className="page-container">
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
             6 Smart AI Agents That Know Your Church
           </h2>
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: mobile ? '14px' : '18px', marginBottom: mobile ? '32px' : '60px' }}>
             Denomination-aware, habit-learning AI that creates content tailored to YOUR church
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             {agents.map((agent, i) => (
               <Link key={i} href={`/features/${agent.slug}`} style={{ textDecoration: 'none' }}>
                 <div className="card" style={{ padding: '24px', cursor: 'pointer' }}>
@@ -255,16 +264,16 @@ export default function Home() {
 
 
       {/* Comparison */}
-      <section style={{ padding: '100px 0', background: '#f8fafc' }}>
+      <section style={{ padding: mobile ? '48px 16px' : '100px 0', background: '#f8fafc' }}>
         <div className="page-container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', color: '#1e3a5f' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', marginBottom: '16px', color: '#1e3a5f' }}>
             Not Just Another AI Tool
           </h2>
           <p style={{ color: '#666', fontSize: '18px', marginBottom: '60px' }}>
             See how ShepherdAI compares to what you might be using today
           </p>
 
-          <div style={{ maxWidth: '900px', margin: '0 auto', background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', background: 'white', borderRadius: '16px', overflow: 'auto', border: '1px solid var(--border)', fontSize: mobile ? '12px' : '15px' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
               <thead>
                 <tr style={{ background: '#1e3a5f', color: 'white' }}>
@@ -300,14 +309,14 @@ export default function Home() {
       {/* How It Works */}
       <section id="how-it-works" style={{ padding: '100px 0', background: 'white' }}>
         <div className="page-container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', color: '#1e3a5f' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', marginBottom: '16px', color: '#1e3a5f' }}>
             How It Works
           </h2>
           <p style={{ color: '#666', fontSize: '18px', marginBottom: '60px' }}>
             Three steps to an AI that truly knows your church
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
             {[
               { step: '1', icon: '⛪', title: 'Sign Up & Get Diagnosed', desc: 'Enter your church name, denomination, size, and worship style. AI instantly analyzes your church profile and generates a personalized Church Health Report with actionable recommendations.' },
               { step: '2', icon: '🧠', title: 'AI Learns As You Use It', desc: 'Every time you generate content, ShepherdAI learns your preferences, tone, and ministry focus. The more you use it, the more personalized and accurate it becomes.' },
@@ -336,14 +345,14 @@ export default function Home() {
       {/* Why Choose ShepherdAI */}
       <section style={{ padding: '100px 0', background: 'white' }}>
         <div className="page-container">
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
             Why Choose ShepherdAI?
           </h2>
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: mobile ? '14px' : '18px', marginBottom: mobile ? '32px' : '60px' }}>
             Other tools give you features. We give you a growing ministry partner.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
             {[
               { emoji: '🧠', title: 'AI That Learns Your Church', desc: "Every interaction teaches ShepherdAI your tone, style, and priorities. The longer you use it, the more personalized it gets — no other tool does this." },
               { emoji: '⛪', title: 'Denomination-Aware Content', desc: "Baptist sermons sound different from Catholic homilies. ShepherdAI adapts to YOUR theological tradition, liturgical calendar, and worship style." },
@@ -385,9 +394,9 @@ export default function Home() {
       </section>
 
 {/* Pricing */}
-      <section id="pricing" style={{ padding: '100px 0', background: '#f8fafc' }}>
+      <section id="pricing" style={{ padding: mobile ? '48px 16px' : '100px 0', background: '#f8fafc' }}>
         <div className="page-container">
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
             Simple Pricing
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '24px' }}>
@@ -421,7 +430,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', maxWidth: '1100px', margin: '0 auto' }}>
             {/* Free */}
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>Free</h3>
@@ -531,8 +540,8 @@ export default function Home() {
 
       {/* FAQ */}
       <section id="faq" style={{ padding: '100px 0', background: 'white' }}>
-        <div className="page-container" style={{ maxWidth: '800px' }}>
-          <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
+        <div className="page-container" style={{ maxWidth: '800px', padding: mobile ? '0 8px' : '0' }}>
+          <h2 style={{ fontSize: mobile ? '24px' : '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
             Frequently Asked Questions
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '48px' }}>

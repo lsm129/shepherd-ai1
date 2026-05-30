@@ -47,10 +47,11 @@ export default function DashboardPage() {
   const [editingField, setEditingField] = useState<string>('');
   const [editValue, setEditValue] = useState('');
   const [savingMemory, setSavingMemory] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); const checkMobile = () => setMobile(window.innerWidth < 768); checkMobile(); window.addEventListener('resize', checkMobile);
     async function checkAuth() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
@@ -368,7 +369,7 @@ export default function DashboardPage() {
               } catch (e) {}
               window.location.href = '/login';
             }}
-            style={{ background: 'white', color: '#666', padding: '12px 24px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', cursor: 'pointer' }}
+            style={{ background: 'white', color: '#666', padding: mobile ? '10px 16px' : '12px 24px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', cursor: 'pointer' }}
           >
             Back to Login
           </button>
@@ -451,15 +452,15 @@ export default function DashboardPage() {
       </div>
 
       {/* Welcome Banner with Church Name + Check-in */}
-      <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #4a90a4 100%)', borderRadius: '16px', padding: '40px', color: 'white', marginBottom: '32px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #4a90a4 100%)', borderRadius: '16px', padding: mobile ? '20px' : '40px', color: 'white', marginBottom: mobile ? '16px' : '32px' }}>
         <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '8px' }}>
           {churchName ? 'Welcome to ' + churchName : 'Welcome'}!
         </h1>
         <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '24px' }}>Your AI-powered church assistant is ready.</p>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <Link href="/visitor-followup" style={{ background: 'white', color: '#1e3a5f', padding: '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Visitor Follow-up</Link>
-          <Link href="/prayer-requests" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Prayer Requests</Link>
-          <Link href="/daily-devotional" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Daily Devotional</Link>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flexDirection: mobile ? 'column' : 'row', alignItems: 'center' }}>
+          <Link href="/visitor-followup" style={{ background: 'white', color: '#1e3a5f', padding: mobile ? '10px 16px' : '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Visitor Follow-up</Link>
+          <Link href="/prayer-requests" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: mobile ? '10px 16px' : '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Prayer Requests</Link>
+          <Link href="/daily-devotional" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: mobile ? '10px 16px' : '12px 24px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none' }}>Daily Devotional</Link>
           {/* Daily Check-in Button */}
           <button
             onClick={handleDailyCheckin}
@@ -507,7 +508,7 @@ export default function DashboardPage() {
           justifyContent: 'center', zIndex: 9999, padding: '20px',
         }}>
           <div style={{
-            background: 'white', borderRadius: '24px', padding: '48px',
+            background: 'white', borderRadius: '24px', padding: mobile ? '20px' : '48px',
             maxWidth: '560px', width: '100%', maxHeight: '95vh', overflowY: 'auto',
             boxShadow: '0 25px 80px rgba(0,0,0,0.3)', textAlign: 'center',
           }}>
@@ -584,7 +585,7 @@ export default function DashboardPage() {
 
       {/* Rewards Panel */}
       {showRewards && (
-        <div style={{ background: 'white', borderRadius: '16px', padding: '32px', marginBottom: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+        <div style={{ background: 'white', borderRadius: '16px', padding: mobile ? '16px' : '32px', marginBottom: mobile ? '16px' : '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>🏆 Points Rewards</h2>
           <p style={{ color: '#666', marginBottom: '24px' }}>Your balance: <strong style={{ fontSize: '20px', color: '#f59e0b' }}>{pointsBalance} pts</strong></p>
           {redeemMessage && (
@@ -592,7 +593,7 @@ export default function DashboardPage() {
               {redeemMessage}
             </div>
           )}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
             {rewards.map((r) => (
               <div key={r.type} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', textAlign: 'center' }}>
                 <div style={{ fontSize: '36px', marginBottom: '8px' }}>{r.icon}</div>
@@ -623,7 +624,7 @@ export default function DashboardPage() {
 
       {/* AI Diagnosis Report */}
       {profileSaved && diagnosis && (
-        <div style={{ background: 'white', borderRadius: '16px', padding: '32px', marginBottom: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+        <div style={{ background: 'white', borderRadius: '16px', padding: mobile ? '16px' : '32px', marginBottom: mobile ? '16px' : '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <div>
               <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '4px' }}>AI Church Diagnosis</h2>
@@ -642,7 +643,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', gap: '12px', marginBottom: '16px' }}>
             {(diagnosis.modules || []).map((mod: any, i: number) => (
               <div key={mod.id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', position: 'relative', overflow: 'hidden' }}>
                 {mod.status === 'locked' && (
@@ -674,7 +675,7 @@ export default function DashboardPage() {
       )}
 
       {profileSaved && diagnosing && (
-        <div style={{ background: 'white', borderRadius: '16px', padding: '48px', marginBottom: '32px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+        <div style={{ background: 'white', borderRadius: '16px', padding: mobile ? '24px' : '48px', marginBottom: mobile ? '16px' : '32px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
           <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#1e3a5f', marginBottom: '8px' }}>AI is analyzing your church...</h3>
           <p style={{ color: '#666' }}>Generating personalized diagnosis report</p>
@@ -683,7 +684,7 @@ export default function DashboardPage() {
 
       {/* AI Proactive Suggestions */}
       {profileComplete && suggestions.length > 0 && (
-        <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: '16px', padding: '28px', marginBottom: '32px', color: 'white' }}>
+        <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: '16px', padding: mobile ? '16px' : '28px', marginBottom: mobile ? '16px' : '32px', color: 'white' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div>
               <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '4px' }}>🤖 AI Suggestions for You</h2>
@@ -691,7 +692,7 @@ export default function DashboardPage() {
             </div>
             <button onClick={loadSuggestions} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }}>Refresh</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
             {suggestions.map((s: any, i: number) => (
               <a key={i} href={s.actionUrl || '#'} style={{ textDecoration: 'none', background: 'rgba(255,255,255,0.15)', borderRadius: '10px', padding: '16px', display: 'block', transition: 'background 0.2s' }}>
                 <div style={{ fontSize: '24px', marginBottom: '8px' }}>{s.icon}</div>
@@ -722,7 +723,7 @@ export default function DashboardPage() {
             <div style={{ background: 'white', borderRadius: '16px', padding: '28px', marginTop: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
               <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '20px' }}>🧠 What AI Knows About Your Church</h3>
               
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginBottom: '16px' }}>
                 {Object.entries(aiMemory.profile || {}).map(([key, val]) => (
                   <div key={key} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '12px' }}>
                     <div style={{ fontSize: '12px', color: '#999', marginBottom: '4px', textTransform: 'capitalize' }}>{key.replace(/_/g, ' ')}</div>
@@ -779,7 +780,7 @@ export default function DashboardPage() {
       )}
 
       {/* Stats Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr 1fr' : 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: mobile ? '16px' : '32px' }}>
         <div className="card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#22c55e' }}>{totalTimeSaved > 0 ? totalTimeSaved + ' hrs' : '—'}</div>
           <div style={{ color: '#666', fontSize: '14px' }}>Total Time Saved</div>
@@ -825,7 +826,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Feedback Section */}
-      <div style={{ background: '#f0f4ff', borderRadius: '16px', padding: '32px', marginBottom: '40px', textAlign: 'center', border: '1px dashed #c7d2fe' }}>
+      <div style={{ background: '#f0f4ff', borderRadius: '16px', padding: mobile ? '16px' : '32px', marginBottom: mobile ? '24px' : '40px', textAlign: 'center', border: '1px dashed #c7d2fe' }}>
         <span style={{ fontSize: '40px' }}>💬</span>
         <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>Share Your Feedback</h3>
         <p style={{ color: '#666', marginBottom: '16px' }}>Help us improve ShepherdAI with your suggestions and bug reports.</p>
