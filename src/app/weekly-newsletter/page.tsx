@@ -84,6 +84,33 @@ export default function WeeklyNewsletterPage() {
   function handleBackToForm() {
     setStep('form');
     setError('');
+    setHighlights('');
+    setUpcomingEvents('');
+    setPrayerRequests('');
+  }
+
+  async function handleSendNewsletter() {
+    setSending(true);
+    try {
+      // Save newsletter to DB first
+      const supabase = getSupabase();
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        await supabase.from('newsletters').insert({
+          user_id: session.user.id,
+          title: newsletterTitle,
+          highlights: highlights,
+          content: editedContent,
+        });
+      }
+
+      setStep('sent');
+    } catch (err: any) {
+      setError(err.message || 'Failed to send newsletter');
+    } finally {
+      setSending(false);
+    }
   }
 
   if (step === 'form') {
