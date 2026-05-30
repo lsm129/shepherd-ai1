@@ -22,17 +22,12 @@ interface PrayerEntry {
 
 export default function PrayerRequestsPage() {
   const [mounted, setMounted] = useState(false);
-  const [tab, setTab] = useState<'add' | 'manage'>('manage');
   const [entries, setEntries] = useState<PrayerEntry[]>([]);
-  const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState('');
-
-  // Form state
-  const [name, setName] = useState('');
-  const [requestText, setRequestText] = useState('');
-  const [urgency, setUrgency] = useState<'low' | 'medium' | 'high'>('medium');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'high'>('all');
+  const [shareLink, setShareLink] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -40,32 +35,55 @@ export default function PrayerRequestsPage() {
       try {
         const supabase = getSupabase();
         const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) setUserId(session.user.id);
+        if (session?.user) {
+          setUserId(session.user.id);
+          // Generate shareable link for congregation
+          const baseUrl = window.location.origin;
+          setShareLink(`${baseUrl}/prayer/submit`);
+        }
       } catch {}
     })();
   }, []);
 
-  if (!mounted) return null;
+  // Demo entries for first-time users
+  useEffect(() => {
+    if (entries.length === 0) {
+      setEntries([
+        {
+          id: 'demo1',
+          requester_name: 'Sister Mary',
+          request_text: 'Please pray for my husband who is having surgery next Tuesday. We are trusting God for a successful outcome.',
+          urgency: 'high',
+          status: 'pending',
+          ai_response: '',
+          verse: { reference: '', text: '' },
+          created_at: new Date(Date.now() - 3600000).toISOString(),
+        },
+        {
+          id: 'demo2',
+          requester_name: 'Anonymous',
+          request_text: 'I have been struggling with anxiety and depression. Please pray for peace and healing.',
+          urgency: 'high',
+          status: 'pending',
+          ai_response: '',
+          verse: { reference: '', text: '' },
+          created_at: new Date(Date.now() - 7200000).toISOString(),
+        },
+        {
+          id: 'demo3',
+          requester_name: 'Brother David',
+          request_text: 'Pray for our youth group mission trip next month. We need safe travels and open hearts.',
+          urgency: 'medium',
+          status: 'pending',
+          ai_response: '',
+          verse: { reference: '', text: '' },
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+        },
+      ]);
+    }
+  }, []);
 
-  async function handleAddRequest(e: React.FormEvent) {
-    e.preventDefault();
-    if (!requestText) return;
-    const newEntry: PrayerEntry = {
-      id: Date.now().toString(),
-      requester_name: name || 'Anonymous',
-      request_text: requestText,
-      urgency,
-      status: 'pending',
-      ai_response: '',
-      verse: { reference: '', text: '' },
-      created_at: new Date().toISOString(),
-    };
-    setEntries(prev => [newEntry, ...prev]);
-    setName('');
-    setRequestText('');
-    setUrgency('medium');
-    setTab('manage');
-  }
+  if (!mounted) return null;
 
   async function handleGenerateResponse(entryId: string) {
     setGenerating(entryId);
@@ -90,8 +108,8 @@ export default function PrayerRequestsPage() {
     }
   }
 
-  async function handleGenerateAllPending() {
-    const pending = entries.filter(e => e.status === 'pending');
+  async function handleRespondAll() {
+    const pending = filteredEntries.filter(e => e.status === 'pending');
     for (const entry of pending) {
       await handleGenerateResponse(entry.id);
     }
@@ -101,16 +119,33 @@ export default function PrayerRequestsPage() {
     navigator.clipboard.writeText(text);
   }
 
+  function handleCopyShareLink() {
+    navigator.clipboard.writeText(shareLink);
+  }
+
   const urgencyColors = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
   const statusLabels = { pending: '⏳ Pending', responded: '✅ Responded', 'follow-up': '🔄 Follow-up' };
   const pendingCount = entries.filter(e => e.status === 'pending').length;
   const highUrgencyCount = entries.filter(e => e.urgency === 'high' && e.status === 'pending').length;
+  const filteredEntries = filter === 'all' ? entries : filter === 'pending' ? entries.filter(e => e.status === 'pending') : entries.filter(e => e.urgency === 'high' && e.status === 'pending');
 
   return (
     <div>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>🙏 Prayer Request Manager</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Manage prayer requests from your congregation. AI helps you draft compassionate responses with relevant scriptures.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Congregation members submit prayer requests via your shareable link. You review and AI helps you respond.</p>
+      </div>
+
+      {/* Share Link - the key feature */}
+      <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%)', borderRadius: '12px', padding: '24px', marginBottom: '24px', color: 'white' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <div style={{ fontWeight: '600', marginBottom: '4px' }}>📢 Share This Link With Your Congregation</div>
+            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '8px' }}>Members submit prayer requests themselves — no login needed</div>
+            <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '6px', padding: '8px 14px', fontFamily: 'monospace', fontSize: '13px', wordBreak: 'break-all' }}>{shareLink}</div>
+          </div>
+          <button onClick={handleCopyShareLink} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', whiteSpace: 'nowrap' }}>📋 Copy Link</button>
+        </div>
       </div>
 
       {error && (
@@ -133,100 +168,66 @@ export default function PrayerRequestsPage() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
-        <button onClick={() => setTab('manage')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: tab === 'manage' ? 'var(--primary)' : '#f3f4f6', color: tab === 'manage' ? 'white' : '#333' }}>
-          📋 Manage Requests {pendingCount > 0 && <span style={{ background: '#ef4444', color: 'white', borderRadius: '10px', padding: '2px 8px', fontSize: '12px', marginLeft: '6px' }}>{pendingCount}</span>}
-        </button>
-        <button onClick={() => setTab('add')} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: tab === 'add' ? 'var(--primary)' : '#f3f4f6', color: tab === 'add' ? 'white' : '#333' }}>
-          ➕ Add Request
-        </button>
+      {/* Filter + Actions */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        {(['all', 'pending', 'high'] as const).map(f => (
+          <button key={f} onClick={() => setFilter(f)} style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: filter === f ? 'var(--primary)' : '#f3f4f6', color: filter === f ? 'white' : '#333', fontSize: '13px' }}>
+            {f === 'all' ? '📋 All' : f === 'pending' ? `⏳ Pending (${pendingCount})` : `🔴 High Urgency (${highUrgencyCount})`}
+          </button>
+        ))}
         {pendingCount > 1 && (
-          <button onClick={handleGenerateAllPending} disabled={!!generating} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: '#6366f1', color: 'white', marginLeft: 'auto' }}>
+          <button onClick={handleRespondAll} disabled={!!generating} style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: '#6366f1', color: 'white', fontSize: '13px', marginLeft: 'auto' }}>
             🤖 AI Respond to All Pending
           </button>
         )}
       </div>
 
-      {tab === 'add' && (
-        <div className="card" style={{ maxWidth: '600px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>Add Prayer Request</h2>
-          <p style={{ color: '#666', fontSize: '14px', marginBottom: '20px' }}>Enter a prayer request from your congregation member. AI will help you draft a response.</p>
-          <form onSubmit={handleAddRequest}>
-            <div className="form-group">
-              <label className="form-label">Requester Name</label>
-              <input type="text" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., Sister Mary, Brother John" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Prayer Request *</label>
-              <textarea className="input textarea" value={requestText} onChange={(e) => setRequestText(e.target.value)} placeholder="e.g., Please pray for my mother who is in hospital recovering from surgery..." style={{ minHeight: '120px' }} required />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Urgency Level</label>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                {(['low', 'medium', 'high'] as const).map(level => (
-                  <label key={level} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: '8px 16px', borderRadius: '8px', border: `2px solid ${urgency === level ? urgencyColors[level] : '#ddd'}`, background: urgency === level ? `${urgencyColors[level]}15` : 'white' }}>
-                    <input type="radio" name="urgency" checked={urgency === level} onChange={() => setUrgency(level)} style={{ display: 'none' }} />
-                    <span style={{ color: urgencyColors[level], fontWeight: '600', fontSize: '14px' }}>{level.charAt(0).toUpperCase() + level.slice(1)}</span>
-                  </label>
-                ))}
+      {/* Prayer Request List */}
+      {filteredEntries.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🙏</div>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--primary)', marginBottom: '8px' }}>No Prayer Requests Yet</h3>
+          <p style={{ color: '#666', marginBottom: '16px' }}>Share the link above with your congregation to start receiving prayer requests.</p>
+        </div>
+      ) : (
+        filteredEntries.map(entry => (
+          <div key={entry.id} className="card" style={{ marginBottom: '16px', borderLeft: `4px solid ${urgencyColors[entry.urgency]}` }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontWeight: '600', color: 'var(--primary)' }}>{entry.requester_name}</span>
+                <span style={{ fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: `${urgencyColors[entry.urgency]}20`, color: urgencyColors[entry.urgency], fontWeight: '600' }}>{entry.urgency.toUpperCase()}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#999' }}>{new Date(entry.created_at).toLocaleDateString()}</span>
+                <span style={{ fontSize: '13px', fontWeight: '500' }}>{statusLabels[entry.status]}</span>
               </div>
             </div>
-            <button type="submit" className="btn-primary" style={{ width: '100%' }}>Add Request</button>
-          </form>
-        </div>
-      )}
-
-      {tab === 'manage' && (
-        <div>
-          {entries.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🙏</div>
-              <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--primary)', marginBottom: '8px' }}>No Prayer Requests Yet</h3>
-              <p style={{ color: '#666', marginBottom: '16px' }}>Add prayer requests from your congregation and let AI help you respond with compassion.</p>
-              <button onClick={() => setTab('add')} className="btn-primary">➕ Add First Request</button>
-            </div>
-          ) : (
-            entries.map(entry => (
-              <div key={entry.id} className="card" style={{ marginBottom: '16px', borderLeft: `4px solid ${urgencyColors[entry.urgency]}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <div>
-                    <span style={{ fontWeight: '600', color: 'var(--primary)' }}>{entry.requester_name}</span>
-                    <span style={{ marginLeft: '8px', fontSize: '12px', padding: '2px 8px', borderRadius: '10px', background: `${urgencyColors[entry.urgency]}20`, color: urgencyColors[entry.urgency], fontWeight: '600' }}>{entry.urgency.toUpperCase()}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '13px', color: '#999' }}>{new Date(entry.created_at).toLocaleDateString()}</span>
-                    <span style={{ fontSize: '13px', fontWeight: '500' }}>{statusLabels[entry.status]}</span>
-                  </div>
+            <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px', fontStyle: 'italic' }}>"{entry.request_text}"</p>
+            
+            {entry.ai_response ? (
+              <div>
+                <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
+                  <div style={{ fontWeight: '600', color: '#16a34a', marginBottom: '8px' }}>✉️ AI Drafted Response</div>
+                  <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', color: '#333' }}>{entry.ai_response}</p>
                 </div>
-                <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px' }}>"{entry.request_text}"</p>
-                
-                {entry.ai_response ? (
-                  <div>
-                    <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
-                      <div style={{ fontWeight: '600', color: '#16a34a', marginBottom: '8px' }}>✉️ AI Drafted Response</div>
-                      <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', color: '#333' }}>{entry.ai_response}</p>
-                    </div>
-                    {entry.verse.reference && (
-                      <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
-                        <span style={{ fontWeight: '600', color: 'var(--primary)' }}>📖 {entry.verse.reference}</span>
-                        <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '4px' }}>"{entry.verse.text}"</p>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => handleCopy(`${entry.ai_response}\n\n— ${entry.verse.reference}: "${entry.verse.text}"`)} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>📋 Copy Response</button>
-                      <button onClick={() => setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, status: 'follow-up' } : e))} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>🔄 Mark for Follow-up</button>
-                    </div>
+                {entry.verse.reference && (
+                  <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
+                    <span style={{ fontWeight: '600', color: 'var(--primary)' }}>📖 {entry.verse.reference}</span>
+                    <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '4px' }}>"{entry.verse.text}"</p>
                   </div>
-                ) : (
-                  <button onClick={() => handleGenerateResponse(entry.id)} disabled={generating === entry.id} className="btn-primary" style={{ fontSize: '14px' }}>
-                    {generating === entry.id ? '🤖 Generating Response...' : '🤖 Generate AI Response'}
-                  </button>
                 )}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button onClick={() => handleCopy(`${entry.ai_response}\n\n— ${entry.verse.reference}: "${entry.verse.text}"`)} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>📋 Copy Response</button>
+                  <button onClick={() => setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, status: 'follow-up' } : e))} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>🔄 Mark for Follow-up</button>
+                </div>
               </div>
-            ))
-          )}
-        </div>
+            ) : (
+              <button onClick={() => handleGenerateResponse(entry.id)} disabled={generating === entry.id} className="btn-primary" style={{ fontSize: '14px' }}>
+                {generating === entry.id ? '🤖 Generating Response...' : '🤖 Generate AI Response'}
+              </button>
+            )}
+          </div>
+        ))
       )}
     </div>
   );
