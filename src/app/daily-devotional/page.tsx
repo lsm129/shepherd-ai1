@@ -176,7 +176,7 @@ export default function DailyDevotionalPage() {
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-          <div className="card">
+          <div className="card" style={{ userSelect: copied ? 'auto' : 'none', WebkitUserSelect: copied ? 'auto' : 'none' }}>
             <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary)' }}>{devotional.title}</h2>
 
             <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>

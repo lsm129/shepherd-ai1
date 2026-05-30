@@ -91,7 +91,6 @@ export default function WeeklyNewsletterPage() {
 
   async function handleSendNewsletter() {
     // Consume 1 AI generation when user approves the newsletter
-    if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'newsletter'); } catch {} }
     setSending(true);
     try {
       // Save newsletter to DB first

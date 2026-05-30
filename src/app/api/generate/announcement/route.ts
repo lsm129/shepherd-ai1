@@ -1,4 +1,4 @@
-import { incrementPending } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
@@ -92,7 +92,7 @@ Return ONLY valid JSON: {"title": "...", "content": "...", "summary": "..."}`;
 
     // Record generation and earn points
     if (auth.userId) {
-      await incrementPending(auth.userId);
+      await recordGeneration(auth.userId, 'announcement', 'generated');
       await earnPoints(auth.userId, 'generate_sermon').catch(e => console.error('Points error:', e));
     }
 

@@ -121,7 +121,6 @@ export default function PrayerRequestsPage() {
   async function handleCopy(text: string) {
     await navigator.clipboard.writeText(text);
     // Consume 1 AI use when user copies the AI-generated response
-    if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'prayer_response'); } catch {} }
   }
 
   function handleCopyShareLink() {
@@ -266,7 +265,7 @@ export default function PrayerRequestsPage() {
               <div>
                 <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
                   <div style={{ fontWeight: '600', color: '#16a34a', marginBottom: '8px' }}>✉️ AI Drafted Response</div>
-                  <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', color: '#333' }}>{entry.ai_response}</p>
+                  <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', color: '#333', userSelect: 'none', WebkitUserSelect: 'none' }}>{entry.ai_response}</p>
                 </div>
                 {entry.verse.reference && (
                   <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>

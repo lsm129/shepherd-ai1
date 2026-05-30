@@ -1,4 +1,4 @@
-import { incrementPending } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
@@ -90,7 +90,7 @@ Return ONLY valid JSON: {"emails": [{"week": 1, "subject": "Subject", "body": "B
 
     // Record generation and earn points
     if (auth.userId) {
-      await incrementPending(auth.userId);
+      await recordGeneration(auth.userId, 'visitor_sequence', 'generated');
       await earnPoints(auth.userId, 'generate_other').catch(e => console.error('Points error:', e));
     }
 

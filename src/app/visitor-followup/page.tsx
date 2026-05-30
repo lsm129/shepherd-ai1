@@ -86,7 +86,6 @@ export default function VisitorFollowupPage() {
 
   async function handleSend() {
     // Consume 1 AI generation when user approves the sequence
-    if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'visitor_followup'); } catch {} }
     setStep('sending');
     setError('');
     try {
@@ -211,7 +210,7 @@ export default function VisitorFollowupPage() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-          <div>
+          <div style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
             {editedEmails.map((email) => (
               <div key={email.week} className="card" style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>

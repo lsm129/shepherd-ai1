@@ -96,7 +96,6 @@ export default function SermonSocialPage() {
 
       // Record habit
       if (userId) {
-        if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'sermon_social'); } catch {} }
       await fetch('/api/ai-habits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -132,7 +131,6 @@ export default function SermonSocialPage() {
       setEditingPlatform('');
 
       if (userId) {
-        if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'sermon_social'); } catch {} }
       await fetch('/api/ai-habits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -156,7 +154,6 @@ export default function SermonSocialPage() {
   // Reject and regenerate
   async function handleReject(platform: string, text: string) {
     if (userId) {
-      if (userId) { try { const mod = await import('@/lib/consume'); await mod.rejectGeneration(userId); } catch {} }
       await fetch('/api/ai-habits', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -228,7 +225,7 @@ export default function SermonSocialPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 'bold', color }}>{icon} {title}</h3>
-          {isApproved && <span style={{ fontSize: '12px', color: '#22c55e', fontWeight: 600 }}>✓ Approved</span>}
+          {isApproved && <span style={{ fontSize: '11px', color: '#22c55e', fontWeight: 500 }}>✓ Copied</span>}
         </div>
 
         {/* Content - non-selectable until approved */}
@@ -241,6 +238,8 @@ export default function SermonSocialPage() {
               borderRadius: '8px', border: '1px solid #ddd',
               fontSize: '14px', lineHeight: '1.8', resize: 'vertical',
               fontFamily: 'inherit',
+              userSelect: isApproved ? 'auto' : 'none',
+              WebkitUserSelect: isApproved ? 'auto' : 'none',
             }}
           />
         ) : (
@@ -277,7 +276,7 @@ export default function SermonSocialPage() {
                   fontSize: '13px', cursor: recording ? 'wait' : 'pointer',
                 }}
               >
-                {recording ? '...' : copiedField === platform ? '✓ Copied!' : '✓ Approve & Copy'}
+                {recording ? '...' : copiedField === platform ? '✓ Copied!' : '📋 Copy'}
               </button>
               {/* Edit first */}
               <button
@@ -314,7 +313,7 @@ export default function SermonSocialPage() {
                   fontSize: '13px', cursor: recording ? 'wait' : 'pointer',
                 }}
               >
-                {recording ? '...' : '✓ Save & Copy Edited Version'}
+                {recording ? '...' : '✓ Save & Copy'}
               </button>
               <button
                 onClick={() => { setEditingPlatform(''); setEditTexts({ ...editTexts, [platform]: '' }); }}
@@ -344,7 +343,7 @@ export default function SermonSocialPage() {
         {/* Habit learning hint */}
         {!isApproved && (
           <div style={{ fontSize: '11px', color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px' }}>
-            💡 Click "Approve & Copy" to tell AI you like this style — it learns your preferences over time
+            💡 Copying tells AI you like this style — it learns your preferences over time
           </div>
         )}
       </div>
