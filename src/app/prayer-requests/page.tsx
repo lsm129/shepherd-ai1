@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -180,13 +181,6 @@ export default function PrayerRequestsPage() {
     }
   }
 
-  const noSelectStyle: React.CSSProperties = {
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    MozUserSelect: 'none',
-    msUserSelect: 'none',
-  };
-
   const urgencyColors = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
   const statusLabels = { pending: '⏳ Pending', responded: '✅ Responded', 'follow-up': '🔄 Follow-up' };
   const pendingCount = entries.filter(e => e.status === 'pending').length;
@@ -285,7 +279,7 @@ export default function PrayerRequestsPage() {
             </div>
             
             {/* Request text - non-selectable */}
-            <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px', fontStyle: 'italic', ...noSelectStyle }}>"{entry.request_text}"</p>
+            <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px', fontStyle: 'italic', ...noSelectStyle }} {...noSelectEvents}>"{entry.request_text}"</p>
             
             {entry.ai_response ? (
               <div>
@@ -320,7 +314,7 @@ export default function PrayerRequestsPage() {
                       padding: '12px',
                       fontSize: '14px',
                       ...noSelectStyle,
-                    }}>
+                    }} {...noSelectEvents}>
                       {entry.ai_response}
                     </div>
                   )}
@@ -331,7 +325,7 @@ export default function PrayerRequestsPage() {
                   )}
                 </div>
                 {entry.verse.reference && (
-                  <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px', ...noSelectStyle }}>
+                  <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px', ...noSelectStyle }} {...noSelectEvents}>
                     <span style={{ fontWeight: '600', color: 'var(--primary)' }}>📖 {entry.verse.reference}</span>
                     <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '4px', marginBottom: 0 }}>"{entry.verse.text}"</p>
                   </div>

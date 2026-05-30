@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -136,13 +137,6 @@ export default function VisitorFollowupPage() {
     setEditingWeek(null);
   }
 
-  const noSelectStyle: React.CSSProperties = {
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    MozUserSelect: 'none',
-    msUserSelect: 'none',
-  };
-
   if (step === 'form') {
     return (
       <div style={{ padding: isMobile ? '16px' : '0' }}>
@@ -262,7 +256,7 @@ export default function VisitorFollowupPage() {
                         fontSize: '14px',
                         fontWeight: '600',
                         ...noSelectStyle,
-                      }}>
+                      }} {...noSelectEvents}>
                         {email.subject}
                       </div>
                     )}
@@ -284,7 +278,7 @@ export default function VisitorFollowupPage() {
                         lineHeight: '1.6',
                         whiteSpace: 'pre-wrap',
                         ...noSelectStyle,
-                      }}>
+                      }} {...noSelectEvents}>
                         {email.body}
                       </div>
                     )}

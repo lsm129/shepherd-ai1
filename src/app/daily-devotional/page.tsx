@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -128,13 +129,6 @@ export default function DailyDevotionalPage() {
     setEditingField('');
   }
 
-  const noSelectStyle: React.CSSProperties = {
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    MozUserSelect: 'none',
-    msUserSelect: 'none',
-  };
-
   return (
     <div style={{ padding: isMobile ? '16px' : '0' }}>
       <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
@@ -221,12 +215,12 @@ export default function DailyDevotionalPage() {
         <div>
           {/* AI Generated Result */}
           <div className="card" style={{ marginBottom: '16px' }}>
-            <h2 style={{ fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary)', ...noSelectStyle }}>
+            <h2 style={{ fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary)', ...noSelectStyle }} {...noSelectEvents}>
               {devotional.title}
             </h2>
 
             {/* Verse - always non-selectable */}
-            <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: isMobile ? '16px' : '20px', marginBottom: '24px', ...noSelectStyle }}>
+            <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: isMobile ? '16px' : '20px', marginBottom: '24px', ...noSelectStyle }} {...noSelectEvents}>
               <div style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>📖 {devotional.verse.reference}</div>
               <p style={{ fontStyle: 'italic', fontSize: isMobile ? '16px' : '18px', lineHeight: '1.8', color: 'var(--text)', margin: 0 }}>
                 &ldquo;{devotional.verse.text}&rdquo;
@@ -261,7 +255,7 @@ export default function DailyDevotionalPage() {
                   lineHeight: '1.8',
                   whiteSpace: 'pre-wrap',
                   ...noSelectStyle,
-                }}>
+                }} {...noSelectEvents}>
                   {devotional.meditation}
                 </div>
               )}
@@ -300,7 +294,7 @@ export default function DailyDevotionalPage() {
                   lineHeight: '1.8',
                   whiteSpace: 'pre-wrap',
                   ...noSelectStyle,
-                }}>
+                }} {...noSelectEvents}>
                   {devotional.application}
                 </div>
               )}
@@ -340,7 +334,7 @@ export default function DailyDevotionalPage() {
                   whiteSpace: 'pre-wrap',
                   fontStyle: 'italic',
                   ...noSelectStyle,
-                }}>
+                }} {...noSelectEvents}>
                   {devotional.prayer}
                 </div>
               )}

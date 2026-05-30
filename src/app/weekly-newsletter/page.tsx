@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -146,13 +147,6 @@ export default function WeeklyNewsletterPage() {
     }
   }
 
-  const noSelectStyle: React.CSSProperties = {
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    MozUserSelect: 'none',
-    msUserSelect: 'none',
-  };
-
   if (step === 'form') {
     return (
       <div style={{ padding: isMobile ? '16px' : '0' }}>
@@ -229,7 +223,7 @@ export default function WeeklyNewsletterPage() {
                   fontSize: '16px',
                   fontWeight: '600',
                   ...noSelectStyle,
-                }}>
+                }} {...noSelectEvents}>
                   {newsletterTitle}
                 </div>
               )}
@@ -258,7 +252,7 @@ export default function WeeklyNewsletterPage() {
                   lineHeight: '1.6',
                   whiteSpace: 'pre-wrap',
                   ...noSelectStyle,
-                }}>
+                }} {...noSelectEvents}>
                   {newsletterContent}
                 </div>
               )}

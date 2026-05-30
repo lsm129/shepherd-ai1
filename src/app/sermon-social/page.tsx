@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -203,13 +204,6 @@ export default function SermonSocialPage() {
     }
   }
 
-  const noSelectStyle: React.CSSProperties = {
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    MozUserSelect: 'none',
-    msUserSelect: 'none',
-  };
-
   function renderContentCard(
     platform: string, 
     icon: string, 
@@ -251,13 +245,13 @@ export default function SermonSocialPage() {
             borderRadius: '8px',
             padding: '12px',
             ...noSelectStyle,
-          }}>
+          }} {...noSelectEvents}>
             {content}
           </div>
         )}
 
         {extraContent && (
-          <div style={{ ...noSelectStyle }}>
+          <div style={{ ...noSelectStyle }} {...noSelectEvents}>
             {extraContent}
           </div>
         )}
@@ -342,7 +336,7 @@ export default function SermonSocialPage() {
 
         {/* Habit learning hint */}
         {!isApproved && (
-          <div style={{ fontSize: '11px', color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px', ...noSelectStyle }}>
+          <div style={{ fontSize: '11px', color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px', ...noSelectStyle }} {...noSelectEvents}>
             💡 Copying tells AI you like this style — it learns your preferences over time 复制即告诉AI你喜欢此风格，它会随时间学习你的偏好
           </div>
         )}
