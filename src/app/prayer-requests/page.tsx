@@ -22,6 +22,7 @@ interface PrayerEntry {
 
 export default function PrayerRequestsPage() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [entries, setEntries] = useState<PrayerEntry[]>([]);
   const [generating, setGenerating] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -30,22 +31,27 @@ export default function PrayerRequestsPage() {
   const [shareLink, setShareLink] = useState('');
   const [ocrLoading, setOcrLoading] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
+  const [editingEntry, setEditingEntry] = useState<string | null>(null);
+  const [editedResponse, setEditedResponse] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     (async () => {
       try {
         const supabase = getSupabase();
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           setUserId(session.user.id);
-          // Generate shareable link for congregation
           const baseUrl = window.location.origin;
           setShareLink(`${baseUrl}/prayer/submit`);
         }
       } catch {}
     })();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Demo entries for first-time users
@@ -120,11 +126,20 @@ export default function PrayerRequestsPage() {
 
   async function handleCopy(text: string) {
     await navigator.clipboard.writeText(text);
-    // Consume 1 AI use when user copies the AI-generated response
   }
 
   function handleCopyShareLink() {
     navigator.clipboard.writeText(shareLink);
+  }
+
+  function handleEditResponse(entryId: string, currentResponse: string) {
+    setEditingEntry(entryId);
+    setEditedResponse(currentResponse);
+  }
+
+  function handleSaveResponse(entryId: string) {
+    setEntries(prev => prev.map(e => e.id === entryId ? { ...e, ai_response: editedResponse } : e));
+    setEditingEntry(null);
   }
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -165,6 +180,13 @@ export default function PrayerRequestsPage() {
     }
   }
 
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+  };
+
   const urgencyColors = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
   const statusLabels = { pending: '⏳ Pending', responded: '✅ Responded', 'follow-up': '🔄 Follow-up' };
   const pendingCount = entries.filter(e => e.status === 'pending').length;
@@ -172,56 +194,58 @@ export default function PrayerRequestsPage() {
   const filteredEntries = filter === 'all' ? entries : filter === 'pending' ? entries.filter(e => e.status === 'pending') : entries.filter(e => e.urgency === 'high' && e.status === 'pending');
 
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>🙏 Prayer Request Manager</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Congregation members submit prayer requests via your shareable link. You review and AI helps you respond.</p>
+    <div style={{ padding: isMobile ? '16px' : '0' }}>
+      <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+        <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>🙏 Prayer Request Manager 代祷管理</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Congregation members submit prayer requests via your shareable link. You review and AI helps you respond. 会众通过分享链接提交代祷事项，您审阅并由AI协助回复</p>
       </div>
 
-      {/* Share Link - the key feature */}
-      <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%)', borderRadius: '12px', padding: '24px', marginBottom: '24px', color: 'white' }}>
+      {/* Share Link */}
+      <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%)', borderRadius: '12px', padding: isMobile ? '16px' : '24px', marginBottom: '24px', color: 'white' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <div style={{ fontWeight: '600', marginBottom: '4px' }}>📢 Share This Link With Your Congregation</div>
-            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '8px' }}>Members submit prayer requests themselves — no login needed</div>
+          <div style={{ flex: 1, minWidth: isMobile ? '100%' : 'auto' }}>
+            <div style={{ fontWeight: '600', marginBottom: '4px' }}>📢 Share This Link With Your Congregation 分享此链接给会众</div>
+            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '8px' }}>Members submit prayer requests themselves — no login needed 会众自行提交代祷事项，无需登录</div>
             <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '6px', padding: '8px 14px', fontFamily: 'monospace', fontSize: '13px', wordBreak: 'break-all' }}>{shareLink}</div>
           </div>
-          <button onClick={handleCopyShareLink} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', whiteSpace: 'nowrap' }}>📋 Copy Link</button>
+          <button onClick={handleCopyShareLink} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', color: 'white', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px', whiteSpace: 'nowrap' }}>
+            📋 Copy Link 复制链接
+          </button>
         </div>
       </div>
 
       {error && (
-        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)' }}>{error}</div>
+        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>{error}</div>
       )}
 
       {/* Quick Add from Paper */}
-      <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      <div style={{ background: 'white', borderRadius: '12px', padding: isMobile ? '16px' : '20px', marginBottom: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <span style={{ fontWeight: '600', color: '#1e3a5f' }}>📝 Got paper prayer requests? </span>
-          <span style={{ color: '#666', fontSize: '14px' }}>Take a photo and AI reads the text. Image stays on your device — nothing uploaded.</span>
+          <span style={{ fontWeight: '600', color: '#1e3a5f' }}>📝 Got paper prayer requests? 有纸质代祷事项？</span>
+          <span style={{ color: '#666', fontSize: '14px' }}> Take a photo and AI reads the text. Image stays on your device. 拍照后AI读取文字，图片保留在您的设备上</span>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {ocrLoading && <span style={{ fontSize: '13px', color: '#6366f1' }}>Reading... {ocrProgress}%</span>}
           <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={handlePhotoUpload} style={{ display: 'none' }} />
           <button onClick={() => fileInputRef.current?.click()} disabled={ocrLoading} style={{ background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', cursor: ocrLoading ? 'not-allowed' : 'pointer', fontWeight: '600', fontSize: '14px' }}>
-            {ocrLoading ? '⏳ Reading...' : '📸 Take Photo / Upload'}
+            {ocrLoading ? '⏳ Reading... 读取中...' : '📸 Take Photo / Upload 拍照/上传'}
           </button>
         </div>
       </div>
 
       {/* Stats Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr 1fr' : 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '24px' }}>
         <div className="card" style={{ textAlign: 'center', padding: '16px' }}>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#f59e0b' }}>{pendingCount}</div>
-          <div style={{ fontSize: '13px', color: '#666' }}>Pending</div>
+          <div style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: '#f59e0b' }}>{pendingCount}</div>
+          <div style={{ fontSize: '13px', color: '#666' }}>Pending 待处理</div>
         </div>
         <div className="card" style={{ textAlign: 'center', padding: '16px' }}>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#ef4444' }}>{highUrgencyCount}</div>
-          <div style={{ fontSize: '13px', color: '#666' }}>High Urgency</div>
+          <div style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: '#ef4444' }}>{highUrgencyCount}</div>
+          <div style={{ fontSize: '13px', color: '#666' }}>High Urgency 紧急</div>
         </div>
         <div className="card" style={{ textAlign: 'center', padding: '16px' }}>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#22c55e' }}>{entries.filter(e => e.status === 'responded').length}</div>
-          <div style={{ fontSize: '13px', color: '#666' }}>Responded</div>
+          <div style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: '#22c55e' }}>{entries.filter(e => e.status === 'responded').length}</div>
+          <div style={{ fontSize: '13px', color: '#666' }}>Responded 已回复</div>
         </div>
       </div>
 
@@ -229,12 +253,12 @@ export default function PrayerRequestsPage() {
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
         {(['all', 'pending', 'high'] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: filter === f ? 'var(--primary)' : '#f3f4f6', color: filter === f ? 'white' : '#333', fontSize: '13px' }}>
-            {f === 'all' ? '📋 All' : f === 'pending' ? `⏳ Pending (${pendingCount})` : `🔴 High Urgency (${highUrgencyCount})`}
+            {f === 'all' ? '📋 All 全部' : f === 'pending' ? `⏳ Pending 待处理 (${pendingCount})` : `🔴 High Urgency 紧急 (${highUrgencyCount})`}
           </button>
         ))}
         {pendingCount > 1 && (
           <button onClick={handleRespondAll} disabled={!!generating} style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', background: '#6366f1', color: 'white', fontSize: '13px', marginLeft: 'auto' }}>
-            🤖 AI Respond to All Pending
+            🤖 AI Respond to All 全部AI回复
           </button>
         )}
       </div>
@@ -243,8 +267,8 @@ export default function PrayerRequestsPage() {
       {filteredEntries.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '48px' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>🙏</div>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--primary)', marginBottom: '8px' }}>No Prayer Requests Yet</h3>
-          <p style={{ color: '#666', marginBottom: '16px' }}>Share the link above with your congregation to start receiving prayer requests.</p>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', color: 'var(--primary)', marginBottom: '8px' }}>No Prayer Requests Yet 暂无代祷事项</h3>
+          <p style={{ color: '#666', marginBottom: '16px' }}>Share the link above with your congregation to start receiving prayer requests. 分享上方链接给会众以开始接收代祷事项</p>
         </div>
       ) : (
         filteredEntries.map(entry => (
@@ -259,28 +283,67 @@ export default function PrayerRequestsPage() {
                 <span style={{ fontSize: '13px', fontWeight: '500' }}>{statusLabels[entry.status]}</span>
               </div>
             </div>
-            <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px', fontStyle: 'italic' }}>"{entry.request_text}"</p>
+            
+            {/* Request text - non-selectable */}
+            <p style={{ color: '#333', lineHeight: '1.6', marginBottom: '12px', fontStyle: 'italic', ...noSelectStyle }}>"{entry.request_text}"</p>
             
             {entry.ai_response ? (
               <div>
                 <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '16px', marginBottom: '12px' }}>
-                  <div style={{ fontWeight: '600', color: '#16a34a', marginBottom: '8px' }}>✉️ AI Drafted Response</div>
-                  <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', color: '#333', userSelect: 'none', WebkitUserSelect: 'none' }}>{entry.ai_response}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ fontWeight: '600', color: '#16a34a' }}>✉️ AI Drafted Response AI草拟回复</div>
+                    {editingEntry !== entry.id && (
+                      <button
+                        onClick={() => handleEditResponse(entry.id, entry.ai_response)}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}
+                      >
+                        ✏️ Edit 编辑
+                      </button>
+                    )}
+                  </div>
+                  {editingEntry === entry.id ? (
+                    <textarea
+                      className="input"
+                      value={editedResponse}
+                      onChange={(e) => setEditedResponse(e.target.value)}
+                      style={{ minHeight: isMobile ? '120px' : '150px' }}
+                    />
+                  ) : (
+                    <div style={{
+                      minHeight: isMobile ? '80px' : '100px',
+                      lineHeight: '1.8',
+                      whiteSpace: 'pre-wrap',
+                      color: '#333',
+                      background: 'white',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      fontSize: '14px',
+                      ...noSelectStyle,
+                    }}>
+                      {entry.ai_response}
+                    </div>
+                  )}
+                  {editingEntry === entry.id && (
+                    <button onClick={() => handleSaveResponse(entry.id)} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                      ✅ Save 保存修改
+                    </button>
+                  )}
                 </div>
                 {entry.verse.reference && (
-                  <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px' }}>
+                  <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '12px', ...noSelectStyle }}>
                     <span style={{ fontWeight: '600', color: 'var(--primary)' }}>📖 {entry.verse.reference}</span>
-                    <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '4px' }}>"{entry.verse.text}"</p>
+                    <p style={{ fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '4px', marginBottom: 0 }}>"{entry.verse.text}"</p>
                   </div>
                 )}
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <button onClick={() => handleCopy(`${entry.ai_response}\n\n— ${entry.verse.reference}: "${entry.verse.text}"`)} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>📋 Copy Response</button>
-                  <button onClick={() => setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, status: 'follow-up' } : e))} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>🔄 Mark for Follow-up</button>
+                  <button onClick={() => handleCopy(`${entry.ai_response}\n\n— ${entry.verse.reference}: "${entry.verse.text}"`)} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>📋 Copy Response 复制回复</button>
+                  <button onClick={() => setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, status: 'follow-up' } : e))} className="btn-secondary" style={{ fontSize: '13px', padding: '6px 14px' }}>🔄 Mark for Follow-up 标记跟进</button>
                 </div>
               </div>
             ) : (
               <button onClick={() => handleGenerateResponse(entry.id)} disabled={generating === entry.id} className="btn-primary" style={{ fontSize: '14px' }}>
-                {generating === entry.id ? '🤖 Generating Response...' : '🤖 Generate AI Response'}
+                {generating === entry.id ? '🤖 Generating Response... 生成回复中...' : '🤖 Generate AI Response 生成AI回复'}
               </button>
             )}
           </div>

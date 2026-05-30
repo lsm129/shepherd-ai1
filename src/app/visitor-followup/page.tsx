@@ -18,6 +18,8 @@ interface Email {
 
 export default function VisitorFollowupPage() {
   const [step, setStep] = useState<'form' | 'preview' | 'sending' | 'sent'>('form');
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [visitorName, setVisitorName] = useState('');
   const [visitorEmail, setVisitorEmail] = useState('');
   const [visitorPhone, setVisitorPhone] = useState('');
@@ -26,12 +28,17 @@ export default function VisitorFollowupPage() {
   const [interests, setInterests] = useState('');
   const [emails, setEmails] = useState<Email[]>([]);
   const [editedEmails, setEditedEmails] = useState<Email[]>([]);
+  const [editingWeek, setEditingWeek] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     (async () => {
       try {
         const supabase = getSupabase();
@@ -42,7 +49,10 @@ export default function VisitorFollowupPage() {
         }
       } catch {}
     })();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  if (!mounted) return null;
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -73,6 +83,7 @@ export default function VisitorFollowupPage() {
       if (data.emails && data.emails.length > 0) {
         setEmails(data.emails);
         setEditedEmails(data.emails);
+        setEditingWeek(null);
         setStep('preview');
       } else {
         setError('AI generated no emails. Please try again.');
@@ -85,7 +96,6 @@ export default function VisitorFollowupPage() {
   }
 
   async function handleSend() {
-    // Consume 1 AI generation when user approves the sequence
     setStep('sending');
     setError('');
     try {
@@ -96,7 +106,7 @@ export default function VisitorFollowupPage() {
           emails: editedEmails,
           recipientEmail: visitorEmail,
           recipientName: visitorName,
-          fromName: undefined, // will use default
+          fromName: undefined,
           userId: userId || undefined,
         }),
       });
@@ -110,7 +120,7 @@ export default function VisitorFollowupPage() {
       setStep('sent');
     } catch (err: any) {
       setError(err.message || 'Failed to send emails');
-      setStep('preview'); // Go back to preview so user can retry
+      setStep('preview');
     }
   }
 
@@ -123,59 +133,67 @@ export default function VisitorFollowupPage() {
     setEmails([]);
     setEditedEmails([]);
     setError('');
+    setEditingWeek(null);
   }
+
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+  };
 
   if (step === 'form') {
     return (
-      <div>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Visitor Follow-up Agent</h1>
-          <p style={{ color: '#666' }}>Enter visitor information and let AI create a personalized 6-week follow-up sequence.</p>
+      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+          <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Visitor Follow-up Agent 访客跟进助手</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Enter visitor information and let AI create a personalized 6-week follow-up sequence. 输入访客信息，AI生成个性化6周跟进邮件</p>
         </div>
 
         {error && (
-          <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: '#dc2626' }}>
+          <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>
             {error}
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
           <div className="card">
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Visitor Information</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Visitor Information 访客信息</h2>
             <form onSubmit={handleGenerate}>
               <div className="form-group">
-                <label className="form-label">Full Name *</label>
+                <label className="form-label">Full Name * 姓名</label>
                 <input type="text" className="input" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} placeholder="John Smith" required />
               </div>
               <div className="form-group">
-                <label className="form-label">Email *</label>
+                <label className="form-label">Email * 邮箱</label>
                 <input type="email" className="input" value={visitorEmail} onChange={(e) => setVisitorEmail(e.target.value)} placeholder="john@example.com" required />
               </div>
               <div className="form-group">
-                <label className="form-label">Phone</label>
+                <label className="form-label">Phone 电话</label>
                 <input type="tel" className="input" value={visitorPhone} onChange={(e) => setVisitorPhone(e.target.value)} placeholder="(555) 123-4567" />
               </div>
               <div className="form-group">
-                <label className="form-label">First Visit Date *</label>
+                <label className="form-label">First Visit Date * 首次到访日期</label>
                 <input type="date" className="input" value={firstVisitDate} onChange={(e) => setFirstVisitDate(e.target.value)} required />
               </div>
               <div className="form-group">
-                <label className="form-label">How Did They Hear About Us?</label>
+                <label className="form-label">How Did They Hear About Us? 如何了解到教会？</label>
                 <input type="text" className="input" value={howHeard} onChange={(e) => setHowHeard(e.target.value)} placeholder="Friend referral, Google search, etc." />
               </div>
               <div className="form-group">
-                <label className="form-label">Expressed Interests</label>
+                <label className="form-label">Expressed Interests 感兴趣的方面</label>
                 <textarea className="input textarea" value={interests} onChange={(e) => setInterests(e.target.value)} placeholder="Any interests or needs they mentioned..." />
               </div>
               <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-                {loading ? 'Generating...' : 'Generate Email Sequence'}
+                {loading ? 'Generating... 生成中...' : 'Generate Email Sequence 生成邮件序列'}
               </button>
             </form>
           </div>
 
           <div>
-            <div className="card" style={{ background: '#f5f5f5', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>What You'll Get</h3>
+            <div className="card" style={{ background: 'var(--surface)', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>What You'll Get 你将获得</h3>
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {[
                   { week: 1, title: 'Welcome Email', desc: 'Sent immediately' },
@@ -186,10 +204,10 @@ export default function VisitorFollowupPage() {
                   { week: 6, title: 'Personal Invite', desc: 'Encourage connection' }
                 ].map((item) => (
                   <li key={item.week} style={{ display: 'flex', gap: '12px', marginBottom: '12px', alignItems: 'flex-start' }}>
-                    <span style={{ width: '24px', height: '24px', background: '#1e3a5f', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 }}>{item.week}</span>
+                    <span style={{ width: '24px', height: '24px', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0 }}>{item.week}</span>
                     <div>
                       <div style={{ fontWeight: '600' }}>{item.title}</div>
-                      <div style={{ fontSize: '13px', color: '#666' }}>{item.desc}</div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.desc}</div>
                     </div>
                   </li>
                 ))}
@@ -203,41 +221,94 @@ export default function VisitorFollowupPage() {
 
   if (step === 'preview') {
     return (
-      <div>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Review Email Sequence</h1>
-          <p style={{ color: '#666' }}>Review and edit the generated emails for {visitorName} ({visitorEmail})</p>
+      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+          <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Review Email Sequence 审阅邮件序列</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Review and edit the generated emails for {visitorName} ({visitorEmail})</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-          <div style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
-            {editedEmails.map((email) => (
-              <div key={email.week} className="card" style={{ marginBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                  <span style={{ width: '32px', height: '32px', background: '#1e3a5f', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{email.week}</span>
-                  <span style={{ fontSize: '14px', color: '#666' }}>Week {email.week}</span>
+        <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
+          <div>
+            {editedEmails.map((email) => {
+              const isEditingThis = editingWeek === email.week;
+              return (
+                <div key={email.week} className="card" style={{ marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ width: '32px', height: '32px', background: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{email.week}</span>
+                      <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Week {email.week}</span>
+                    </div>
+                    {!isEditingThis && (
+                      <button
+                        onClick={() => setEditingWeek(email.week)}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}
+                      >
+                        ✏️ Edit 编辑
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Subject */}
+                  <div className="form-group">
+                    <label className="form-label">Subject Line 主题</label>
+                    {isEditingThis ? (
+                      <input type="text" className="input" value={email.subject} onChange={(e) => updateEmail(email.week, 'subject', e.target.value)} />
+                    ) : (
+                      <div style={{
+                        background: 'white',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px',
+                        padding: '10px 12px',
+                        fontSize: '14px',
+                        fontWeight: '600',
+                        ...noSelectStyle,
+                      }}>
+                        {email.subject}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Body */}
+                  <div className="form-group">
+                    <label className="form-label">Email Body 邮件正文</label>
+                    {isEditingThis ? (
+                      <textarea className="input" value={email.body} onChange={(e) => updateEmail(email.week, 'body', e.target.value)} style={{ minHeight: '200px' }} />
+                    ) : (
+                      <div style={{
+                        minHeight: '200px',
+                        background: 'white',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        fontSize: '14px',
+                        lineHeight: '1.6',
+                        whiteSpace: 'pre-wrap',
+                        ...noSelectStyle,
+                      }}>
+                        {email.body}
+                      </div>
+                    )}
+                  </div>
+
+                  {isEditingThis && (
+                    <button onClick={() => setEditingWeek(null)} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                      ✅ Save 保存修改
+                    </button>
+                  )}
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Subject Line</label>
-                  <input type="text" className="input" value={email.subject} onChange={(e) => updateEmail(email.week, 'subject', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Email Body</label>
-                  <textarea className="input" value={email.body} onChange={(e) => updateEmail(email.week, 'body', e.target.value)} style={{ minHeight: '200px' }} />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="card" style={{ position: 'sticky', top: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options</h3>
+          <div className="card" style={{ position: isMobile ? 'relative' : 'sticky', top: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options 发送选项</h3>
             <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Recipient</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Recipient 收件人</div>
               <div style={{ fontWeight: '600' }}>{visitorName}</div>
-              <div style={{ fontSize: '14px', color: '#666' }}>{visitorEmail}</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{visitorEmail}</div>
             </div>
-            <button onClick={handleSend} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>Send All Emails</button>
-            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over</button>
+            <button onClick={handleSend} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>Send All Emails 发送所有邮件</button>
+            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over 重新开始</button>
           </div>
         </div>
       </div>
@@ -247,8 +318,8 @@ export default function VisitorFollowupPage() {
   if (step === 'sending') {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Sending Emails...</h2>
-        <p style={{ color: '#666' }}>Your email sequence is being sent to {visitorName}</p>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Sending Emails... 发送中...</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>Your email sequence is being sent to {visitorName}</p>
       </div>
     );
   }
@@ -257,11 +328,11 @@ export default function VisitorFollowupPage() {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>&#10003;</div>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#16a34a' }}>Email Sequence Started!</h2>
-        <p style={{ color: '#666', marginBottom: '8px' }}>Week 1 email sent immediately to {visitorName}</p>
-        <p style={{ color: '#666', marginBottom: '32px' }}>Weeks 2-6 are scheduled to send automatically every 7 days</p>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#16a34a' }}>Email Sequence Started! 邮件序列已启动！</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '8px' }}>Week 1 email sent immediately to {visitorName}</p>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Weeks 2-6 are scheduled to send automatically every 7 days</p>
         <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', maxWidth: '400px', margin: '0 auto 32px', textAlign: 'left' }}>
-          <div style={{ fontWeight: '600', marginBottom: '12px', color: '#16a34a' }}>Schedule:</div>
+          <div style={{ fontWeight: '600', marginBottom: '12px', color: '#16a34a' }}>Schedule 计划:</div>
           {editedEmails.map((email, i) => (
             <div key={email.week} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0', fontSize: '14px', color: '#333' }}>
               <span>Week {email.week}: {email.subject.substring(0, 30)}{email.subject.length > 30 ? '...' : ''}</span>
@@ -270,8 +341,8 @@ export default function VisitorFollowupPage() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-          <button onClick={handleBackToForm} className="btn-primary">Follow Up Another Visitor</button>
-          <a href="/dashboard" className="btn-secondary">Back to Dashboard</a>
+          <button onClick={handleBackToForm} className="btn-primary">Follow Up Another Visitor 跟进下一位访客</button>
+          <a href="/dashboard" className="btn-secondary">Back to Dashboard 返回仪表盘</a>
         </div>
       </div>
     );

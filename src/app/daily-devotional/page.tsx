@@ -26,17 +26,25 @@ const PRESET_TOPICS = [
 
 export default function DailyDevotionalPage() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [customTopic, setCustomTopic] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [devotional, setDevotional] = useState<Devotional | null>(null);
+  const [editedMeditation, setEditedMeditation] = useState('');
+  const [editedApplication, setEditedApplication] = useState('');
+  const [editedPrayer, setEditedPrayer] = useState('');
+  const [editingField, setEditingField] = useState<string>('');
   const [copied, setCopied] = useState(false);
   const [userId, setUserId] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     // Read Supabase session for auth
     (async () => {
       try {
@@ -48,6 +56,7 @@ export default function DailyDevotionalPage() {
         }
       } catch {}
     })();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!mounted) return null;
@@ -74,6 +83,10 @@ export default function DailyDevotionalPage() {
       }
 
       setDevotional(data);
+      setEditedMeditation(data.meditation || '');
+      setEditedApplication(data.application || '');
+      setEditedPrayer(data.prayer || '');
+      setEditingField('');
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
     } finally {
@@ -83,7 +96,10 @@ export default function DailyDevotionalPage() {
 
   async function handleCopy() {
     if (!devotional) return;
-    const text = `${devotional.title}\n\n📖 ${devotional.verse.reference}\n"${devotional.verse.text}"\n\n💭 Meditation\n${devotional.meditation}\n\n🎯 Application\n${devotional.application}\n\n🙏 Prayer\n${devotional.prayer}`;
+    const meditation = editingField === 'meditation' ? editedMeditation : devotional.meditation;
+    const application = editingField === 'application' ? editedApplication : devotional.application;
+    const prayer = editingField === 'prayer' ? editedPrayer : devotional.prayer;
+    const text = `${devotional.title}\n\n📖 ${devotional.verse.reference}\n"${devotional.verse.text}"\n\n💭 Meditation\n${meditation}\n\n🎯 Application\n${application}\n\n🙏 Prayer\n${prayer}`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -94,28 +110,55 @@ export default function DailyDevotionalPage() {
     setSelectedTopic('');
     setCustomTopic('');
     setError('');
+    setEditingField('');
   }
 
+  function handleEdit(field: string) {
+    setEditingField(field);
+  }
+
+  function handleSaveEdit() {
+    if (editingField === 'meditation' && devotional) {
+      setDevotional({ ...devotional, meditation: editedMeditation });
+    } else if (editingField === 'application' && devotional) {
+      setDevotional({ ...devotional, application: editedApplication });
+    } else if (editingField === 'prayer' && devotional) {
+      setDevotional({ ...devotional, prayer: editedPrayer });
+    }
+    setEditingField('');
+  }
+
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+  };
+
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Daily Devotional</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Generate a daily devotional with Bible verse, meditation, application, and prayer.</p>
+    <div style={{ padding: isMobile ? '16px' : '0' }}>
+      <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+        <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
+          Daily Devotional 每日灵修
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>
+          Generate a daily devotional with Bible verse, meditation, application, and prayer. 生成每日灵修内容
+        </p>
       </div>
 
       {error && (
-        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)' }}>
+        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>
           {error}
         </div>
       )}
 
       {!devotional ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
           <div className="card">
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Choose a Topic</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Choose a Topic 选择主题</h2>
             <form onSubmit={handleGenerate}>
               <div className="form-group">
-                <label className="form-label">Select a Topic</label>
+                <label className="form-label">Select a Topic 选择主题</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {PRESET_TOPICS.map((topic) => (
                     <button
@@ -139,7 +182,7 @@ export default function DailyDevotionalPage() {
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Or Enter a Custom Topic</label>
+                <label className="form-label">Or Enter a Custom Topic 或输入自定义主题</label>
                 <input
                   type="text"
                   className="input"
@@ -149,13 +192,13 @@ export default function DailyDevotionalPage() {
                 />
               </div>
               <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading || (!selectedTopic && !customTopic)}>
-                {loading ? 'Generating Devotional...' : 'Generate Daily Devotional'}
+                {loading ? 'Generating Devotional... 生成中...' : 'Generate Daily Devotional 生成每日灵修'}
               </button>
             </form>
           </div>
 
           <div className="card" style={{ background: 'var(--surface)' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>📖 What You&apos;ll Receive</h3>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>📖 What You'll Receive 你将获得</h3>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {[
                 { icon: '📖', title: 'Bible Verse', desc: 'A relevant Scripture passage' },
@@ -175,38 +218,147 @@ export default function DailyDevotionalPage() {
           </div>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-          <div className="card" style={{ userSelect: copied ? 'auto' : 'none', WebkitUserSelect: copied ? 'auto' : 'none' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary)' }}>{devotional.title}</h2>
+        <div>
+          {/* AI Generated Result */}
+          <div className="card" style={{ marginBottom: '16px' }}>
+            <h2 style={{ fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold', marginBottom: '24px', color: 'var(--primary)', ...noSelectStyle }}>
+              {devotional.title}
+            </h2>
 
-            <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
+            {/* Verse - always non-selectable */}
+            <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: isMobile ? '16px' : '20px', marginBottom: '24px', ...noSelectStyle }}>
               <div style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>📖 {devotional.verse.reference}</div>
-              <p style={{ fontStyle: 'italic', fontSize: '18px', lineHeight: '1.8', color: 'var(--text)' }}>&ldquo;{devotional.verse.text}&rdquo;</p>
+              <p style={{ fontStyle: 'italic', fontSize: isMobile ? '16px' : '18px', lineHeight: '1.8', color: 'var(--text)', margin: 0 }}>
+                &ldquo;{devotional.verse.text}&rdquo;
+              </p>
             </div>
 
+            {/* Meditation */}
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' }}>💭 Meditation</h3>
-              <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{devotional.meditation}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 'bold', margin: 0 }}>💭 Meditation 默想</h3>
+                {editingField !== 'meditation' && (
+                  <button onClick={() => handleEdit('meditation')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}>
+                    ✏️ Edit 编辑
+                  </button>
+                )}
+              </div>
+              {editingField === 'meditation' ? (
+                <textarea
+                  className="input"
+                  value={editedMeditation}
+                  onChange={(e) => setEditedMeditation(e.target.value)}
+                  style={{ minHeight: isMobile ? '120px' : '150px' }}
+                />
+              ) : (
+                <div style={{
+                  minHeight: isMobile ? '120px' : '150px',
+                  background: 'white',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  lineHeight: '1.8',
+                  whiteSpace: 'pre-wrap',
+                  ...noSelectStyle,
+                }}>
+                  {devotional.meditation}
+                </div>
+              )}
+              {editingField === 'meditation' && (
+                <button onClick={handleSaveEdit} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                  ✅ Save 保存修改
+                </button>
+              )}
             </div>
 
+            {/* Application */}
             <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' }}>🎯 Application</h3>
-              <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{devotional.application}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 'bold', margin: 0 }}>🎯 Application 应用</h3>
+                {editingField !== 'application' && (
+                  <button onClick={() => handleEdit('application')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}>
+                    ✏️ Edit 编辑
+                  </button>
+                )}
+              </div>
+              {editingField === 'application' ? (
+                <textarea
+                  className="input"
+                  value={editedApplication}
+                  onChange={(e) => setEditedApplication(e.target.value)}
+                  style={{ minHeight: isMobile ? '100px' : '120px' }}
+                />
+              ) : (
+                <div style={{
+                  minHeight: isMobile ? '100px' : '120px',
+                  background: 'white',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  lineHeight: '1.8',
+                  whiteSpace: 'pre-wrap',
+                  ...noSelectStyle,
+                }}>
+                  {devotional.application}
+                </div>
+              )}
+              {editingField === 'application' && (
+                <button onClick={handleSaveEdit} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                  ✅ Save 保存修改
+                </button>
+              )}
             </div>
 
-            <div style={{ background: 'rgba(30, 58, 95, 0.05)', borderRadius: '8px', padding: '20px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' }}>🙏 Prayer</h3>
-              <p style={{ lineHeight: '1.8', whiteSpace: 'pre-wrap', fontStyle: 'italic' }}>{devotional.prayer}</p>
+            {/* Prayer */}
+            <div style={{ background: 'rgba(30, 58, 95, 0.05)', borderRadius: '8px', padding: isMobile ? '16px' : '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <h3 style={{ fontSize: isMobile ? '16px' : '18px', fontWeight: 'bold', margin: 0 }}>🙏 Prayer 祷告</h3>
+                {editingField !== 'prayer' && (
+                  <button onClick={() => handleEdit('prayer')} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}>
+                    ✏️ Edit 编辑
+                  </button>
+                )}
+              </div>
+              {editingField === 'prayer' ? (
+                <textarea
+                  className="input"
+                  value={editedPrayer}
+                  onChange={(e) => setEditedPrayer(e.target.value)}
+                  style={{ minHeight: isMobile ? '120px' : '150px' }}
+                />
+              ) : (
+                <div style={{
+                  minHeight: isMobile ? '120px' : '150px',
+                  background: 'white',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  lineHeight: '1.8',
+                  whiteSpace: 'pre-wrap',
+                  fontStyle: 'italic',
+                  ...noSelectStyle,
+                }}>
+                  {devotional.prayer}
+                </div>
+              )}
+              {editingField === 'prayer' && (
+                <button onClick={handleSaveEdit} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                  ✅ Save 保存修改
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="card" style={{ position: 'sticky', top: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Actions</h3>
-            <button onClick={handleCopy} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>
-              {copied ? '✓ Copied!' : '📋 Copy Devotional'}
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button onClick={handleCopy} className="btn-primary" style={{ flex: 1 }}>
+              {copied ? '✓ Copied! 已复制' : '📋 Copy Devotional 复制灵修内容'}
             </button>
-            <button onClick={handleReset} className="btn-secondary" style={{ width: '100%' }}>
-              Generate Another
+            <button onClick={handleReset} className="btn-secondary" style={{ flex: 1 }}>
+              Generate Another 再生成
             </button>
           </div>
         </div>

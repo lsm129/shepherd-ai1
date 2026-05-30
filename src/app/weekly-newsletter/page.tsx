@@ -12,6 +12,8 @@ function getSupabase() {
 
 export default function WeeklyNewsletterPage() {
   const [step, setStep] = useState<'form' | 'preview' | 'sent'>('form');
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [sending, setSending] = useState(false);
   const [highlights, setHighlights] = useState('');
   const [churchName, setChurchName] = useState('');
@@ -20,13 +22,20 @@ export default function WeeklyNewsletterPage() {
   const [prayerRequests, setPrayerRequests] = useState('');
   const [newsletterTitle, setNewsletterTitle] = useState('');
   const [newsletterContent, setNewsletterContent] = useState('');
+  const [editedTitle, setEditedTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     (async () => {
       try {
         const supabase = getSupabase();
@@ -37,7 +46,10 @@ export default function WeeklyNewsletterPage() {
         }
       } catch {}
     })();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  if (!mounted) return null;
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -67,9 +79,13 @@ export default function WeeklyNewsletterPage() {
       }
 
       if (data.newsletter) {
-        setNewsletterTitle(data.newsletter.title || 'Weekly Newsletter');
-        setNewsletterContent(data.newsletter.content || '');
-        setEditedContent(data.newsletter.content || '');
+        const title = data.newsletter.title || 'Weekly Newsletter';
+        const content = data.newsletter.content || '';
+        setNewsletterTitle(title);
+        setNewsletterContent(content);
+        setEditedTitle(title);
+        setEditedContent(content);
+        setIsEditing(false);
         setStep('preview');
       } else {
         setError('AI generated no content. Please try again.');
@@ -87,13 +103,29 @@ export default function WeeklyNewsletterPage() {
     setHighlights('');
     setUpcomingEvents('');
     setPrayerRequests('');
+    setIsEditing(false);
+  }
+
+  function handleEdit() {
+    setIsEditing(true);
+  }
+
+  function handleSaveEdit() {
+    setNewsletterTitle(editedTitle);
+    setNewsletterContent(editedContent);
+    setIsEditing(false);
+  }
+
+  async function handleCopy() {
+    const text = `${newsletterTitle}\n\n${newsletterContent}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleSendNewsletter() {
-    // Consume 1 AI generation when user approves the newsletter
     setSending(true);
     try {
-      // Save newsletter to DB first
       const supabase = getSupabase();
       const { data: { session } } = await supabase.auth.getSession();
       
@@ -114,16 +146,23 @@ export default function WeeklyNewsletterPage() {
     }
   }
 
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+  };
+
   if (step === 'form') {
     return (
-      <div>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Weekly Newsletter Agent</h1>
-          <p style={{ color: '#666' }}>Enter your week highlights and let AI create a beautiful newsletter.</p>
+      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+          <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Weekly Newsletter Agent 周刊助手</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Enter your week highlights and let AI create a beautiful newsletter. 输入本周亮点，AI生成精美周刊</p>
         </div>
 
         {error && (
-          <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: '#dc2626' }}>
+          <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>
             {error}
           </div>
         )}
@@ -131,27 +170,27 @@ export default function WeeklyNewsletterPage() {
         <div className="card" style={{ maxWidth: '700px' }}>
           <form onSubmit={handleGenerate}>
             <div className="form-group">
-              <label className="form-label">Church Name</label>
+              <label className="form-label">Church Name 教会名称</label>
               <input type="text" className="input" value={churchName} onChange={(e) => setChurchName(e.target.value)} placeholder="Grace Community Church" />
             </div>
             <div className="form-group">
-              <label className="form-label">Pastor Name</label>
+              <label className="form-label">Pastor Name 牧师姓名</label>
               <input type="text" className="input" value={pastorName} onChange={(e) => setPastorName(e.target.value)} placeholder="Pastor John Smith" />
             </div>
             <div className="form-group">
-              <label className="form-label">This Week's Highlights *</label>
+              <label className="form-label">This Week's Highlights * 本周亮点</label>
               <textarea className="input textarea" value={highlights} onChange={(e) => setHighlights(e.target.value)} placeholder="Youth group had 20 attendees, New bible study starting next week, Building fund reached 50%..." style={{ minHeight: '120px' }} required />
             </div>
             <div className="form-group">
-              <label className="form-label">Upcoming Events</label>
+              <label className="form-label">Upcoming Events 近期活动</label>
               <textarea className="input textarea" value={upcomingEvents} onChange={(e) => setUpcomingEvents(e.target.value)} placeholder="Sunday service 10am, Wednesday bible study 7pm..." style={{ minHeight: '80px' }} />
             </div>
             <div className="form-group">
-              <label className="form-label">Prayer Requests</label>
+              <label className="form-label">Prayer Requests 代祷事项</label>
               <textarea className="input textarea" value={prayerRequests} onChange={(e) => setPrayerRequests(e.target.value)} placeholder="Pray for the Smith family, Community outreach..." style={{ minHeight: '80px' }} />
             </div>
             <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-              {loading ? 'Generating...' : 'Generate Newsletter'}
+              {loading ? 'Generating... 生成中...' : 'Generate Newsletter 生成周刊'}
             </button>
           </form>
         </div>
@@ -161,28 +200,84 @@ export default function WeeklyNewsletterPage() {
 
   if (step === 'preview') {
     return (
-      <div>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>Review Newsletter</h1>
-          <p style={{ color: '#666' }}>Edit and send your newsletter</p>
+      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+          <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Review Newsletter 审阅周刊</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Edit and send your newsletter 编辑并发送周刊</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
+        <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
           <div className="card">
+            {/* Title */}
             <div className="form-group">
-              <label className="form-label">Newsletter Title</label>
-              <input type="text" className="input" value={newsletterTitle} onChange={(e) => setNewsletterTitle(e.target.value)} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="form-label">Newsletter Title 周刊标题</label>
+                {!isEditing && (
+                  <button onClick={handleEdit} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}>
+                    ✏️ Edit 编辑
+                  </button>
+                )}
+              </div>
+              {isEditing ? (
+                <input type="text" className="input" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+              ) : (
+                <div style={{
+                  background: 'white',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '10px 12px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  ...noSelectStyle,
+                }}>
+                  {newsletterTitle}
+                </div>
+              )}
             </div>
+
+            {/* Content */}
             <div className="form-group">
-              <label className="form-label">Content</label>
-              <textarea className="input" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} style={{ minHeight: '400px' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label className="form-label">Content 内容</label>
+                {!isEditing && (
+                  <button onClick={handleEdit} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '13px', fontWeight: '600', padding: '4px 8px' }}>
+                    ✏️ Edit 编辑
+                  </button>
+                )}
+              </div>
+              {isEditing ? (
+                <textarea className="input" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} style={{ minHeight: isMobile ? '300px' : '400px' }} />
+              ) : (
+                <div style={{
+                  minHeight: isMobile ? '300px' : '400px',
+                  background: 'white',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  whiteSpace: 'pre-wrap',
+                  ...noSelectStyle,
+                }}>
+                  {newsletterContent}
+                </div>
+              )}
             </div>
+
+            {isEditing && (
+              <button onClick={handleSaveEdit} className="btn-secondary" style={{ width: '100%', marginTop: '8px' }}>
+                ✅ Save 保存修改
+              </button>
+            )}
           </div>
 
-          <div className="card" style={{ position: 'sticky', top: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options</h3>
-            <button onClick={handleSendNewsletter} disabled={sending} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>{sending ? 'Sending...' : 'Send Newsletter'}</button>
-            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over</button>
+          <div className="card" style={{ position: isMobile ? 'relative' : 'sticky', top: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Send Options 发送选项</h3>
+            <button onClick={handleCopy} className="btn-secondary" style={{ width: '100%', marginBottom: '12px' }}>
+              {copied ? '✓ Copied! 已复制' : '📋 Copy Newsletter 复制周刊'}
+            </button>
+            <button onClick={handleSendNewsletter} disabled={sending} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>{sending ? 'Sending... 发送中...' : 'Send Newsletter 发送周刊'}</button>
+            <button onClick={handleBackToForm} className="btn-secondary" style={{ width: '100%' }}>Start Over 重新开始</button>
           </div>
         </div>
       </div>
@@ -192,11 +287,11 @@ export default function WeeklyNewsletterPage() {
   if (step === 'sent') {
     return (
       <div style={{ textAlign: 'center', padding: '80px 0' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Newsletter Sent!</h2>
-        <p style={{ color: '#666', marginBottom: '32px' }}>Your newsletter has been sent successfully.</p>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Newsletter Sent! 周刊已发送！</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Your newsletter has been sent successfully. 您的周刊已成功发送。</p>
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-          <button onClick={handleBackToForm} className="btn-primary">Create Another</button>
-          <a href="/dashboard" className="btn-secondary">Back to Dashboard</a>
+          <button onClick={handleBackToForm} className="btn-primary">Create Another 再创建一份</button>
+          <a href="/dashboard" className="btn-secondary">Back to Dashboard 返回仪表盘</a>
         </div>
       </div>
     );

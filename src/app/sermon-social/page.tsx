@@ -86,15 +86,12 @@ export default function SermonSocialPage() {
   async function handleApproveAndCopy(platform: string, text: string) {
     setRecording(true);
     try {
-      // Copy to clipboard
       await navigator.clipboard.writeText(text);
       setCopiedField(platform);
       setTimeout(() => setCopiedField(''), 2000);
       
-      // Mark as approved
       setApprovedPlatforms(prev => new Set([...prev, platform]));
 
-      // Record habit
       if (userId) {
       await fetch('/api/ai-habits', {
           method: 'POST',
@@ -118,7 +115,6 @@ export default function SermonSocialPage() {
   // Edit then Approve - even stronger signal
   async function handleEditApprove(platform: string, originalText: string, editedText: string) {
     if (editedText.trim() === originalText.trim()) {
-      // No actual edit, just approve
       handleApproveAndCopy(platform, editedText);
       return;
     }
@@ -166,7 +162,6 @@ export default function SermonSocialPage() {
         }),
       });
     }
-    // Regenerate for this platform only
     setLoading(true);
     try {
       const response = await fetch('/api/generate/sermon-social', {
@@ -208,6 +203,13 @@ export default function SermonSocialPage() {
     }
   }
 
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+  };
+
   function renderContentCard(
     platform: string, 
     icon: string, 
@@ -225,42 +227,40 @@ export default function SermonSocialPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 'bold', color }}>{icon} {title}</h3>
-          {isApproved && <span style={{ fontSize: '11px', color: '#22c55e', fontWeight: 500 }}>✓ Copied</span>}
+          {isApproved && <span style={{ fontSize: '11px', color: '#22c55e', fontWeight: 500 }}>✓ Copied 已复制</span>}
         </div>
 
-        {/* Content - non-selectable until approved */}
+        {/* Content - always non-selectable (use div when not editing, textarea when editing) */}
         {isEditing ? (
           <textarea
             value={editText}
             onChange={(e) => setEditTexts({ ...editTexts, [platform]: e.target.value })}
             style={{
-              width: '100%', minHeight: '120px', padding: '12px',
+              width: '100%', minHeight: mobile ? '100px' : '120px', padding: '12px',
               borderRadius: '8px', border: '1px solid #ddd',
               fontSize: '14px', lineHeight: '1.8', resize: 'vertical',
               fontFamily: 'inherit',
-              userSelect: isApproved ? 'auto' : 'none',
-              WebkitUserSelect: isApproved ? 'auto' : 'none',
             }}
           />
         ) : (
           <div style={{
+            minHeight: mobile ? '100px' : '120px',
             lineHeight: '1.8', whiteSpace: 'pre-wrap', fontSize: '14px',
-            userSelect: isApproved ? 'auto' : 'none',
-            WebkitUserSelect: isApproved ? 'auto' : 'none',
-            position: 'relative',
-            filter: isApproved ? 'none' : 'none',
+            background: 'white',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            padding: '12px',
+            ...noSelectStyle,
           }}>
             {content}
-            {!isApproved && (
-              <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                background: 'transparent', cursor: 'default', zIndex: 1,
-              }} />
-            )}
           </div>
         )}
 
-        {extraContent}
+        {extraContent && (
+          <div style={{ ...noSelectStyle }}>
+            {extraContent}
+          </div>
+        )}
 
         {/* Action buttons */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
@@ -276,7 +276,7 @@ export default function SermonSocialPage() {
                   fontSize: '13px', cursor: recording ? 'wait' : 'pointer',
                 }}
               >
-                {recording ? '...' : copiedField === platform ? '✓ Copied!' : '📋 Copy'}
+                {recording ? '...' : copiedField === platform ? '✓ Copied! 已复制' : '📋 Copy 复制'}
               </button>
               {/* Edit first */}
               <button
@@ -286,7 +286,7 @@ export default function SermonSocialPage() {
                   background: 'white', color: '#333', fontSize: '13px', cursor: 'pointer',
                 }}
               >
-                ✏️ Edit
+                ✏️ Edit 编辑
               </button>
               {/* Reject & retry */}
               <button
@@ -297,7 +297,7 @@ export default function SermonSocialPage() {
                   background: 'white', color: '#ef4444', fontSize: '13px', cursor: loading ? 'wait' : 'pointer',
                 }}
               >
-                🔄 Retry
+                🔄 Retry 重试
               </button>
             </>
           )}
@@ -313,7 +313,7 @@ export default function SermonSocialPage() {
                   fontSize: '13px', cursor: recording ? 'wait' : 'pointer',
                 }}
               >
-                {recording ? '...' : '✓ Save & Copy'}
+                {recording ? '...' : '✓ Save & Copy 保存并复制'}
               </button>
               <button
                 onClick={() => { setEditingPlatform(''); setEditTexts({ ...editTexts, [platform]: '' }); }}
@@ -322,7 +322,7 @@ export default function SermonSocialPage() {
                   background: 'white', color: '#666', fontSize: '13px', cursor: 'pointer',
                 }}
               >
-                Cancel
+                Cancel 取消
               </button>
             </>
           )}
@@ -335,15 +335,15 @@ export default function SermonSocialPage() {
                 background: 'white', color: '#333', fontSize: '13px', cursor: 'pointer',
               }}
             >
-              {copiedField === platform ? '✓ Copied!' : '📋 Copy Again'}
+              {copiedField === platform ? '✓ Copied! 已复制' : '📋 Copy Again 再次复制'}
             </button>
           )}
         </div>
 
         {/* Habit learning hint */}
         {!isApproved && (
-          <div style={{ fontSize: '11px', color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px' }}>
-            💡 Copying tells AI you like this style — it learns your preferences over time
+          <div style={{ fontSize: '11px', color: '#999', borderTop: '1px solid #f0f0f0', paddingTop: '8px', ...noSelectStyle }}>
+            💡 Copying tells AI you like this style — it learns your preferences over time 复制即告诉AI你喜欢此风格，它会随时间学习你的偏好
           </div>
         )}
       </div>
@@ -351,14 +351,14 @@ export default function SermonSocialPage() {
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Sermon to Social Media</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: mobile ? '14px' : '16px' }}>Transform your sermon notes into engaging content. AI learns your style every time you approve.</p>
+    <div style={{ padding: mobile ? '16px' : '0' }}>
+      <div style={{ marginBottom: mobile ? '20px' : '32px' }}>
+        <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Sermon to Social Media 讲道转社交媒体</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: mobile ? '14px' : '16px' }}>Transform your sermon notes into engaging content. AI learns your style every time you approve. 将讲道笔记转化为社交媒体内容，AI会学习你的风格</p>
       </div>
 
       {error && (
-        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)' }}>
+        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>
           {error}
         </div>
       )}
@@ -367,7 +367,7 @@ export default function SermonSocialPage() {
         <div className="card" style={{ maxWidth: '700px' }}>
           <form onSubmit={handleGenerate}>
             <div className="form-group">
-              <label className="form-label">Church Name</label>
+              <label className="form-label">Church Name 教会名称</label>
               <input
                 type="text"
                 className="input"
@@ -377,7 +377,7 @@ export default function SermonSocialPage() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Sermon Notes / Summary *</label>
+              <label className="form-label">Sermon Notes / Summary * 讲道笔记/摘要</label>
               <textarea
                 className="input textarea"
                 value={sermonNotes}
@@ -388,12 +388,12 @@ export default function SermonSocialPage() {
               />
             </div>
             <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-              {loading ? 'Generating Social Content...' : 'Generate Social Media Posts'}
+              {loading ? 'Generating... 生成中...' : 'Generate Social Media Posts 生成社交媒体帖子'}
             </button>
           </form>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr 1fr', gap: mobile ? '16px' : '24px' }}>
+        <div style={{ display: mobile ? 'block' : 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr 1fr', gap: mobile ? '16px' : '24px' }}>
           {renderContentCard(
             'facebook', '📘', 'Facebook Post', '#1877F2',
             socialContent.facebook.post
@@ -401,7 +401,7 @@ export default function SermonSocialPage() {
           {renderContentCard(
             'instagram', '📸', 'Instagram', '#E4405F',
             socialContent.instagram.caption,
-            <p style={{ color: 'var(--secondary)', fontSize: '14px' }}>{socialContent.instagram.hashtags}</p>
+            <p style={{ color: 'var(--secondary)', fontSize: '14px', margin: 0 }}>{socialContent.instagram.hashtags}</p>
           )}
           {renderContentCard(
             'twitter', '🐦', 'Twitter / X', '#000000',
@@ -412,7 +412,7 @@ export default function SermonSocialPage() {
           )}
 
           <div style={{ gridColumn: mobile ? '1' : '1 / -1', textAlign: 'center' }}>
-            <button onClick={handleReset} className="btn-primary">Create Another</button>
+            <button onClick={handleReset} className="btn-primary">Create Another 再创建</button>
           </div>
         </div>
       )}
