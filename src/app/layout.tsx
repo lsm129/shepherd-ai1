@@ -1,17 +1,23 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import AppShell from "@/components/AppShell";
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-};
 
 export const metadata: Metadata = {
-  title: "ShepherdAI - AI-Powered Church Management",
-  description: "Your AI assistant for church visitor follow-up and weekly newsletters. Save time, grow your community.",
-  keywords: "church management, AI pastor assistant, church newsletter, visitor follow-up",
+  title: "ShepherdAI - AI-Powered Church Management Platform",
+  description: "Your AI ministry platform for pastors and congregations. Sermon tools, visitor follow-up, prayer management, daily devotionals, and more. Starting at $19/mo.",
+  keywords: "church management, AI pastor assistant, church newsletter, visitor follow-up, sermon generator, prayer management, church AI",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ShepherdAI",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1e3a5f",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -21,8 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+      </head>
       <body className="antialiased">
-        <AppShell>{children}</AppShell>
+        {children}
       </body>
     </html>
   );

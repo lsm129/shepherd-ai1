@@ -1,19 +1,25 @@
-// ShepherdAI Pricing Configuration
-// Single source of truth for all pricing-related logic
+// Pricing configuration - 4-tier plan system
+// Updated: $19/$39/$79 monthly, annual pricing with 2 months free
 
 export type PlanId = 'free' | 'starter' | 'pro' | 'growth';
+
+export type BillingCycle = 'monthly' | 'annual';
 
 export interface Plan {
   id: PlanId;
   name: string;
-  price: number; // monthly price
-  annualPrice?: number; // annual price (20% off monthly * 12)
+  price: number; // monthly in USD, 0 = free
+  annualPrice: number; // annual in USD, 0 = free
+  priceId?: string; // Creem/stripe price ID for checkout (monthly)
+  annualPriceId?: string; // Creem/stripe price ID for checkout (annual)
   generationsPerMonth: number; // -1 = unlimited
   features: string[];
-  maxTools: number; // how many AI tools they can access (7 total)
-  highlight?: string;
-  creemProductId?: string; // Creem product ID for monthly plan
-  annualCreemProductId?: string; // Creem product ID for annual plan
+  highlighted?: boolean;
+  badge?: string;
+  congregantSeats?: number; // -1 = unlimited
+  batchLimit?: number;
+  highlight?: boolean; // alias for highlighted
+  annualCreemProductId?: string; // max posts per batch generation
 }
 
 export const PLANS: Record<PlanId, Plan> = {
@@ -21,104 +27,95 @@ export const PLANS: Record<PlanId, Plan> = {
     id: 'free',
     name: 'Free',
     price: 0,
+    annualPrice: 0,
     generationsPerMonth: 10,
-    maxTools: 3,
     features: [
       '10 AI generations/month',
-      'Visitor follow-up',
-      'Weekly newsletter',
-      'Prayer requests',
+      'Visitor follow-up emails',
+      'Sermon outline generator',
+      'Prayer request management',
+      'Church announcements',
+      'Basic email support',
     ],
+    congregantSeats: 5,
+    batchLimit: 5,
   },
   starter: {
     id: 'starter',
     name: 'Starter',
-    price: 29,
-    generationsPerMonth: 50,
-    maxTools: 3,
-    creemProductId: 'prod_89GZ0Mr4cUbRkaH1guqcD',
-    annualCreemProductId: '', // TODO: Fill in after creating annual product in Creem
-    annualPrice: 278, // $29*12*0.8
+    price: 19,
+    annualPrice: 190, // save $38 (2 months free)
+    generationsPerMonth: 100,
     features: [
-      '50 AI generations/month',
-      '3 core AI tools',
-      'Email sending',
-      'Custom AI tone',
+      '100 AI generations/month',
+      'Everything in Free',
+      'Sermon social media content',
+      'Daily devotional generator',
+      'Church newsletter agent',
+      'Template marketplace access',
+      'Priority support',
     ],
+    highlighted: true,
+    badge: 'Most Popular',
+    congregantSeats: 25,
+    batchLimit: 20,
   },
   pro: {
     id: 'pro',
     name: 'Pro',
-    price: 49,
-    generationsPerMonth: 200,
-    maxTools: 7,
-    highlight: 'Most Popular',
-    creemProductId: 'prod_6mHoeoWBuxR3qsJdAfQWo0',
-    annualCreemProductId: '', // TODO: Fill in after creating annual product in Creem
-    annualPrice: 470, // $49*12*0.8
+    price: 39,
+    annualPrice: 390, // save $78 (2 months free)
+    generationsPerMonth: 300,
     features: [
-      '200 AI generations/month',
-      'All 7 AI tools',
-      'Email sending',
-      'Priority support',
-      'Referral program',
-      'Custom AI tone',
+      '300 AI generations/month',
+      'Everything in Starter',
+      'AI habit learning — gets smarter over time',
+      'Correctable AI memory',
+      'Paper prayer OCR scanning',
+      'Batch content generation',
+      'Share your templates & earn',
+      'Unlimited congregant seats',
     ],
+    congregantSeats: -1, // unlimited
+    batchLimit: 50,
   },
   growth: {
     id: 'growth',
     name: 'Growth',
-    price: 99,
+    price: 79,
+    annualPrice: 790, // save $158 (2 months free)
     generationsPerMonth: -1, // unlimited
-    maxTools: 7,
-    creemProductId: 'prod_LtkwTRkzN7R7brJIoCh5Q',
-    annualCreemProductId: '', // TODO: Fill in after creating annual product in Creem
-    annualPrice: 950, // $99*12*0.8
     features: [
       'Unlimited AI generations',
       'Everything in Pro',
-      'Multi-campus support',
-      'Team accounts (5 users)',
-      'Dedicated onboarding',
-      'API access',
-      'Custom integrations',
+      'Full automation — AI runs your ministry',
+      'AI diagnosis report on signup',
+      'Proactive AI suggestions',
+      'Prayer Tap for congregants',
+      'Community knowledge base',
+      'White-label church pages',
+      'Dedicated account manager',
     ],
+    congregantSeats: -1,
+    batchLimit: -1,
   },
 };
 
-export const TOTAL_AI_TOOLS = 7;
+export const PLAN_ORDER: PlanId[] = ['free', 'starter', 'pro', 'growth'];
 
-export function getPlan(planId: PlanId): Plan {
-  return PLANS[planId];
+export function getPlan(planId: string | null | undefined): Plan {
+  return PLANS[(planId as PlanId) || 'free'] || PLANS.free;
 }
 
-export function isUnlimited(plan: Plan): boolean {
-  return plan.generationsPerMonth === -1;
+export function canUpgrade(currentPlan: PlanId): boolean {
+  const idx = PLAN_ORDER.indexOf(currentPlan);
+  return idx < PLAN_ORDER.length - 1;
 }
 
-export function canGenerate(usedCount: number, plan: Plan): boolean {
-  if (isUnlimited(plan)) return true;
-  return usedCount < plan.generationsPerMonth;
-}
-
-export function getRemainingGenerations(usedCount: number, plan: Plan): number | string {
-  if (isUnlimited(plan)) return 'Unlimited';
-  return Math.max(0, plan.generationsPerMonth - usedCount);
-}
-
-export type BillingCycle = 'monthly' | 'annual';
-
-export function getPlanPrice(plan: Plan, billingCycle: BillingCycle): number {
-  if (billingCycle === 'annual' && plan.annualPrice) return plan.annualPrice;
-  return plan.price;
-}
-
-export function getPlanProductId(plan: Plan, billingCycle: BillingCycle): string | undefined {
-  if (billingCycle === 'annual' && plan.annualCreemProductId) return plan.annualCreemProductId;
-  return plan.creemProductId;
-}
-
-export function getAnnualSavings(plan: Plan): number {
-  if (!plan.annualPrice) return 0;
-  return plan.price * 12 - plan.annualPrice;
+export function getNextPlan(currentPlan: PlanId): Plan | null {
+  const idx = PLAN_ORDER.indexOf(currentPlan);
+  if (idx < PLAN_ORDER.length - 1) {
+    return PLANS[PLAN_ORDER[idx + 1]];
+  }
+  return null;
 }

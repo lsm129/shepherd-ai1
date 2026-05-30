@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, request, anonymous, churchId } = body;
-    if (!request) return NextResponse.json({ error: 'Prayer request is required' }, { status: 400 });
+    const { name, request: prayerRequest, anonymous, churchId } = body;
+    if (!prayerRequest) return NextResponse.json({ error: 'Prayer request is required' }, { status: 400 });
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;

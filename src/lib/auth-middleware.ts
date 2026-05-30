@@ -18,7 +18,6 @@ export async function requireAuthAndQuota(
   request: NextRequest,
   userIdFromClient?: string
 ): Promise<AuthQuotaResult> {
-  // 1. Check authentication - verify userId exists and matches a real session
   if (!userIdFromClient) {
     return {
       authenticated: false,
@@ -32,7 +31,6 @@ export async function requireAuthAndQuota(
     };
   }
 
-  // 2. Verify the user exists in Supabase (server-side)
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
   
@@ -51,7 +49,6 @@ export async function requireAuthAndQuota(
     };
   }
 
-  // 3. Check email verification
   if (!user.email_confirmed_at) {
     return {
       authenticated: true,
@@ -65,9 +62,25 @@ export async function requireAuthAndQuota(
     };
   }
 
-  // 4. Check quota
-  const quotaResult = await checkQuota(userIdFromClient);
+  // Congregant role cannot access AI generation APIs
+  const userRole = user.user_metadata?.role || 'pastor';
+  if (userRole === 'congregant') {
+    return {
+      authenticated: true,
+      userId: userIdFromClient,
+      allowed: false,
+      remaining: 0,
+      plan: 'free',
+      used: 0,
+      limit: 0,
+      error: NextResponse.json(
+        { error: 'Church members cannot access AI generation features. Only pastors have access.' },
+        { status: 403 }
+      ),
+    };
+  }
 
+  const quotaResult = await checkQuota(userIdFromClient);
   if (!quotaResult.allowed) {
     return {
       authenticated: true,
@@ -97,5 +110,68 @@ export async function requireAuthAndQuota(
     plan: quotaResult.plan,
     used: quotaResult.used,
     limit: quotaResult.limit,
+  };
+}
+
+// Congregant auth middleware
+export interface CongregantAuthResult {
+  authenticated: boolean;
+  userId: string;
+  role: string;
+  churchCode: string;
+  joinedChurches: string[];
+  error?: NextResponse;
+}
+
+export async function requireCongregantAuth(
+  userIdFromClient: string
+): Promise<CongregantAuthResult> {
+  if (!userIdFromClient) {
+    return {
+      authenticated: false,
+      userId: '',
+      role: '',
+      churchCode: '',
+      joinedChurches: [],
+      error: NextResponse.json({ error: 'Authentication required. Please log in.' }, { status: 401 }),
+    };
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  
+  const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userIdFromClient);
+  
+  if (!user) {
+    return {
+      authenticated: false,
+      userId: '',
+      role: '',
+      churchCode: '',
+      joinedChurches: [],
+      error: NextResponse.json({ error: 'Invalid user. Please log in again.' }, { status: 401 }),
+    };
+  }
+
+  const meta = user.user_metadata || {};
+  const role = meta.role || 'pastor';
+
+  if (role !== 'congregant') {
+    return {
+      authenticated: false,
+      userId: userIdFromClient,
+      role,
+      churchCode: '',
+      joinedChurches: [],
+      error: NextResponse.json({ error: 'This feature is only available for church members.' }, { status: 403 }),
+    };
+  }
+
+  return {
+    authenticated: true,
+    userId: userIdFromClient,
+    role,
+    churchCode: meta.church_code || '',
+    joinedChurches: meta.joined_churches || [],
   };
 }

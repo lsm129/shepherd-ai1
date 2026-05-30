@@ -306,7 +306,7 @@ export default function SettingsPage() {
                     </div>
                   )}
                   <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text)' }}>
-                    {plan.name} {plan.highlight && <span className="badge badge-primary" style={{ fontSize: '10px', padding: '2px 6px', marginLeft: '6px' }}>{plan.highlight}</span>}
+                    {plan.name} {plan.highlighted && <span className="badge badge-primary" style={{ fontSize: '10px', padding: '2px 6px', marginLeft: '6px' }}>{plan.highlighted}</span>}
                   </div>
                   <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '4px' }}>
                     {isFree ? 'Free' : `$${displayPrice}${priceSuffix}`}
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                     <button
                       onClick={() => handleSubscribe(plan.id)}
                       disabled={checkoutLoading === plan.id}
-                      className={plan.highlight ? 'btn-primary' : 'btn-secondary'}
+                      className={plan.highlighted ? 'btn-primary' : 'btn-secondary'}
                       style={{ width: '100%', fontSize: '13px', cursor: checkoutLoading === plan.id ? 'wait' : 'pointer' }}
                     >
                       {checkoutLoading === plan.id ? 'Redirecting...' : `Subscribe $${displayPrice}${priceSuffix}`}

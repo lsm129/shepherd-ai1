@@ -9,7 +9,6 @@ export const noSelectStyle: React.CSSProperties = {
   MozUserSelect: 'none',
   msUserSelect: 'none',
   WebkitTouchCallout: 'none',  // iOS长按菜单
-  WebkitUserDrag: 'none',
   KhtmlUserSelect: 'none',
 };
 

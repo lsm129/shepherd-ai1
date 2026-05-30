@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { planId, userId, email, billingCycle } = body;
 
-    if (!planId || !CREEM_PRODUCTS[planId]) {
+    if (!planId || !CREEM_PRODUCTS[planId as keyof typeof CREEM_PRODUCTS]) {
       return NextResponse.json(
         { error: 'Invalid plan. Choose: starter, pro, or growth.' },
         { status: 400 }
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const productId = CREEM_PRODUCTS[planId];
+    const productId = CREEM_PRODUCTS[planId as keyof typeof CREEM_PRODUCTS];
     
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com';
 

@@ -1,6 +1,5 @@
 // ShepherdAI Points System
 // Configuration and helper functions for earning/redeeming points
-
 import { createClient } from '@supabase/supabase-js';
 
 // --- Points Configuration ---
@@ -11,6 +10,7 @@ export const POINTS_CONFIG: Record<string, { points: number; dailyCap: number; l
   generate_other: { points: 5, dailyCap: 15, label: 'Other Generation' },
   complete_profile: { points: 500, dailyCap: 500, label: 'Complete Church Profile' },
   referral_bonus: { points: 50, dailyCap: Infinity, label: 'Referral Bonus' },
+  template_shared: { points: 50, dailyCap: Infinity, label: 'Shared Sermon Template' },
 };
 
 // --- Rewards Configuration ---
@@ -33,14 +33,12 @@ export async function getTodayEarned(userId: string, action: string): Promise<nu
   const supabase = getAdminClient();
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
-
   const { data } = await supabase
     .from('points_transactions')
     .select('points')
     .eq('user_id', userId)
     .eq('action', action)
     .gte('created_at', startOfDay);
-
   return (data || []).reduce((sum: number, t: { points: number }) => sum + t.points, 0);
 }
 
@@ -67,7 +65,6 @@ export async function earnPoints(
 
   const supabase = getAdminClient();
 
-  // Check daily cap
   const todayEarned = await getTodayEarned(userId, action);
   if (todayEarned >= config.dailyCap) {
     return {
@@ -78,14 +75,10 @@ export async function earnPoints(
     };
   }
 
-  // Calculate actual points to award (don't exceed daily cap)
   const pointsToAward = Math.min(config.points, config.dailyCap - todayEarned);
-
-  // Get current balance
   const currentBalance = await getPointsBalance(userId);
   const newBalance = currentBalance + pointsToAward;
 
-  // Insert transaction
   const { error: txError } = await supabase.from('points_transactions').insert({
     user_id: userId,
     action,
@@ -99,7 +92,6 @@ export async function earnPoints(
     return { success: false, pointsEarned: 0, newBalance: currentBalance, reason: 'DB error' };
   }
 
-  // Update profile balance
   const { error: profileError } = await supabase
     .from('profiles')
     .update({ points_balance: newBalance, updated_at: new Date().toISOString() })
@@ -135,7 +127,6 @@ export async function redeemReward(
 
   const newBalance = currentBalance - reward.cost;
 
-  // Deduct from balance via a negative transaction
   const { error: txError } = await supabase.from('points_transactions').insert({
     user_id: userId,
     action: 'redeem_' + rewardType,
@@ -149,7 +140,6 @@ export async function redeemReward(
     return { success: false, newBalance: currentBalance, reason: 'DB error' };
   }
 
-  // Insert redemption record
   const { error: redError } = await supabase.from('points_redemptions').insert({
     user_id: userId,
     reward_type: rewardType,
@@ -160,13 +150,11 @@ export async function redeemReward(
     console.error('Failed to insert redemption record:', redError);
   }
 
-  // Update profile balance
   await supabase
     .from('profiles')
     .update({ points_balance: newBalance, updated_at: new Date().toISOString() })
     .eq('id', userId);
 
-  // If extra_generations, add to extra_generations field
   if (rewardType === 'extra_generations') {
     const { data: profile } = await supabase
       .from('profiles')
