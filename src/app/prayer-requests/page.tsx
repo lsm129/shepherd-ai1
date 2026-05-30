@@ -118,8 +118,10 @@ export default function PrayerRequestsPage() {
     }
   }
 
-  function handleCopy(text: string) {
-    navigator.clipboard.writeText(text);
+  async function handleCopy(text: string) {
+    await navigator.clipboard.writeText(text);
+    // Consume 1 AI use when user copies the AI-generated response
+    if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'prayer_response'); } catch {} }
   }
 
   function handleCopyShareLink() {

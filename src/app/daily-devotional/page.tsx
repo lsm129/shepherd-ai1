@@ -81,7 +81,7 @@ export default function DailyDevotionalPage() {
     }
   }
 
-  function handleCopy() {
+  async function handleCopy() {
     if (!devotional) return;
     const text = `${devotional.title}\n\n📖 ${devotional.verse.reference}\n"${devotional.verse.text}"\n\n💭 Meditation\n${devotional.meditation}\n\n🎯 Application\n${devotional.application}\n\n🙏 Prayer\n${devotional.prayer}`;
     navigator.clipboard.writeText(text);

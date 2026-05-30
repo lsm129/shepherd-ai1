@@ -787,7 +787,7 @@ export default function DashboardPage() {
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#1e3a5f' }}>{genCount}</div>
-          <div style={{ color: '#666', fontSize: '14px' }}>AI Generations Used</div>
+          <div style={{ color: '#666', fontSize: '14px' }}>AI Uses (Approved)</div>
         </div>
         <div className="card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '36px', fontWeight: 'bold', color: isUnlimited ? '#22c55e' : (quotaLimit > 0 && genCount / quotaLimit >= 0.8 ? '#ef4444' : '#1e3a5f') }}>{isUnlimited ? '∞' : Math.max(0, quotaLimit - genCount)}</div>

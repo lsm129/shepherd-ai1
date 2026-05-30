@@ -76,7 +76,7 @@ export default function ChurchAnnouncementPage() {
     }
   }
 
-  function handleCopy() {
+  async function handleCopy() {
     if (!announcement) return;
     navigator.clipboard.writeText(editedContent);
     setCopied(true);

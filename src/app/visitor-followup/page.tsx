@@ -85,6 +85,8 @@ export default function VisitorFollowupPage() {
   }
 
   async function handleSend() {
+    // Consume 1 AI generation when user approves the sequence
+    if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'visitor_followup'); } catch {} }
     setStep('sending');
     setError('');
     try {

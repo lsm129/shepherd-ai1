@@ -1,4 +1,4 @@
-import { recordGeneration } from '@/lib/quota';
+import { incrementPending } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
@@ -85,7 +85,7 @@ Return ONLY valid JSON: {"facebook": {"post": "..."}, "instagram": {"caption": "
 
     // Record generation and earn points
     if (auth.userId) {
-      await recordGeneration(auth.userId, 'sermon_social', sermon_notes.substring(0, 200));
+      await incrementPending(auth.userId);
       await earnPoints(auth.userId, 'generate_sermon').catch(e => console.error('Points error:', e));
     }
 

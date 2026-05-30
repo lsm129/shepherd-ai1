@@ -96,7 +96,8 @@ export default function SermonSocialPage() {
 
       // Record habit
       if (userId) {
-        await fetch('/api/ai-habits', {
+        if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'sermon_social'); } catch {} }
+      await fetch('/api/ai-habits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -131,7 +132,8 @@ export default function SermonSocialPage() {
       setEditingPlatform('');
 
       if (userId) {
-        await fetch('/api/ai-habits', {
+        if (userId) { try { const mod = await import('@/lib/consume'); await mod.consumeGeneration(userId, 'sermon_social'); } catch {} }
+      await fetch('/api/ai-habits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -154,6 +156,7 @@ export default function SermonSocialPage() {
   // Reject and regenerate
   async function handleReject(platform: string, text: string) {
     if (userId) {
+      if (userId) { try { const mod = await import('@/lib/consume'); await mod.rejectGeneration(userId); } catch {} }
       await fetch('/api/ai-habits', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
