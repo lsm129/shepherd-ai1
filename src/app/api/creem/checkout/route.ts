@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shepherd-ai1-ly6j.vercel.app';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com';
     const successUrl = `${appUrl}/settings?checkout=success&plan=${planId}`;
 
     const result = await createCheckout({

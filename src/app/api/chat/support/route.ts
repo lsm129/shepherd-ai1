@@ -24,7 +24,7 @@ function getAIConfig() {
   return { apiKey: '', baseURL: '', model: '' };
 }
 
-const SYSTEM_PROMPT = `You are Grace, the friendly AI support assistant for ShepherdAI (https://shepherd-ai1-ly6j.vercel.app), an AI-powered church management platform designed for small churches in the USA.
+const SYSTEM_PROMPT = `You are Grace, the friendly AI support assistant for ShepherdAI (https://www.shepherdaitech.com), an AI-powered church management platform designed for small churches in the USA.
 
 ## Your Personality
 - Warm, professional, and helpful — like a church greeting team member

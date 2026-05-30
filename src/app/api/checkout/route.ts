@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     const productId = CREEM_PRODUCTS[planId];
     
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shepherd-ai1-ly6j.vercel.app';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com';
 
     const response = await fetch(`CREEM_API_BASE/checkouts`, {
       method: 'POST',
