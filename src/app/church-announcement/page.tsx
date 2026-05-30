@@ -18,6 +18,7 @@ interface Announcement {
 
 export default function ChurchAnnouncementPage() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [keyPoints, setKeyPoints] = useState('');
   const [announcementType, setAnnouncementType] = useState<'sunday' | 'special' | 'urgent'>('sunday');
   const [churchName, setChurchName] = useState('');
@@ -31,7 +32,9 @@ export default function ChurchAnnouncementPage() {
 
   useEffect(() => {
     setMounted(true);
-    // Read Supabase session for auth
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     (async () => {
       try {
         const supabase = getSupabase();
@@ -42,6 +45,7 @@ export default function ChurchAnnouncementPage() {
         }
       } catch {}
     })();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!mounted) return null;
@@ -49,7 +53,7 @@ export default function ChurchAnnouncementPage() {
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
-    if (!emailVerified) { setError('Please verify your email first. Check your inbox for the verification link.'); return; }
+    if (!emailVerified) { setError('Please verify your email first.'); return; }
     setLoading(true);
     setAnnouncement(null);
 
@@ -63,9 +67,7 @@ export default function ChurchAnnouncementPage() {
       const data = await response.json();
 
       if (response.status === 429) { throw new Error('Monthly AI generation limit reached! Upgrade your plan for more generations.'); }
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate announcement');
-      }
+      if (!response.ok) { throw new Error(data.error || 'Failed to generate announcement'); }
 
       setAnnouncement({ title: data.title, content: data.content, summary: data.summary });
       setEditedContent(data.content);
@@ -97,25 +99,29 @@ export default function ChurchAnnouncementPage() {
   ];
 
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Church Announcement Generator</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Enter key points and let AI create a polished church announcement.</p>
+    <div style={{ padding: isMobile ? '16px' : '0' }}>
+      <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+        <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
+          Church Announcement Generator
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>
+          Enter key points and let AI create a polished church announcement.
+        </p>
       </div>
 
       {error && (
-        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)' }}>
+        <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)', fontSize: '14px' }}>
           {error}
         </div>
       )}
 
       {!announcement ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
           <div className="card">
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Create Announcement</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '24px' }}>Create Announcement 创建公告</h2>
             <form onSubmit={handleGenerate}>
               <div className="form-group">
-                <label className="form-label">Church Name</label>
+                <label className="form-label">Church Name 教会名称</label>
                 <input
                   type="text"
                   className="input"
@@ -125,8 +131,8 @@ export default function ChurchAnnouncementPage() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Announcement Type</label>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <label className="form-label">Announcement Type 公告类型</label>
+                <div style={{ display: 'flex', gap: isMobile ? '8px' : '12px', flexWrap: 'wrap' }}>
                   {typeOptions.map((opt) => (
                     <button
                       key={opt.value}
@@ -134,8 +140,8 @@ export default function ChurchAnnouncementPage() {
                       onClick={() => setAnnouncementType(opt.value as any)}
                       style={{
                         flex: 1,
-                        minWidth: '120px',
-                        padding: '12px',
+                        minWidth: isMobile ? '90px' : '120px',
+                        padding: isMobile ? '8px 4px' : '12px',
                         border: announcementType === opt.value ? '2px solid var(--primary)' : '2px solid var(--border)',
                         borderRadius: '8px',
                         background: announcementType === opt.value ? 'rgba(30, 58, 95, 0.05)' : 'white',
@@ -143,14 +149,14 @@ export default function ChurchAnnouncementPage() {
                         textAlign: 'center',
                       }}
                     >
-                      <div style={{ fontSize: '14px', fontWeight: '600' }}>{opt.label}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>{opt.desc}</div>
+                      <div style={{ fontSize: isMobile ? '12px' : '14px', fontWeight: '600' }}>{opt.label}</div>
+                      <div style={{ fontSize: isMobile ? '10px' : '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{opt.desc}</div>
                     </button>
                   ))}
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Key Points *</label>
+                <label className="form-label">Key Points * 关键要点</label>
                 <textarea
                   className="input textarea"
                   value={keyPoints}
@@ -161,58 +167,69 @@ export default function ChurchAnnouncementPage() {
                 />
               </div>
               <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-                {loading ? 'Generating Announcement...' : 'Generate Announcement'}
+                {loading ? 'Generating...' : 'Generate Announcement 生成公告'}
               </button>
             </form>
           </div>
 
-          <div className="card" style={{ background: 'var(--surface)' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Tips for Great Announcements</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              {[
-                'Include date, time, and location',
-                'Mention who the announcement is for',
-                'Add contact information if applicable',
-                'Keep key points clear and concise',
-                'Specify any preparation needed',
-              ].map((tip, i) => (
-                <li key={i} style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-start' }}>
-                  <span style={{ color: 'var(--success)' }}>✓</span>
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{tip}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {!isMobile && (
+            <div className="card" style={{ background: 'var(--surface)' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Tips for Great Announcements</h3>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {[
+                  'Include date, time, and location',
+                  'Mention who the announcement is for',
+                  'Add contact information if applicable',
+                  'Keep key points clear and concise',
+                  'Specify any preparation needed',
+                ].map((tip, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'flex-start' }}>
+                    <span style={{ color: 'var(--success)' }}>✓</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
-          <div className="card">
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: 'var(--primary)' }}>{announcement.title}</h3>
+        <div>
+          {/* AI Generated Result - single column on mobile */}
+          <div className="card" style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+              <h3 style={{ fontSize: isMobile ? '18px' : '20px', fontWeight: 'bold', color: 'var(--primary)' }}>
+                {announcement.title}
+              </h3>
+              <span className="badge badge-primary">
+                {announcementType === 'sunday' ? 'Sunday Service' : announcementType === 'special' ? 'Special Event' : 'Urgent Notice'}
+              </span>
+            </div>
+
+            {announcement.summary && (
+              <div style={{ background: 'var(--surface)', borderRadius: '8px', padding: '12px', marginBottom: '16px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', fontWeight: '600' }}>Summary 摘要</div>
+                <p style={{ fontSize: '14px', fontStyle: 'italic', margin: 0 }}>{announcement.summary}</p>
+              </div>
+            )}
+
             <div className="form-group">
-              <label className="form-label">Announcement Content</label>
+              <label className="form-label">Announcement Content 公告内容</label>
               <textarea
                 className="input"
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
-                style={{ minHeight: '300px' }}
+                style={{ minHeight: isMobile ? '200px' : '300px', userSelect: 'none', WebkitUserSelect: 'none' }}
               />
             </div>
           </div>
 
-          <div className="card" style={{ position: 'sticky', top: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '16px' }}>Actions</h3>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Summary</div>
-              <p style={{ fontSize: '14px', fontStyle: 'italic' }}>{announcement.summary}</p>
-            </div>
-            <div style={{ marginBottom: '16px' }}>
-              <span className="badge badge-primary">{announcementType === 'sunday' ? 'Sunday Service' : announcementType === 'special' ? 'Special Event' : 'Urgent Notice'}</span>
-            </div>
-            <button onClick={handleCopy} className="btn-primary" style={{ width: '100%', marginBottom: '12px' }}>
-              {copied ? '✓ Copied!' : '📋 Copy Announcement'}
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button onClick={handleCopy} className="btn-primary" style={{ flex: 1 }}>
+              {copied ? '✓ Copied! 已复制' : '📋 Copy Announcement 复制公告'}
             </button>
-            <button onClick={handleReset} className="btn-secondary" style={{ width: '100%' }}>
-              Create Another
+            <button onClick={handleReset} className="btn-secondary" style={{ flex: 1 }}>
+              Create Another 再生成
             </button>
           </div>
         </div>
