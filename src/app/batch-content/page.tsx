@@ -1,47 +1,24 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+
+import { useState } from 'react';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 
-// ── i18n ──────────────────────────────────────────────
-const t = (en: string, zh: string) => ({ en, zh });
-const LABELS = {
-  title: t('Batch Content Creator', '批量内容生成'),
-  subtitle: t('Turn one sermon into multiple social media posts', '一次讲道 → 多条社媒内容'),
-  sermonLabel: t('Sermon Content', '讲道内容'),
-  sermonPlaceholder: t('Paste your sermon content here...', '在此粘贴讲道内容...'),
-  orSelectHistory: t('Or select from history', '或从历史记录选择'),
-  platformLabel: t('Platforms', '平台'),
-  styleLabel: t('Style', '风格'),
-  countLabel: t('Number of Posts', '生成条数'),
-  generateBtn: t('Generate', '生成'),
-  generating: t('Generating...', '生成中...'),
-  copy: t('Copy', '复制'),
-  copied: t('Copied!', '已复制！'),
-  edit: t('Edit', '编辑'),
-  save: t('Save', '保存'),
-  schedule: t('Schedule', '定时发送'),
-  resultsTitle: t('Generated Content', '生成结果'),
-  noResults: t('No content generated yet.', '尚未生成内容。'),
-  errorQuota: t('Quota exceeded. Please upgrade your plan.', '配额已用完，请升级套餐。'),
-  errorEmpty: t('Please enter sermon content.', '请输入讲道内容。'),
-  errorApi: t('Generation failed. Please try again.', '生成失败，请重试。'),
-  maxHint: t('Free: 5 | Starter: 20 | Pro/Growth: 50', '免费版:5 | Starter:20 | Pro/Growth:50'),
-};
+// Labels are inline strings
 
 const PLATFORMS = [
   { value: 'instagram', label: 'Instagram' },
   { value: 'facebook', label: 'Facebook' },
   { value: 'twitter', label: 'Twitter / X' },
   { value: 'email', label: 'Email' },
-  { value: 'all', label: t('All Platforms', '全部平台').en },
+  { value: 'all', label: 'All Platforms' },
 ];
 
 const STYLES = [
-  { value: 'inspirational', label: t('Inspirational ✨', '灵感启发 ✨') },
-  { value: 'educational', label: t('Educational 📚', '教育分享 📚') },
-  { value: 'engaging', label: t('Engaging 💬', '互动参与 💬') },
-  { value: 'question', label: t('Question ❓', '提问思考 ❓') },
+  { value: 'inspirational', label: 'Inspirational ✨' },
+  { value: 'educational', label: 'Educational 📚' },
+  { value: 'engaging', label: 'Engaging 💬' },
+  { value: 'question', label: 'Question ❓' },
 ];
 
 type GeneratedPost = {
@@ -63,16 +40,7 @@ export default function BatchContentPage() {
   const [editContent, setEditContent] = useState('');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
-  // Simple language detection — default English, toggle with ?lang=zh
-  const [lang] = useState<'en' | 'zh'>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('lang') === 'zh') return 'zh';
-    }
-    return 'en';
-  });
 
-  const label = (item: any) => item[lang] || item.label || item.en || '';
 
   const handlePlatformToggle = (value: string) => {
     if (value === 'all') {
@@ -89,10 +57,10 @@ export default function BatchContentPage() {
     });
   };
 
-  const handleGenerate = useCallback(async () => {
+  const handleGenerate = async () => {
     setError('');
     if (!sermonContent.trim()) {
-      setError(label(LABELS.errorEmpty));
+      setError('Please enter sermon content.');
       return;
     }
 
@@ -117,20 +85,20 @@ export default function BatchContentPage() {
 
       if (!res.ok) {
         if (res.status === 429) {
-          setError(label(LABELS.errorQuota));
+          setError('Quota exceeded. Please upgrade your plan.');
         } else {
-          setError(data.error || label(LABELS.errorApi));
+          setError(data.error || 'Generation failed. Please try again.');
         }
         return;
       }
 
       setResults(data.results || []);
     } catch {
-      setError(label(LABELS.errorApi));
+      setError('Generation failed. Please try again.');
     } finally {
       setLoading(false);
     }
-  }, [sermonContent, selectedPlatforms, count, style, lang]);
+  }
 
   const handleCopy = async (text: string, index: number) => {
     try {
@@ -169,10 +137,10 @@ export default function BatchContentPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            ✨ {label(LABELS.title)}
+            ✨ {'Batch Content Creator'}
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            {label(LABELS.subtitle)}
+            {'Turn one sermon into multiple social media posts'}
           </p>
         </div>
 
@@ -181,11 +149,11 @@ export default function BatchContentPage() {
           {/* Sermon Content */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {label(LABELS.sermonLabel)}
+              {'Sermon Content'}
             </label>
             <textarea
               className="w-full h-48 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-y"
-              placeholder={label(LABELS.sermonPlaceholder)}
+              placeholder={'Paste your sermon content here...'}
               value={sermonContent}
               onChange={(e) => setSermonContent(e.target.value)}
             />
@@ -194,7 +162,7 @@ export default function BatchContentPage() {
           {/* Platform Selection */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {label(LABELS.platformLabel)}
+              {'Platforms'}
             </label>
             <div className="flex flex-wrap gap-3">
               {PLATFORMS.map((p) => (
@@ -212,7 +180,7 @@ export default function BatchContentPage() {
                     checked={selectedPlatforms.includes(p.value)}
                     onChange={() => handlePlatformToggle(p.value)}
                   />
-                  {p.value === 'all' ? label(p as any) : p.label}
+                  {p.value === 'all' ? 'All Platforms' : p.label}
                 </label>
               ))}
             </div>
@@ -221,7 +189,7 @@ export default function BatchContentPage() {
           {/* Style Selection */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {label(LABELS.styleLabel)}
+              {'Style'}
             </label>
             <div className="flex flex-wrap gap-3">
               {STYLES.map((s) => (
@@ -234,7 +202,7 @@ export default function BatchContentPage() {
                       : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
                   }`}
                 >
-                  {label(s)}
+                  {s.label}
                 </button>
               ))}
             </div>
@@ -243,7 +211,7 @@ export default function BatchContentPage() {
           {/* Count */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {label(LABELS.countLabel)}
+              {'Number of Posts'}
             </label>
             <input
               type="number"
@@ -254,7 +222,7 @@ export default function BatchContentPage() {
               className="w-24 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              {label(LABELS.maxHint)}
+              {'Free: 5 | Starter: 20 | Pro/Growth: 50'}
             </p>
           </div>
 
@@ -277,10 +245,10 @@ export default function BatchContentPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                {label(LABELS.generating)}
+                {'Generating...'}
               </>
             ) : (
-              label(LABELS.generateBtn)
+              <>{'Generate'}</>
             )}
           </button>
         </div>
@@ -289,7 +257,7 @@ export default function BatchContentPage() {
         {results.length > 0 && (
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {label(LABELS.resultsTitle)} ({results.length})
+              {'Generated Content'} ({results.length})
             </h2>
             <div className="space-y-4">
               {results.map((post, index) => (
@@ -338,14 +306,14 @@ export default function BatchContentPage() {
                           <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
-                          {label(LABELS.copied)}
+                          {'Copied!'}
                         </>
                       ) : (
                         <>
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
-                          {label(LABELS.copy)}
+                          {'Copy'}
                         </>
                       )}
                     </button>
@@ -359,7 +327,7 @@ export default function BatchContentPage() {
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        {label(LABELS.save)}
+                        {'Save'}
                       </button>
                     ) : (
                       <button
@@ -369,7 +337,7 @@ export default function BatchContentPage() {
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        {label(LABELS.edit)}
+                        {'Edit'}
                       </button>
                     )}
 
@@ -381,7 +349,7 @@ export default function BatchContentPage() {
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      {label(LABELS.schedule)}
+                      {'Schedule'}
                     </button>
                   </div>
                 </div>
@@ -393,7 +361,7 @@ export default function BatchContentPage() {
         {/* No results */}
         {results.length === 0 && !loading && (
           <div className="text-center py-12 text-gray-400 dark:text-gray-500">
-            {label(LABELS.noResults)}
+            {'No content generated yet.'}
           </div>
         )}
       </div>

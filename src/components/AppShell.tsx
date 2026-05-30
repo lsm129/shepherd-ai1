@@ -100,6 +100,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     { href: '/sermon-social', label: 'Sermon Social', icon: '✝️' },
     { href: '/batch-content', label: 'Batch Content', icon: '⚡' },
     { href: '/templates', label: 'Templates', icon: '📋' },
+    { href: '/community', label: 'Community', icon: '🌍' },
     { href: '/settings', label: 'Settings', icon: '⚙️' },
   ];
 
@@ -108,6 +109,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     { href: '/member/dashboard#devotional', label: 'Devotional', icon: '📖' },
     { href: '/prayer/submit', label: 'Prayer', icon: '🙏' },
     { href: '/member/dashboard#announcements', label: 'Announcements', icon: '📢' },
+    { href: '/community', label: 'Community', icon: '🌍' },
   ];
 
   const navItems = userRole === 'congregant' ? congregantNavItems : pastorNavItems;
