@@ -74,7 +74,7 @@ export default function TermsOfService() {
         <h2 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e3a5f', marginTop: '32px', marginBottom: '12px' }}>10. Changes to Terms</h2>
         <p style={{ color: '#555', lineHeight: '1.8' }}>We may update these terms from time to time. Material changes will be notified via email. Continued use after changes constitutes acceptance.</p>
         <h2 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e3a5f', marginTop: '32px', marginBottom: '12px' }}>11. Contact</h2>
-        <p style={{ color: '#555', lineHeight: '1.8' }}>Questions? Contact us at: <strong>yunjia_ai@outlook.com</strong></p>
+        <p style={{ color: '#555', lineHeight: '1.8' }}>Questions? Contact us at: <strong>464930272@qq.com</strong></p>
       </div>
       <footer style={{ padding: '40px 0', borderTop: '1px solid var(--border)', textAlign: 'center', color: '#999', fontSize: '14px' }}>© 2026 ShepherdAI. All rights reserved.</footer>
     </div>
