@@ -1,6 +1,8 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -39,28 +41,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { topic, custom_topic, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     const actualTopic = custom_topic || topic || 'Faith';
 
-    const systemPrompt = `You are a devotional content creator for a Christian church. Create a daily devotional that includes a Bible verse, a meditation/reflection, and a closing prayer. Be spiritually enriching and practical. Return as JSON: {"title": "devotional title", "verse": {"reference": "Book Chapter:Verse", "text": "full verse text"}, "meditation": "meditation/reflection text", "prayer": "closing prayer", "application": "practical application for today"}`;
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
 
-    const userPrompt = `Create a daily devotional on the topic of "${actualTopic}". Include: 1) A relevant Bible verse with its reference, 2) A thoughtful meditation on the verse and topic, 3) A practical application, 4) A closing prayer. Return ONLY valid JSON.`;
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
+
+    const basePrompt = `You are an AI assistant helping a church pastor create a daily devotional.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+
+    const userPrompt = `Create a daily devotional on the topic: ${actualTopic}
+Include a title, scripture verse, meditation, prayer, and practical application.
+Return ONLY valid JSON: {"title": "...", "verse": {"reference": "...", "text": "..."}, "meditation": "...", "prayer": "...", "application": "..."}`;
 
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',
@@ -86,9 +81,9 @@ export async function POST(request: NextRequest) {
     const parsed = JSON.parse(content || '{}');
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'devotional', actualTopic.substring(0, 200));
-      await earnPoints(userId, 'generate_prayer').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'devotional', actualTopic.substring(0, 200));
+      await earnPoints(auth.userId, 'generate_prayer').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({

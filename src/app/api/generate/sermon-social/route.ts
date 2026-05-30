@@ -2,6 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -40,40 +41,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { sermon_notes, church_name, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     if (!sermon_notes) {
       return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
     }
-
 
     // Auth + Quota check
     const auth = await requireAuthAndQuota(request, userId);
     if (auth.error) return auth.error;
 
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
 
-    if (!sermon_notes) {
-      return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
-    }
+    const basePrompt = `You are an AI assistant helping a church pastor turn sermon notes into social media content.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
 
-    const systemPrompt = `You are a social media content creator for a church. Transform sermon notes into engaging social media posts. Return as JSON: {"facebook": {"post": "full facebook post text"}, "instagram": {"caption": "instagram caption with emojis", "hashtags": "#tag1 #tag2 #tag3"}, "twitter": {"tweet": "tweet within 280 characters"}}`;
-
-    const userPrompt = `Transform these sermon notes into social media content for ${church_name || 'our church'}: "${sermon_notes}". Create: 1) A Facebook post (engaging, community-focused), 2) An Instagram caption with relevant hashtags, 3) A Twitter/X tweet (under 280 chars). Return ONLY valid JSON.`;
+    const userPrompt = `Turn these sermon notes into social media content: ${sermon_notes}
+Create posts for Facebook, Instagram, and Twitter/X.
+Return ONLY valid JSON: {"facebook": {"post": "..."}, "instagram": {"caption": "...", "hashtags": "..."}, "twitter": {"tweet": "..."}}`;
 
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',

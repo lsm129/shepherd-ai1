@@ -35,12 +35,12 @@ export default function Home() {
   const ctaHref = isLoggedIn ? '/dashboard' : (refParam ? `/register?ref=${refParam}` : '/register');
 
   const agents = [
-    { emoji: '📧', title: 'Visitor Follow-up', desc: 'AI-generated 6-week email sequences for new visitors', saves: '3 hrs/week', slug: 'visitor-followup' },
-    { emoji: '📰', title: 'Weekly Newsletter', desc: 'Transform highlights into professional newsletters', saves: '2 hrs/week', slug: 'weekly-newsletter' },
-    { emoji: '🙏', title: 'Prayer Requests', desc: 'Manage prayers with AI-crafted responses and verses', saves: '1.5 hrs/week', slug: 'prayer-requests' },
-    { emoji: '📱', title: 'Sermon to Social', desc: 'Turn sermon notes into Facebook, Instagram & X posts', saves: '2 hrs/week', slug: 'sermon-social' },
-    { emoji: '📢', title: 'Church Announcements', desc: 'Generate formal announcements for any occasion', saves: '1 hr/week', slug: 'church-announcement' },
-    { emoji: '📖', title: 'Daily Devotional', desc: 'Create devotionals with scripture and prayer', saves: '1.5 hrs/week', slug: 'daily-devotional' },
+    { emoji: '📧', title: 'Visitor Follow-up', desc: 'AI creates personalized 6-week sequences that match your church tone and denomination', saves: '3 hrs/week', slug: 'visitor-followup' },
+    { emoji: '📰', title: 'Weekly Newsletter', desc: 'AI learns your style and writes newsletters that sound like YOU, not a template', saves: '2 hrs/week', slug: 'weekly-newsletter' },
+    { emoji: '🙏', title: 'Prayer Requests', desc: 'AI crafts scripture-based responses that fit your theological tradition', saves: '1.5 hrs/week', slug: 'prayer-requests' },
+    { emoji: '📱', title: 'Sermon to Social', desc: 'AI adapts your sermon into platform-perfect posts in your church voice', saves: '2 hrs/week', slug: 'sermon-social' },
+    { emoji: '📢', title: 'Church Announcements', desc: 'AI generates announcements matching your church formality and style', saves: '1 hr/week', slug: 'church-announcement' },
+    { emoji: '📖', title: 'Daily Devotional', desc: 'AI writes devotionals aligned with your liturgical calendar and tradition', saves: '1.5 hrs/week', slug: 'daily-devotional' },
   ];
 
   const churchLogos = [
@@ -67,11 +67,11 @@ export default function Home() {
     },
     {
       q: 'How quickly can I get started?',
-      a: "Under 5 minutes. Sign up, enter your church name, and start generating content immediately. No complex setup, no training required. Our AI learns your church's voice from day one.",
+      a: "Under 5 minutes. Sign up, tell us your denomination, congregation size, and worship style — and AI instantly generates your Church Health Report with personalized recommendations. No complex setup, no training required. The AI starts learning your church from the very first interaction.",
     },
     {
       q: 'How much does it cost?',
-      a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. Starter is $29/mo for 50 generations and 3 core tools. Pro is $49/mo for 200 generations and all 7 AI tools. Growth is $99/mo for unlimited generations, multi-campus support, and priority assistance. No credit card required to start.',
+      a: 'ShepherdAI offers a Free plan with a Church Health Report and 10 generations/month. Starter ($29/mo) unlocks all tools with personalized AI. Pro ($49/mo) adds deep learning, proactive suggestions, and trend alerts. Growth ($99/mo) gives you full auto-pilot — AI generates and sends content automatically. No credit card required to start.',
     },
     {
       q: 'Can I cancel anytime?',
@@ -83,7 +83,7 @@ export default function Home() {
     },
     {
       q: 'What denominations does ShepherdAI support?',
-      a: "All of them! Whether you're Baptist, Methodist, Pentecostal, non-denominational, or any other tradition, ShepherdAI adapts to your theological emphasis. You always review and edit content before it goes out.",
+      a: "All of them! ShepherdAI is denomination-aware — it adapts content based on your specific tradition. Baptist sermons emphasize expository preaching; Catholic content references liturgical seasons; Pentecostal content highlights Spirit-led worship. You tell us your tradition, and AI shapes everything accordingly. Plus, you can correct AI anytime if it gets something wrong.",
     },
     {
       q: 'Can multiple staff members use one account?',
@@ -99,7 +99,7 @@ export default function Home() {
     },
     {
       q: 'How is ShepherdAI different from Planning Center or Church Community Builder?',
-      a: 'Those tools focus on church administration (scheduling, attendance, giving). ShepherdAI focuses on content creation — generating emails, newsletters, social posts, and devotionals. Think of us as a complement, not a competitor.',
+      a: 'Those tools manage church administration (scheduling, attendance, giving). ShepherdAI is fundamentally different — it's an AI ministry partner that learns your church over time. It adapts to your denomination, proactively suggests content, and gets smarter with every use. Think of it this way: Planning Center is your admin tool; ShepherdAI is your AI assistant that grows with you.',
     },
   ];
 
@@ -199,10 +199,10 @@ export default function Home() {
         <div className="page-container">
           <div style={{ fontSize: '56px', marginBottom: '24px' }}>⛪🤖</div>
           <h1 style={{ fontSize: '52px', fontWeight: 'bold', marginBottom: '24px', lineHeight: '1.1' }}>
-            Your AI-Powered<br/>Church Staff
+            An AI Assistant That<br/>Grows With Your Church
           </h1>
-          <p style={{ fontSize: '22px', opacity: 0.9, marginBottom: '40px', maxWidth: '600px', margin: '0 auto 40px' }}>
-            Save 15+ hours/week on follow-ups, newsletters, prayer responses, social media, and devotionals.
+          <p style={{ fontSize: '22px', opacity: 0.9, marginBottom: '40px', maxWidth: '680px', margin: '0 auto 40px' }}>
+            Not just another tool — ShepherdAI learns your church, understands your denomination, and proactively handles your ministry busywork.
           </p>
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -232,10 +232,10 @@ export default function Home() {
       <section id="features" style={{ padding: '100px 0', background: '#f8fafc' }}>
         <div className="page-container">
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#1e3a5f' }}>
-            Your AI Church Staff
+            6 Smart AI Agents That Know Your Church
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
-            6 AI-powered agents that handle your weekly busywork
+            Denomination-aware, habit-learning AI that creates content tailored to YOUR church
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
@@ -253,6 +253,50 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* Comparison */}
+      <section style={{ padding: '100px 0', background: '#f8fafc' }}>
+        <div className="page-container" style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px', color: '#1e3a5f' }}>
+            Not Just Another AI Tool
+          </h2>
+          <p style={{ color: '#666', fontSize: '18px', marginBottom: '60px' }}>
+            See how ShepherdAI compares to what you might be using today
+          </p>
+
+          <div style={{ maxWidth: '900px', margin: '0 auto', background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
+              <thead>
+                <tr style={{ background: '#1e3a5f', color: 'white' }}>
+                  <th style={{ padding: '16px 20px', textAlign: 'left', fontWeight: '600' }}>Capability</th>
+                  <th style={{ padding: '16px 20px', textAlign: 'center', fontWeight: '600' }}>ChatGPT / Generic AI</th>
+                  <th style={{ padding: '16px 20px', textAlign: 'center', fontWeight: '600', background: '#2a5080' }}>ShepherdAI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['Knows your denomination', '❌', '✅'],
+                  ['Learns your church style over time', '❌', '✅'],
+                  ['Proactive suggestions & reminders', '❌', '✅'],
+                  ['Church Health Report on signup', '❌', '✅'],
+                  ['Liturgical calendar awareness', '❌', '✅'],
+                  ['Visitor follow-up automation', '❌', '✅'],
+                  ['Editable AI memory & preferences', '❌', '✅'],
+                  ['Church-specific content templates', '❌', '✅'],
+                  ['Bulk church admin tools', '❌', '✅'],
+                ].map((row, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #f0f0f0', background: i % 2 === 0 ? 'white' : '#fafbfc' }}>
+                    <td style={{ padding: '14px 20px', textAlign: 'left', fontWeight: '500', color: '#333' }}>{row[0]}</td>
+                    <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: '18px' }}>{row[1]}</td>
+                    <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: '18px', background: '#f0f7ff' }}>{row[2]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section id="how-it-works" style={{ padding: '100px 0', background: 'white' }}>
         <div className="page-container" style={{ textAlign: 'center' }}>
@@ -260,16 +304,14 @@ export default function Home() {
             How It Works
           </h2>
           <p style={{ color: '#666', fontSize: '18px', marginBottom: '60px' }}>
-            Five simple steps to reclaim your week
+            Three steps to an AI that truly knows your church
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', maxWidth: '1000px', margin: '0 auto' }}>
             {[
-              { step: '1', icon: '✏️', title: 'Sign Up Free', desc: 'No credit card required. Create your account in under 2 minutes.' },
-              { step: '2', icon: '⛪', title: 'Set Your Church Profile', desc: 'Enter your church name, denomination, and preferred communication style.' },
-              { step: '3', icon: '🤖', title: 'Choose Your AI Tool', desc: 'Pick from 6 AI-powered tools: visitor follow-up, newsletter, prayer responses, social media, announcements, or devotionals.' },
-              { step: '4', icon: '✨', title: 'AI Generates Content', desc: "ShepherdAI creates polished, on-brand content in seconds — tailored to your church's voice." },
-              { step: '5', icon: '✅', title: 'Review & Share', desc: 'You always have the final say. Review, tweak, and send with confidence.' },
+              { step: '1', icon: '⛪', title: 'Sign Up & Get Diagnosed', desc: 'Enter your church name, denomination, size, and worship style. AI instantly analyzes your church profile and generates a personalized Church Health Report with actionable recommendations.' },
+              { step: '2', icon: '🧠', title: 'AI Learns As You Use It', desc: 'Every time you generate content, ShepherdAI learns your preferences, tone, and ministry focus. The more you use it, the more personalized and accurate it becomes.' },
+              { step: '3', icon: '🚀', title: 'AI Works For You Proactively', desc: 'ShepherdAI doesn\'t wait for you — it pushes weekly suggestions, seasonal content, follow-up reminders, and trend alerts. You review, tweak, and send with confidence.' },
             ].map((item, i) => (
               <div key={i} style={{ textAlign: 'center' }}>
                 <div style={{
@@ -298,17 +340,17 @@ export default function Home() {
             Why Choose ShepherdAI?
           </h2>
           <p style={{ textAlign: 'center', color: '#666', fontSize: '18px', marginBottom: '60px' }}>
-            Built with purpose. Driven by conviction.
+            Other tools give you features. We give you a growing ministry partner.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', maxWidth: '1100px', margin: '0 auto' }}>
             {[
-              { emoji: '⏰', title: 'Save 10+ Hours Per Week', desc: "AI handles your admin work so you can focus on shepherding souls." },
-              { emoji: '🙏', title: '7 Powerful AI Tools', desc: "From visitor follow-up to daily devotionals — everything a pastor needs." },
-              { emoji: '🎯', title: 'Smart & Simple', desc: "No bloated features. No steep learning curve. Just tools that work." },
-              { emoji: '💰', title: 'Fair, Transparent Pricing', desc: "No hidden fees. No per-member charges. Plans start at $29/month." },
-              { emoji: '🔒', title: 'Your Data Stays Yours', desc: "Encrypted, private, and never shared. We don't monetize your data." },
-              { emoji: '🤝', title: 'Built for Pastors, Not Corporations', desc: "Designed by people who respect your calling and your time." },
+              { emoji: '🧠', title: 'AI That Learns Your Church', desc: "Every interaction teaches ShepherdAI your tone, style, and priorities. The longer you use it, the more personalized it gets — no other tool does this." },
+              { emoji: '⛪', title: 'Denomination-Aware Content', desc: "Baptist sermons sound different from Catholic homilies. ShepherdAI adapts to YOUR theological tradition, liturgical calendar, and worship style." },
+              { emoji: '🚀', title: 'Proactive, Not Passive', desc: "ShepherdAI doesn't wait for you to click. It pushes weekly sermon outlines, visitor follow-up reminders, seasonal content, and trend alerts." },
+              { emoji: '📋', title: 'Church Health Report on Signup', desc: "The moment you register, AI diagnoses your church's needs and creates a tailored action plan. Not a blank dashboard — a ready roadmap." },
+              { emoji: '✏️', title: 'You Control What AI Learns', desc: "AI learned something wrong? Correct it anytime. Tell it your priorities directly. Every insight is transparent and editable — no black box." },
+              { emoji: '🔒', title: 'Your Data Stays Yours', desc: "Encrypted, private, never shared. You can delete everything anytime. We respect your church and your privacy." },
             ].map((item, i) => (
               <div key={i} style={{
                 background: '#f8fafc', borderRadius: '16px', padding: '28px',
@@ -386,9 +428,9 @@ export default function Home() {
               <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
                 $0<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For trying it out</p>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>See what AI can do for your church</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['10 AI generations/month', 'Visitor follow-up', 'Weekly newsletter', 'Prayer requests'].map((item, i) => (
+                {['Church Health Report on signup', '10 AI generations/month', '2 free modules preview', 'Visitor follow-up'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
@@ -402,9 +444,9 @@ export default function Home() {
                 ${billingCycle === 'annual' ? '23' : '29'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
               {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$278 billed annually · Save $70/yr</p>}
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For getting started</p>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>Full AI toolkit for your church</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['50 AI generations/month', '3 core AI tools', 'Email sending', 'Custom AI tone'].map((item, i) => (
+                {['50 AI generations/month', 'All 6 AI tools unlocked', 'Church profile personalization', 'Email sending', 'AI learns your style'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
@@ -426,9 +468,9 @@ export default function Home() {
                 ${billingCycle === 'annual' ? '39' : '49'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
               {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$470 billed annually · Save $118/yr</p>}
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For growing churches</p>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>AI that deeply understands you</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['200 AI generations/month', 'All 7 AI tools', 'Email sending', 'Priority support', 'Referral program', 'Custom AI tone'].map((item, i) => (
+                {['200 AI generations/month', 'All 6 AI tools + AI insights', 'Deep learning — AI knows your habits', 'Proactive weekly suggestions', 'Trend alerts & reminders', 'Seasonal content auto-planning', 'Email sending'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
@@ -449,9 +491,9 @@ export default function Home() {
                 ${billingCycle === 'annual' ? '79' : '99'}<span style={{ fontSize: '14px', color: '#666' }}>/mo</span>
               </div>
               {billingCycle === 'annual' && <p style={{ color: '#16a34a', fontSize: '13px', fontWeight: '600', marginBottom: '4px' }}>$950 billed annually · Save $238/yr</p>}
-              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>For large churches</p>
+              <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>AI runs your ministry busywork</p>
               <ul style={{ listStyle: 'none', padding: 0, textAlign: 'left', marginBottom: '28px' }}>
-                {['Unlimited AI generations', 'Everything in Pro', 'Multi-campus support', 'Team accounts (5 users)', 'Dedicated onboarding', 'API access', 'Custom integrations'].map((item, i) => (
+                {['Unlimited AI generations', 'Full auto-pilot mode', 'AI generates & sends automatically', 'Multi-campus support', 'Team accounts (5 users)', 'Monthly AI calibration', 'Priority support & onboarding'].map((item, i) => (
                   <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid #f0f0f0', fontSize: '13px' }}>{item}</li>
                 ))}
               </ul>
@@ -467,7 +509,7 @@ export default function Home() {
           </div>
 
           {/* ROI Calculator */}
-          <div style={{ background: 'white', borderRadius: '16px', border: '2px solid var(--accent)', padding: '32px', maxWidth: '600px', margin: '40px auto 0', textAlign: 'center' }}>
+          <div style={{ background: 'white', borderRadius: '16px', border: '2px solid var(--accent)', padding: '32px', maxWidth: '680px', margin: '40px auto 0', textAlign: 'center' }}>
             <div style={{ fontSize: '24px', marginBottom: '8px' }}>💰</div>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px', color: '#1e3a5f' }}>ROI Calculator</h3>
             <p style={{ color: '#666', marginBottom: '16px', fontSize: '15px' }}>
@@ -535,10 +577,10 @@ export default function Home() {
       <section style={{ padding: '100px 0', background: 'linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%)', color: 'white', textAlign: 'center' }}>
         <div className="page-container">
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', marginBottom: '16px' }}>
-            Ready to Reclaim 15 Hours This Week?
+            Ready to Meet Your AI Ministry Partner?
           </h2>
           <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '40px' }}>
-            Join pastors who focus on ministry, not busywork
+            Join pastors who let AI handle the busywork so they can focus on shepherding
           </p>
           <Link href={ctaHref} style={{ background: 'white', color: '#1e3a5f', padding: '16px 32px', borderRadius: '8px', fontWeight: '600', textDecoration: 'none', fontSize: '18px' }}>
             {isLoggedIn ? "Go to Dashboard →" : "Start Free — No credit card required →"}

@@ -2,6 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -40,41 +41,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { highlights, church_name, pastor_name, upcoming_events, prayer_requests, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     if (!highlights) {
       return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
     }
-
 
     // Auth + Quota check
     const auth = await requireAuthAndQuota(request, userId);
     if (auth.error) return auth.error;
 
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
 
-    if (!highlights) {
-      return NextResponse.json({ error: 'Highlights are required' }, { status: 400 });
-    }
-
-    const systemPrompt = `You are an AI assistant helping a church pastor create a weekly newsletter. 
-The church name is ${church_name || 'our church'} and the pastor is ${pastor_name || 'our pastor'}.
-Create a warm, engaging newsletter that feels personal and community-focused.
-Return as JSON: {"newsletter": {"title": "Newsletter Title", "content": "Full newsletter content with sections"}}`;
+    const basePrompt = `You are an AI assistant helping a church pastor create a weekly newsletter.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
 
     const userPrompt = `Create a weekly newsletter based on these highlights: ${highlights}.${upcoming_events ? ` Upcoming events: ${upcoming_events}.` : ''}${prayer_requests ? ` Prayer requests: ${prayer_requests}.` : ''}
 Include sections for: Welcome message, Highlights, Upcoming Events, Prayer Requests, Closing.

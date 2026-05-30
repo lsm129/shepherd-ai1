@@ -2,6 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -40,36 +41,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { key_points, announcement_type, church_name, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     if (!key_points) {
       return NextResponse.json({ error: 'Key points are required' }, { status: 400 });
     }
-
 
     // Auth + Quota check
     const auth = await requireAuthAndQuota(request, userId);
     if (auth.error) return auth.error;
 
-
-    if (!key_points) {
-      return NextResponse.json({ error: 'Key points are required' }, { status: 400 });
-    }
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
 
     const typeLabels: Record<string, string> = {
       sunday: 'Sunday Service Announcement',
@@ -79,9 +60,11 @@ export async function POST(request: NextRequest) {
 
     const typeName = typeLabels[announcement_type] || 'Church Announcement';
 
-    const systemPrompt = `You are a church communications assistant. Create formal, clear, and welcoming church announcements. The tone should be warm but professional. Return as JSON: {"title": "announcement title", "content": "full announcement text", "summary": "brief one-line summary"}`;
+    const basePrompt = `You are an AI assistant helping a church pastor create church announcements.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
 
-    const userPrompt = `Create a ${typeName} for ${church_name || 'our church'} based on these key points: "${key_points}". The announcement type is: ${typeName}. Make it clear, welcoming, and appropriate for church communications. Return ONLY valid JSON.`;
+    const userPrompt = `Create a ${typeName} based on these key points: ${key_points}
+Return ONLY valid JSON: {"title": "...", "content": "...", "summary": "..."}`;
 
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',

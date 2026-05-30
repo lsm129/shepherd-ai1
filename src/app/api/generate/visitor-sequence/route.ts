@@ -1,6 +1,8 @@
-import { checkQuota, recordGeneration } from '@/lib/quota';
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   // Prefer DeepSeek (cheaper), fallback to OpenAI
@@ -40,35 +42,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, first_visit_date, how_heard, interests, church_name, pastor_name, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     if (!name || !first_visit_date) {
       return NextResponse.json({ error: 'Name and first visit date are required' }, { status: 400 });
     }
 
-    const systemPrompt = `You are an AI assistant helping a church pastor create personalized email sequences for new visitors. 
-The church name is ${church_name || 'our church'} and the pastor is ${pastor_name || 'our pastor'}.
-Generate a 6-week email sequence. Each email should be warm, welcoming, and include the visitor's name.
-Return as JSON: {"emails": [{"week": 1, "subject": "Subject", "body": "Body"}...6 emails]}`;
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
 
-    const userPrompt = `Create a 6-week follow-up email sequence for ${name}, first visit: ${first_visit_date}.${how_heard ? ` How they heard: ${how_heard}.` : ''}${interests ? ` Interests: ${interests}.` : ''}
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
+
+    const basePrompt = `You are an AI assistant helping a church pastor create personalized email sequences for new visitors.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+
+    // Supplement church_name and pastor_name from profile if not provided
+    const effectiveChurchName = church_name || churchProfile?.church_name || 'our church';
+    const effectivePastorName = pastor_name || churchProfile?.pastor_name || 'our pastor';
+
+    const userPrompt = `Create a 6-week follow-up email sequence for ${name}, first visit: ${first_visit_date}.${how_heard ? ` How they heard: ${how_heard}.` : ''}${interests ? ` Interests: ${interests}.` : ''} The church name is ${effectiveChurchName} and the pastor is ${effectivePastorName}.
 Week 1: Welcome immediately, Week 2: Check-in, Week 3: Community story, Week 4: Event invite, Week 5: Testimony, Week 6: Personal invite.
-Return ONLY valid JSON.`;
+Return ONLY valid JSON: {"emails": [{"week": 1, "subject": "Subject", "body": "Body"}...6 emails]}`;
 
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',
@@ -94,9 +88,9 @@ Return ONLY valid JSON.`;
     const emails = JSON.parse(content || '{"emails": []}').emails || [];
 
     // Record generation and earn points
-    if (userId) {
-      await recordGeneration(userId, 'visitor_followup', JSON.stringify({ name, first_visit_date }).substring(0, 200));
-      await earnPoints(userId, 'generate_other').catch(e => console.error('Points error:', e));
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'visitor_followup', JSON.stringify({ name, first_visit_date }).substring(0, 200));
+      await earnPoints(auth.userId, 'generate_other').catch(e => console.error('Points error:', e));
     }
 
     return NextResponse.json({ success: true, emails, visitor: { name, first_visit_date, how_heard, interests } });

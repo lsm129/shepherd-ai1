@@ -2,6 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -40,40 +41,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, request: prayerRequest, anonymous, userId } = body;
 
-    // Server-side quota check
-    if (userId) {
-      const quota = await checkQuota(userId);
-      if (!quota.allowed) {
-        return NextResponse.json(
-          {
-            error: 'AI generation limit reached',
-            message: `You have used all ${quota.limit} AI generations for this month on the ${quota.plan} plan. Upgrade your plan for more.`,
-            upgradeUrl: '/settings#billing',
-            remaining: quota.remaining,
-          },
-          { status: 429 }
-        );
-      }
-    }
-
-
     if (!prayerRequest) {
       return NextResponse.json({ error: 'Prayer request content is required' }, { status: 400 });
     }
-
 
     // Auth + Quota check
     const auth = await requireAuthAndQuota(request, userId);
     if (auth.error) return auth.error;
 
+    // Get church profile for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
 
-    if (!prayerRequest) {
-      return NextResponse.json({ error: 'Prayer request content is required' }, { status: 400 });
-    }
+    const basePrompt = `You are an AI assistant helping a church pastor respond to prayer requests with scripture and pastoral care.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
 
-    const systemPrompt = `You are a compassionate Christian pastoral assistant. When someone submits a prayer request, you generate a warm, empathetic prayer response that includes a relevant Bible verse. Be encouraging and uplifting. Return as JSON: {"response": "prayer text", "verse": {"reference": "Book Chapter:Verse", "text": "verse text"}}`;
-
-    const userPrompt = `Generate a warm prayer response for this prayer request${!anonymous && name ? ` from ${name}` : ''}: "${prayerRequest}". Include a relevant Bible verse that speaks to their situation. Return ONLY valid JSON.`;
+    const userPrompt = `Respond to this prayer request with scripture and pastoral care: ${prayerRequest}${name && !anonymous ? ` from ${name}` : ''}${anonymous ? ' (anonymous request)' : ''}.
+Return ONLY valid JSON: {"response": "...", "verse": {"reference": "...", "text": "..."}}`;
 
     const response = await fetch(`${baseURL}/chat/completions`, {
       method: 'POST',
