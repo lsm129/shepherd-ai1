@@ -99,7 +99,7 @@ export default function Home() {
     },
     {
       q: 'How is ShepherdAI different from Planning Center or Church Community Builder?',
-      a: 'Those tools manage church administration (scheduling, attendance, giving). ShepherdAI is fundamentally different — it's an AI ministry partner that learns your church over time. It adapts to your denomination, proactively suggests content, and gets smarter with every use. Think of it this way: Planning Center is your admin tool; ShepherdAI is your AI assistant that grows with you.',
+      a: "Those tools manage church administration (scheduling, attendance, giving). ShepherdAI is fundamentally different — it’s an AI ministry partner that learns your church over time. It adapts to your denomination, proactively suggests content, and gets smarter with every use. Think of it this way: Planning Center is your admin tool; ShepherdAI is your AI assistant that grows with you.",
     },
   ];
 
