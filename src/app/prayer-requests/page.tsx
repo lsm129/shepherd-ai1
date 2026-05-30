@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -28,6 +28,9 @@ export default function PrayerRequestsPage() {
   const [userId, setUserId] = useState('');
   const [filter, setFilter] = useState<'all' | 'pending' | 'high'>('all');
   const [shareLink, setShareLink] = useState('');
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -123,6 +126,44 @@ export default function PrayerRequestsPage() {
     navigator.clipboard.writeText(shareLink);
   }
 
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setOcrLoading(true);
+    setOcrProgress(0);
+    try {
+      const Tesseract = await import('tesseract.js');
+      const { data: { text } } = await Tesseract.recognize(file, 'eng', {
+        logger: (m: any) => {
+          if (m.status === 'recognizing text') {
+            setOcrProgress(Math.round(m.progress * 100));
+          }
+        }
+      });
+      if (text.trim()) {
+        const newEntry: PrayerEntry = {
+          id: Date.now().toString(),
+          requester_name: 'From Paper',
+          request_text: text.trim(),
+          urgency: 'medium',
+          status: 'pending',
+          ai_response: '',
+          verse: { reference: '', text: '' },
+          created_at: new Date().toISOString(),
+        };
+        setEntries(prev => [newEntry, ...prev]);
+      } else {
+        setError('Could not read text from photo. Try a clearer image or enter manually.');
+      }
+    } catch (err: any) {
+      setError('Photo recognition failed: ' + (err.message || 'Unknown error'));
+    } finally {
+      setOcrLoading(false);
+      setOcrProgress(0);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
   const urgencyColors = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' };
   const statusLabels = { pending: '⏳ Pending', responded: '✅ Responded', 'follow-up': '🔄 Follow-up' };
   const pendingCount = entries.filter(e => e.status === 'pending').length;
@@ -151,6 +192,21 @@ export default function PrayerRequestsPage() {
       {error && (
         <div style={{ background: '#fee2e2', border: '1px solid var(--error)', borderRadius: '8px', padding: '16px', marginBottom: '24px', color: 'var(--error)' }}>{error}</div>
       )}
+
+      {/* Quick Add from Paper */}
+      <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+        <div>
+          <span style={{ fontWeight: '600', color: '#1e3a5f' }}>📝 Got paper prayer requests? </span>
+          <span style={{ color: '#666', fontSize: '14px' }}>Take a photo and AI reads the text. Image stays on your device — nothing uploaded.</span>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {ocrLoading && <span style={{ fontSize: '13px', color: '#6366f1' }}>Reading... {ocrProgress}%</span>}
+          <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={handlePhotoUpload} style={{ display: 'none' }} />
+          <button onClick={() => fileInputRef.current?.click()} disabled={ocrLoading} style={{ background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', padding: '10px 20px', cursor: ocrLoading ? 'not-allowed' : 'pointer', fontWeight: '600', fontSize: '14px' }}>
+            {ocrLoading ? '⏳ Reading...' : '📸 Take Photo / Upload'}
+          </button>
+        </div>
+      </div>
 
       {/* Stats Bar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '24px' }}>
