@@ -38,6 +38,15 @@ export default function DashboardPage() {
   });
   const [savingProfile, setSavingProfile] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
+  const [diagnosis, setDiagnosis] = useState<any>(null);
+  const [diagnosing, setDiagnosing] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [showAiMemory, setShowAiMemory] = useState(false);
+  const [aiMemory, setAiMemory] = useState<any>(null);
+  const [editingField, setEditingField] = useState<string>('');
+  const [editValue, setEditValue] = useState('');
+  const [savingMemory, setSavingMemory] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -114,6 +123,13 @@ export default function DashboardPage() {
     }
     checkAuth();
   }, [router]);
+
+  // Load suggestions and diagnosis when profile is complete
+  useEffect(() => {
+    if (profileComplete && !profileSaved) {
+      loadSuggestions();
+    }
+  }, [profileComplete]);
 
   const handleDailyCheckin = async () => {
     setCheckingIn(true);
@@ -206,6 +222,8 @@ export default function DashboardPage() {
 
       setProfileComplete(true);
       setProfileSaved(true);
+      // Generate AI diagnosis report immediately
+      generateDiagnosis(profileForm.denomination, profileForm.congregation_size, profileForm.worship_style);
       setTimeout(() => { setShowProfileModal(false); setProfileSaved(false); }, 2000);
     } catch (e) {
       console.error('Save error:', e);
@@ -516,6 +534,163 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* AI Diagnosis Report */}
+      {profileSaved && diagnosis && (
+        <div style={{ background: 'white', borderRadius: '16px', padding: '32px', marginBottom: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div>
+              <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '4px' }}>AI Church Diagnosis</h2>
+              <p style={{ color: '#666', fontSize: '14px' }}>{diagnosis.summary}</p>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', color: diagnosis.overallScore >= 70 ? '#22c55e' : diagnosis.overallScore >= 40 ? '#f59e0b' : '#ef4444' }}>{diagnosis.overallScore}</div>
+              <div style={{ fontSize: '12px', color: '#666' }}>Overall Score</div>
+            </div>
+          </div>
+
+          {diagnosis.denominationInsight && (
+            <div style={{ background: '#f0f4ff', borderRadius: '8px', padding: '16px', marginBottom: '20px', borderLeft: '4px solid #6366f1' }}>
+              <span style={{ fontWeight: '600', color: '#1e3a5f' }}>💡 Denomination Insight: </span>
+              <span style={{ color: '#444' }}>{diagnosis.denominationInsight}</span>
+            </div>
+          )}
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+            {(diagnosis.modules || []).map((mod: any, i: number) => (
+              <div key={mod.id} style={{ border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', position: 'relative', overflow: 'hidden' }}>
+                {mod.status === 'locked' && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2, borderRadius: '12px' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '8px' }}>🔒</div>
+                    <div style={{ fontWeight: '600', color: '#1e3a5f', marginBottom: '4px' }}>Unlock with Starter Plan</div>
+                    <a href="/pricing" style={{ color: '#6366f1', fontWeight: '600', fontSize: '14px' }}>Upgrade to $29/mo →</a>
+                  </div>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1e3a5f' }}>{mod.title}</h3>
+                  <div style={{ background: mod.score >= 7 ? '#dcfce7' : mod.score >= 4 ? '#fef3c7' : '#fee2e2', color: mod.score >= 7 ? '#16a34a' : mod.score >= 4 ? '#d97706' : '#dc2626', padding: '4px 12px', borderRadius: '20px', fontSize: '14px', fontWeight: '600' }}>{mod.score}/10</div>
+                </div>
+                <p style={{ color: '#666', fontSize: '14px', marginBottom: '8px' }}>{mod.finding}</p>
+                <p style={{ color: '#6366f1', fontSize: '13px', fontWeight: '500' }}>✨ {mod.recommendation}</p>
+              </div>
+            ))}
+          </div>
+
+          {diagnosis.quickWins && (
+            <div style={{ background: '#f0fdf4', borderRadius: '8px', padding: '16px', borderLeft: '4px solid #22c55e' }}>
+              <div style={{ fontWeight: '600', color: '#16a34a', marginBottom: '8px' }}>🎯 Quick Wins</div>
+              {(diagnosis.quickWins || []).map((win: string, i: number) => (
+                <div key={i} style={{ color: '#444', fontSize: '14px', marginBottom: '4px' }}>• {win}</div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {profileSaved && diagnosing && (
+        <div style={{ background: 'white', borderRadius: '16px', padding: '48px', marginBottom: '32px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+          <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#1e3a5f', marginBottom: '8px' }}>AI is analyzing your church...</h3>
+          <p style={{ color: '#666' }}>Generating personalized diagnosis report</p>
+        </div>
+      )}
+
+      {/* AI Proactive Suggestions */}
+      {profileComplete && suggestions.length > 0 && (
+        <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: '16px', padding: '28px', marginBottom: '32px', color: 'white' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <div>
+              <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '4px' }}>🤖 AI Suggestions for You</h2>
+              <p style={{ opacity: 0.8, fontSize: '14px' }}>Based on your usage and church profile</p>
+            </div>
+            <button onClick={loadSuggestions} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' }}>Refresh</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+            {suggestions.map((s: any, i: number) => (
+              <a key={i} href={s.actionUrl || '#'} style={{ textDecoration: 'none', background: 'rgba(255,255,255,0.15)', borderRadius: '10px', padding: '16px', display: 'block', transition: 'background 0.2s' }}>
+                <div style={{ fontSize: '24px', marginBottom: '8px' }}>{s.icon}</div>
+                <div style={{ fontWeight: '600', marginBottom: '4px' }}>{s.title}</div>
+                <div style={{ opacity: 0.85, fontSize: '13px', lineHeight: '1.4' }}>{s.description}</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {profileComplete && loadingSuggestions && (
+        <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', borderRadius: '16px', padding: '28px', marginBottom: '32px', textAlign: 'center', color: 'white' }}>
+          <div style={{ fontSize: '32px', marginBottom: '12px' }}>🤖</div>
+          <p>Loading personalized suggestions...</p>
+        </div>
+      )}
+
+      {/* AI Memory / Correct AI Understanding */}
+      {profileComplete && (
+        <div style={{ marginBottom: '32px' }}>
+          <button onClick={() => { setShowAiMemory(!showAiMemory); if (!showAiMemory) loadAiMemory(); }} style={{ background: 'none', border: '1px solid #e5e7eb', borderRadius: '10px', padding: '12px 20px', cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: '#1e3a5f', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            🧠 {showAiMemory ? 'Hide' : 'View'} AI Memory
+            <span style={{ fontSize: '12px', color: '#999', fontWeight: '400' }}>(See what AI knows about you & correct it)</span>
+          </button>
+          
+          {showAiMemory && aiMemory && (
+            <div style={{ background: 'white', borderRadius: '16px', padding: '28px', marginTop: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '20px' }}>🧠 What AI Knows About Your Church</h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+                {Object.entries(aiMemory.profile || {}).map(([key, val]) => (
+                  <div key={key} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '12px' }}>
+                    <div style={{ fontSize: '12px', color: '#999', marginBottom: '4px', textTransform: 'capitalize' }}>{key.replace(/_/g, ' ')}</div>
+                    {editingField === key ? (
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <input value={editValue} onChange={(e) => setEditValue(e.target.value)} style={{ flex: 1, padding: '4px 8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px' }} />
+                        <button onClick={() => handleUpdateMemory(key, editValue)} disabled={savingMemory} style={{ background: '#6366f1', color: 'white', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' }}>{savingMemory ? '...' : '✓'}</button>
+                        <button onClick={() => setEditingField('')} style={{ background: '#eee', border: 'none', borderRadius: '4px', padding: '4px 8px', fontSize: '12px', cursor: 'pointer' }}>✕</button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{String(val)}</span>
+                        <button onClick={() => { setEditingField(key); setEditValue(String(val)); }} style={{ background: 'none', border: 'none', color: '#6366f1', cursor: 'pointer', fontSize: '12px' }}>Edit</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {(aiMemory.usage_patterns) && (
+                <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '16px' }}>
+                  <div style={{ fontWeight: '600', color: '#1e3a5f', marginBottom: '8px', fontSize: '13px' }}>📊 Usage Patterns (AI learns from this)</div>
+                  <div style={{ fontSize: '13px', color: '#666', lineHeight: '1.8' }}>
+                    <div>Total AI generations: {aiMemory.usage_patterns.total_generations}</div>
+                    <div>Favorite tool: {aiMemory.usage_patterns.favorite_tool}</div>
+                    <div>Chat conversations: {aiMemory.usage_patterns.chat_conversations}</div>
+                    {Object.entries(aiMemory.usage_patterns.tools_used || {}).map(([tool, count]) => (
+                      <div key={tool}>{tool}: {String(count)} uses</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div style={{ marginTop: '16px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#1e3a5f', fontSize: '14px' }}>📝 Tell AI something specific about your church</label>
+                {editingField === 'custom_preferences' ? (
+                  <div>
+                    <textarea value={editValue} onChange={(e) => setEditValue(e.target.value)} placeholder="e.g., We prefer informal language, Our congregation is mostly elderly, We focus on youth ministry..." style={{ width: '100%', minHeight: '80px', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '14px' }} />
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                      <button onClick={() => handleUpdateMemory('custom_preferences', editValue)} disabled={savingMemory} style={{ background: '#6366f1', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '14px', cursor: 'pointer' }}>{savingMemory ? 'Saving...' : 'Save'}</button>
+                      <button onClick={() => setEditingField('')} style={{ background: '#eee', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '14px', cursor: 'pointer' }}>Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderRadius: '8px', padding: '12px' }}>
+                    <span style={{ color: '#666', fontSize: '13px' }}>{aiMemory.custom_preferences || 'No custom preferences set'}</span>
+                    <button onClick={() => { setEditingField('custom_preferences'); setEditValue(aiMemory.custom_preferences || ''); }} style={{ background: 'none', border: 'none', color: '#6366f1', cursor: 'pointer', fontSize: '13px' }}>Edit</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
