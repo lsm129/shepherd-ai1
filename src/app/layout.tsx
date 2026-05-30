@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "ShepherdAI - AI-Powered Church Management",
   description: "Your AI assistant for church visitor follow-up and weekly newsletters. Save time, grow your community.",
