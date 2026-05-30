@@ -246,6 +246,90 @@ export default function DashboardPage() {
     window.location.href = '/';
   };
 
+  const generateDiagnosis = async (denomination: string, congregation_size: string, worship_style: string) => {
+    if (!denomination || !congregation_size || !worship_style) return;
+    setDiagnosing(true);
+    try {
+      const res = await fetch('/api/diagnosis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ denomination, congregation_size, worship_style }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDiagnosis(data.report);
+      } else {
+        console.error('Diagnosis failed:', await res.text());
+      }
+    } catch (e) {
+      console.error('Diagnosis error:', e);
+    } finally {
+      setDiagnosing(false);
+    }
+  };
+
+  const loadSuggestions = async () => {
+    setLoadingSuggestions(true);
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch('/api/ai-suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.user.id }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSuggestions(data.suggestions || []);
+      }
+    } catch (e) {
+      console.error('Suggestions error:', e);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
+  const loadAiMemory = async () => {
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch('/api/ai-memory?userId=' + session.user.id);
+      if (res.ok) {
+        const data = await res.json();
+        setAiMemory(data.memory || null);
+      }
+    } catch (e) {
+      console.error('Memory load error:', e);
+    }
+  };
+
+  const handleUpdateMemory = async (field: string, value: string) => {
+    setSavingMemory(true);
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const res = await fetch('/api/ai-memory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.user.id, field, value }),
+      });
+      if (res.ok) {
+        setEditingField('');
+        loadAiMemory();
+      }
+    } catch (e) {
+      console.error('Memory update error:', e);
+    } finally {
+      setSavingMemory(false);
+    }
+  };
+
   if (!mounted) return null;
 
   // Email not verified
