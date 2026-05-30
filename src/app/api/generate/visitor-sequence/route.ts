@@ -2,7 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
-import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   // Prefer DeepSeek (cheaper), fallback to OpenAI
@@ -52,9 +52,10 @@ export async function POST(request: NextRequest) {
 
     // Get church profile for personalized AI
     const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
 
     const basePrompt = `You are an AI assistant helping a church pastor create personalized email sequences for new visitors.`;
-    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
 
     // Supplement church_name and pastor_name from profile if not provided
     const effectiveChurchName = church_name || churchProfile?.church_name || 'our church';

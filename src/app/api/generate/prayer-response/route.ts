@@ -2,7 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
-import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -51,9 +51,10 @@ export async function POST(request: NextRequest) {
 
     // Get church profile for personalized AI
     const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
 
     const basePrompt = `You are an AI assistant helping a church pastor respond to prayer requests with scripture and pastoral care.`;
-    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
 
     const userPrompt = `Respond to this prayer request with scripture and pastoral care: ${prayerRequest}${name && !anonymous ? ` from ${name}` : ''}${anonymous ? ' (anonymous request)' : ''}.
 Return ONLY valid JSON: {"response": "...", "verse": {"reference": "...", "text": "..."}}`;

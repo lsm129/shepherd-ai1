@@ -2,7 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
-import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     // Get church profile for personalized AI
     const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
 
     const typeLabels: Record<string, string> = {
       sunday: 'Sunday Service Announcement',
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
     const typeName = typeLabels[announcement_type] || 'Church Announcement';
 
     const basePrompt = `You are an AI assistant helping a church pastor create church announcements.`;
-    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
 
     const userPrompt = `Create a ${typeName} based on these key points: ${key_points}
 Return ONLY valid JSON: {"title": "...", "content": "...", "summary": "..."}`;

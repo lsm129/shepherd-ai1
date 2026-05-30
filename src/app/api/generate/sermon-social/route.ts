@@ -2,7 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
-import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -49,11 +49,12 @@ export async function POST(request: NextRequest) {
     const auth = await requireAuthAndQuota(request, userId);
     if (auth.error) return auth.error;
 
-    // Get church profile for personalized AI
+    // Get church profile + user habits for personalized AI
     const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
 
     const basePrompt = `You are an AI assistant helping a church pastor turn sermon notes into social media content.`;
-    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
 
     const userPrompt = `Turn these sermon notes into social media content: ${sermon_notes}
 Create posts for Facebook, Instagram, and Twitter/X.

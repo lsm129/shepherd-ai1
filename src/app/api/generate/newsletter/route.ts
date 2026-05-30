@@ -2,7 +2,7 @@ import { recordGeneration } from '@/lib/quota';
 import { requireAuthAndQuota } from '@/lib/auth-middleware';
 import { earnPoints } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
-import { getChurchProfile, buildAISystemPrompt } from '@/lib/ai-with-profile';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -51,9 +51,10 @@ export async function POST(request: NextRequest) {
 
     // Get church profile for personalized AI
     const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
 
     const basePrompt = `You are an AI assistant helping a church pastor create a weekly newsletter.`;
-    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile);
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
 
     const userPrompt = `Create a weekly newsletter based on these highlights: ${highlights}.${upcoming_events ? ` Upcoming events: ${upcoming_events}.` : ''}${prayer_requests ? ` Prayer requests: ${prayer_requests}.` : ''}
 Include sections for: Welcome message, Highlights, Upcoming Events, Prayer Requests, Closing.
