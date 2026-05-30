@@ -9,7 +9,7 @@ export const POINTS_CONFIG: Record<string, { points: number; dailyCap: number; l
   generate_sermon: { points: 10, dailyCap: 30, label: 'Sermon/Social/Announcement Generation' },
   generate_prayer: { points: 5, dailyCap: 15, label: 'Prayer/Devotional/Newsletter Generation' },
   generate_other: { points: 5, dailyCap: 15, label: 'Other Generation' },
-  complete_profile: { points: 15, dailyCap: 15, label: 'Complete Church Profile' },
+  complete_profile: { points: 500, dailyCap: 500, label: 'Complete Church Profile' },
   referral_bonus: { points: 50, dailyCap: Infinity, label: 'Referral Bonus' },
 };
 

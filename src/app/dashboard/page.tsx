@@ -29,6 +29,15 @@ export default function DashboardPage() {
   const [userPlan, setUserPlan] = useState<string>('free');
   const [quotaLimit, setQuotaLimit] = useState<number>(10); // default free plan
   const [isUnlimited, setIsUnlimited] = useState(false);
+  const [profileComplete, setProfileComplete] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    denomination: '',
+    congregation_size: '',
+    worship_style: '',
+  });
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profileSaved, setProfileSaved] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -45,11 +54,23 @@ export default function DashboardPage() {
         setUserEmail(session.user.email || '');
         if (!session.user.email_confirmed_at) { setEmailVerified(false); return; }
 
-        // Load church name
+        // Load church name and check profile completeness
         try {
-          const { data } = await supabase.from('church_settings').select('church_name').eq('user_id', session.user.id).single();
+          const { data } = await supabase.from('church_settings').select('church_name, denomination, congregation_size, worship_style').eq('user_id', session.user.id).single();
           if (data && data.church_name) setChurchName(data.church_name);
-        } catch (e) {}
+          if (!data || !data.denomination || !data.congregation_size || !data.worship_style) {
+            setProfileComplete(false);
+          }
+          if (data) {
+            setProfileForm({
+              denomination: data.denomination || '',
+              congregation_size: data.congregation_size || '',
+              worship_style: data.worship_style || '',
+            });
+          }
+        } catch (e) {
+          setProfileComplete(false);
+        }
 
         // Load user plan and quota
         try {
@@ -144,6 +165,50 @@ export default function DashboardPage() {
       setRedeemMessage('Redemption failed');
     } finally {
       setRedeeming(null);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    setSavingProfile(true);
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const { error } = await supabase.from('church_settings').upsert({
+        user_id: session.user.id,
+        denomination: profileForm.denomination,
+        congregation_size: profileForm.congregation_size,
+        worship_style: profileForm.worship_style,
+      }, { onConflict: 'user_id' });
+
+      if (error) throw error;
+
+      // Award 500 points for completing profile
+      try {
+        await fetch('/api/points/earn', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: session.user.id, action: 'complete_profile' }),
+        });
+        const res = await fetch('/api/points/balance?userId=' + session.user.id);
+        if (res.ok) {
+          const data = await res.json();
+          setPointsBalance(data.balance || 0);
+        }
+      } catch (e) { console.error('Points error:', e); }
+
+      setProfileComplete(true);
+      setProfileSaved(true);
+      setTimeout(() => { setShowProfileModal(false); setProfileSaved(false); }, 2000);
+    } catch (e) {
+      console.error('Save error:', e);
+      alert('Failed to save. Please try again.');
+    } finally {
+      setSavingProfile(false);
     }
   };
 
@@ -328,6 +393,89 @@ export default function DashboardPage() {
           <p style={{ marginTop: '12px', fontSize: '14px', opacity: 0.8 }}>🔥 {streakDays}-day check-in streak!</p>
         )}
       </div>
+
+      {/* MANDATORY Profile Completion - Blocking Overlay */}
+      {!profileComplete && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', zIndex: 9999, padding: '20px',
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '24px', padding: '48px',
+            maxWidth: '560px', width: '100%', maxHeight: '95vh', overflowY: 'auto',
+            boxShadow: '0 25px 80px rgba(0,0,0,0.3)', textAlign: 'center',
+          }}>
+            {profileSaved ? (
+              <>
+                <div style={{ fontSize: '72px', marginBottom: '16px' }}>🎉</div>
+                <h3 style={{ fontSize: '28px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '12px' }}>Profile Complete!</h3>
+                <p style={{ color: '#666', marginBottom: '8px' }}>AI now understands your church. All content will be personalized.</p>
+                <p style={{ color: '#f59e0b', fontWeight: '700', fontSize: '18px' }}>+500 points awarded!</p>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize: '56px', marginBottom: '16px' }}>⛪</div>
+                <h3 style={{ fontSize: '26px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '8px' }}>
+                  Tell Us About Your Church
+                </h3>
+                <p style={{ color: '#666', marginBottom: '6px', fontSize: '15px' }}>
+                  Our AI needs to understand your church to create personalized content.
+                </p>
+                <p style={{ color: '#f59e0b', fontWeight: '600', fontSize: '14px', marginBottom: '28px' }}>
+                  🎁 Complete your profile to earn 500 bonus points!
+                </p>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#1e3a5f', fontSize: '14px' }}>Denomination *</label>
+                    <select value={profileForm.denomination} onChange={(e) => setProfileForm({ ...profileForm, denomination: e.target.value })} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', background: 'white' }}>
+                      <option value="">Select your denomination</option>
+                      <option value="baptist">Baptist</option>
+                      <option value="methodist">Methodist (UMC)</option>
+                      <option value="lutheran">Lutheran (ELCA/Missouri Synod)</option>
+                      <option value="presbyterian">Presbyterian (PCA/PCUSA)</option>
+                      <option value="pentecostal">Pentecostal / Assemblies of God</option>
+                      <option value="catholic">Roman Catholic</option>
+                      <option value="anglican">Anglican / Episcopal</option>
+                      <option value="non-denominational">Non-Denominational</option>
+                      <option value="orthodox">Eastern Orthodox</option>
+                      <option value="adventist">Seventh-day Adventist</option>
+                      <option value="reformed">Reformed (CRC/RCA)</option>
+                      <option value="nazarene">Church of the Nazarene</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#1e3a5f', fontSize: '14px' }}>Congregation Size *</label>
+                    <select value={profileForm.congregation_size} onChange={(e) => setProfileForm({ ...profileForm, congregation_size: e.target.value })} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', background: 'white' }}>
+                      <option value="">Select size</option>
+                      <option value="small">Small (under 50)</option>
+                      <option value="medium">Medium (50-200)</option>
+                      <option value="large">Large (200-500)</option>
+                      <option value="mega">Mega (500+)</option>
+                    </select>
+                  </div>
+                  <div style={{ marginBottom: '28px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#1e3a5f', fontSize: '14px' }}>Worship Style *</label>
+                    <select value={profileForm.worship_style} onChange={(e) => setProfileForm({ ...profileForm, worship_style: e.target.value })} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', background: 'white' }}>
+                      <option value="">Select style</option>
+                      <option value="traditional">Traditional (hymns, liturgy)</option>
+                      <option value="contemporary">Contemporary (modern worship band)</option>
+                      <option value="blended">Blended (mix of both)</option>
+                      <option value="charismatic">Charismatic (Spirit-led)</option>
+                      <option value="high-church">High Church (formal liturgy)</option>
+                    </select>
+                  </div>
+                </div>
+                <button onClick={handleSaveProfile} disabled={!profileForm.denomination || !profileForm.congregation_size || !profileForm.worship_style || savingProfile} style={{ width: '100%', padding: '16px', borderRadius: '12px', border: 'none', fontSize: '17px', fontWeight: '700', cursor: (!profileForm.denomination || !profileForm.congregation_size || !profileForm.worship_style) ? 'not-allowed' : 'pointer', background: (!profileForm.denomination || !profileForm.congregation_size || !profileForm.worship_style) ? '#ccc' : '#1e3a5f', color: 'white' }}>
+                  {savingProfile ? 'Saving...' : 'Complete Profile & Earn 500 Points →'}
+                </button>
+                <p style={{ color: '#999', fontSize: '13px', marginTop: '16px' }}>Required to personalize your AI experience</p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Rewards Panel */}
       {showRewards && (
