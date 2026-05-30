@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(url, key);
+}
+
 export default function WeeklyNewsletterPage() {
   const [step, setStep] = useState<'form' | 'preview' | 'sent'>('form');
   const [sending, setSending] = useState(false);
@@ -17,6 +25,19 @@ export default function WeeklyNewsletterPage() {
   const [error, setError] = useState('');
   const [userId, setUserId] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const supabase = getSupabase();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUserId(session.user.id);
+          setEmailVerified(!!session.user.email_confirmed_at);
+        }
+      } catch {}
+    })();
+  }, []);
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -34,6 +55,7 @@ export default function WeeklyNewsletterPage() {
           pastor_name: pastorName,
           upcoming_events: upcomingEvents,
           prayer_requests: prayerRequests,
+          userId,
         }),
       });
 

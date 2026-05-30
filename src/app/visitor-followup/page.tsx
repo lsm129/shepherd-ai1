@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(url, key);
+}
+
 interface Email {
   week: number;
   subject: string;
@@ -23,6 +31,19 @@ export default function VisitorFollowupPage() {
   const [userId, setUserId] = useState<string>('');
   const [emailVerified, setEmailVerified] = useState(true);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const supabase = getSupabase();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUserId(session.user.id);
+          setEmailVerified(!!session.user.email_confirmed_at);
+        }
+      } catch {}
+    })();
+  }, []);
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -38,6 +59,7 @@ export default function VisitorFollowupPage() {
           first_visit_date: firstVisitDate,
           how_heard: howHeard,
           interests: interests,
+          userId,
         }),
       });
 

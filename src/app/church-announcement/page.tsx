@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(url, key);
+}
+
 interface Announcement {
   title: string;
   content: string;
@@ -23,6 +31,17 @@ export default function ChurchAnnouncementPage() {
 
   useEffect(() => {
     setMounted(true);
+    // Read Supabase session for auth
+    (async () => {
+      try {
+        const supabase = getSupabase();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUserId(session.user.id);
+          setEmailVerified(!!session.user.email_confirmed_at);
+        }
+      } catch {}
+    })();
   }, []);
 
   if (!mounted) return null;
@@ -38,7 +57,7 @@ export default function ChurchAnnouncementPage() {
       const response = await fetch('/api/generate/announcement', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(userId ? { 'x-user-id': userId } : {}) },
-        body: JSON.stringify({ key_points: keyPoints, announcement_type: announcementType, church_name: churchName }),
+        body: JSON.stringify({ key_points: keyPoints, announcement_type: announcementType, church_name: churchName, userId }),
       });
 
       const data = await response.json();
