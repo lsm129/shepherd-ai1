@@ -54,19 +54,20 @@ export default function DashboardPage() {
         setUserEmail(session.user.email || '');
         if (!session.user.email_confirmed_at) { setEmailVerified(false); return; }
 
-        // Load church name and check profile completeness
+        // Load church name and check profile completeness from user_metadata
         try {
-          const { data } = await supabase.from('church_settings').select('church_name, denomination, congregation_size, worship_style').eq('user_id', session.user.id).single();
-          if (data && data.church_name) setChurchName(data.church_name);
-          if (!data || !data.denomination || !data.congregation_size || !data.worship_style) {
-            setProfileComplete(false);
-          }
-          if (data) {
+          const { data: csData } = await supabase.from('church_settings').select('church_name').eq('user_id', session.user.id).single();
+          if (csData && csData.church_name) setChurchName(csData.church_name);
+          // Read denomination/congregation_size/worship_style from user_metadata
+          const meta = session.user.user_metadata || {};
+          if (meta.denomination && meta.congregation_size && meta.worship_style) {
             setProfileForm({
-              denomination: data.denomination || '',
-              congregation_size: data.congregation_size || '',
-              worship_style: data.worship_style || '',
+              denomination: meta.denomination || '',
+              congregation_size: meta.congregation_size || '',
+              worship_style: meta.worship_style || '',
             });
+          } else {
+            setProfileComplete(false);
           }
         } catch (e) {
           setProfileComplete(false);
@@ -178,12 +179,14 @@ export default function DashboardPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
-      const { error } = await supabase.from('church_settings').upsert({
-        user_id: session.user.id,
-        denomination: profileForm.denomination,
-        congregation_size: profileForm.congregation_size,
-        worship_style: profileForm.worship_style,
-      }, { onConflict: 'user_id' });
+      // Save to user_metadata (no DDL needed)
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          denomination: profileForm.denomination,
+          congregation_size: profileForm.congregation_size,
+          worship_style: profileForm.worship_style,
+        }
+      });
 
       if (error) throw error;
 
