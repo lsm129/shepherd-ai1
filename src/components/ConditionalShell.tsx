@@ -2,7 +2,7 @@
 import { usePathname } from 'next/navigation';
 import AppShell from './AppShell';
 
-const ALWAYS_PUBLIC_PAGES = ['/login', '/register', '/privacy', '/terms', '/about', '/faq', '/reset-password', '/prayer/submit'];
+const ALWAYS_PUBLIC_PAGES = ['/login', '/register', '/privacy', '/terms', '/about', '/faq', '/reset-password', '/prayer/submit', '/community'];
 
 export default function ConditionalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
