@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { checkQuota } from './quota';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export interface AuthQuotaResult {
   authenticated: boolean;
@@ -31,7 +33,7 @@ export async function requireAuthAndQuota(
     };
   }
 
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
   
   const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userIdFromClient);
@@ -137,7 +139,7 @@ export async function requireCongregantAuth(
     };
   }
 
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
   
   const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userIdFromClient);

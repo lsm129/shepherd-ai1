@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 // Default system user for anonymous prayer submissions
 const SYSTEM_USER_ID = '7cd1f0bf-d4c6-4b15-bbc3-eb2fa49a1969';
@@ -10,9 +12,9 @@ export async function POST(request: NextRequest) {
     const { name, request: prayerRequest, anonymous, churchId, userId } = body;
     if (!prayerRequest) return NextResponse.json({ error: 'Prayer request is required' }, { status: 400 });
 
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     // Store in generations table (prayer_requests table requires DDL which is blocked by MFA)
     const inputSummary = JSON.stringify({

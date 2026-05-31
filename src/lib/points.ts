@@ -1,6 +1,8 @@
 // ShepherdAI Points System
 // Configuration and helper functions for earning/redeeming points
 import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 // --- Points Configuration ---
 export const POINTS_CONFIG: Record<string, { points: number; dailyCap: number; label: string }> = {
@@ -23,7 +25,7 @@ export const REWARDS: Record<string, { cost: number; label: string; value: numbe
 
 // --- Supabase admin client (server-side only) ---
 export function getAdminClient() {
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   return createClient(supabaseUrl, supabaseServiceKey);
 }

@@ -1,6 +1,8 @@
 'use client';
 import Link from "next/link";
 import { useState, useEffect } from 'react';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 const allFeatures = [
   { icon: '📧', title: 'Visitor Follow-up', desc: 'Personalized 6-week email sequences for new visitors. Warm, welcoming messages that make guests feel valued.', color: '#1e3a5f', href: '/visitor-followup' },
@@ -22,10 +24,8 @@ export default function Home() {
     async function checkAuth() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-        const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
         if (!supabaseUrl || !supabaseKey) return;
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         setIsLoggedIn(!!session);
       } catch (e) {}
@@ -51,7 +51,7 @@ export default function Home() {
                 <button onClick={async () => {
                   try {
                     const { createClient } = await import('@supabase/supabase-js');
-                    const supabase = createClient(((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co'), ((process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I'));
+                    const supabase = createClient((supabaseUrl), (supabaseAnonKey));
                     await supabase.auth.signOut();
                     window.location.reload();
                   } catch(e) {}

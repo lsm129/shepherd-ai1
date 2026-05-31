@@ -4,6 +4,8 @@
 import { createClient } from '@supabase/supabase-js';
 import * as crypto from 'crypto';
 import { PLANS, type PlanId } from './pricing';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export const CREEM_API_KEY = process.env.CREEM_API_KEY!;
 export const CREEM_WEBHOOK_SECRET = process.env.CREEM_WEBHOOK_SECRET!;
@@ -214,7 +216,7 @@ export async function updateUserPlan(
   creemCustomerId?: string,
   creemSubscriptionId?: string
 ): Promise<void> {
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -239,7 +241,7 @@ export async function getUserPlan(userId: string): Promise<{
   creemCustomerId?: string;
   creemSubscriptionId?: string;
 }> {
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 

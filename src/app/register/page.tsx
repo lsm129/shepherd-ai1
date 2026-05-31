@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { DENOMINATIONS, CONGREGATION_SIZES, WORSHIP_STYLES } from '@/lib/church-profile';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 type UserRole = 'pastor' | 'congregant';
 
@@ -28,8 +30,6 @@ const US_STATES = [
 
 export { US_STATES };
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co';
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I';
 
 export default function RegisterPage() {
   const [mounted, setMounted] = useState(false);
@@ -85,10 +85,8 @@ export default function RegisterPage() {
     setVerifyingCode(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = SUPABASE_URL;
-      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setVerifyingCode(false); return; }
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const { data: referral } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', code.trim()).single();
       if (referral) {
         const { data: churchData } = await supabase.from('church_settings').select('church_name').eq('user_id', referral.referrer_id).single();
@@ -112,10 +110,8 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = SUPABASE_URL;
-      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const fullAddress = `${addressCity.trim()}, ${addressState} ${addressZip.trim()}`;
       const { data, error } = await supabase.auth.signUp({
         email, password,
@@ -129,7 +125,7 @@ export default function RegisterPage() {
       });
       if (error) throw error;
       if (data.user) {
-        const supabaseAdmin = (await import('@supabase/supabase-js')).createClient(((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co'), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+        const supabaseAdmin = (await import('@supabase/supabase-js')).createClient((supabaseUrl), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
         await supabaseAdmin.from('church_settings').upsert({
           user_id: data.user.id, church_name: churchName, pastor_name: pastorName,
           denomination, congregation_size: congregationSize, worship_style: worshipStyle, address: fullAddress,
@@ -140,7 +136,7 @@ export default function RegisterPage() {
             if (referrer) {
               await supabase.from('referrals').update({ referred_email: email, referred_id: data.user.id, status: 'completed' }).eq('referral_code', refCode).is('referred_id', null);
               const BONUS = 2000;
-              const supabaseAdm = (await import('@supabase/supabase-js')).createClient(((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co'), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+              const supabaseAdm = (await import('@supabase/supabase-js')).createClient((supabaseUrl), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
               try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', referrer.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', referrer.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: referrer.referrer_id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: friend signed up' }); } } catch (e) { console.error(e); }
               try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: signed up via referral' }); } } catch (e) { console.error(e); }
             }
@@ -164,10 +160,8 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = SUPABASE_URL;
-      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const signUpData: any = {
         role: 'congregant', full_name: congregantName.trim(),
         address_city: congregantCity.trim(), address_state: congregantState, address_zip: congregantZip.trim(),
@@ -191,7 +185,7 @@ export default function RegisterPage() {
       if (churchReferral && data.user) {
         try {
           const BONUS = 2000;
-          const supabaseAdm = (await import('@supabase/supabase-js')).createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+          const supabaseAdm = (await import('@supabase/supabase-js')).createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
           try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', churchReferral.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', churchReferral.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: churchReferral.referrer_id, action: 'member_joined_bonus', points: BONUS, balance_after: nb, description: 'Bonus: church member joined via your code' }); } } catch (e) { console.error(e); }
           try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'join_church_bonus', points: BONUS, balance_after: nb, description: 'Bonus: joined a church community' }); } } catch (e) { console.error(e); }
         } catch (e) { console.error(e); }

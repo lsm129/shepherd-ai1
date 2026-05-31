@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { CREEM_API_KEY } from '@/lib/creem';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 const CREEM_API_BASE = 'https://api.creem.io/v1';
 
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's Creem customer ID from profile
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(
       supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY!

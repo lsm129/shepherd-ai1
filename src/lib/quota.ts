@@ -2,8 +2,10 @@
 // Rule: 生成即扣1次，recordGeneration写入generations表即扣次
 import { createClient } from '@supabase/supabase-js';
 import { PLANS, type PlanId } from './pricing';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
-const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+
+const supabaseUrl = (supabaseUrl);
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 interface QuotaResult {

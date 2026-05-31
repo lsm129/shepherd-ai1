@@ -1,6 +1,8 @@
 import { getPointsBalance, getAdminClient } from '@/lib/points';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user exists
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userId);
     if (!user) {

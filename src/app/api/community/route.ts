@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { earnPoints } from '@/lib/points';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 function getAdminClient() {
-  const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   return createClient(supabaseUrl, supabaseServiceKey);
 }

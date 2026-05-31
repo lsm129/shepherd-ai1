@@ -5,6 +5,8 @@ import { CREEM_PRODUCTS } from '@/lib/creem';
 const CREEM_API_KEY = process.env.CREEM_API_KEY!;
 const CREEM_API_BASE = 'https://api.creem.io/v1';
 import { PLANS, type PlanId } from '@/lib/pricing';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already has this plan or higher
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(
       supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY!

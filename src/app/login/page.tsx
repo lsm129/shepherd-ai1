@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export default function LoginPage() {
  const [email, setEmail] = useState('');
@@ -16,15 +18,13 @@ export default function LoginPage() {
  setLoading(true);
  try {
  const { createClient } = await import('@supabase/supabase-js');
- const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
- const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
  
  if (!supabaseUrl || !supabaseKey) {
  setError('System not configured. Please contact support.');
  setLoading(false);
  return;
  }
- const supabase = createClient(supabaseUrl, supabaseKey);
+ const supabase = createClient(supabaseUrl, supabaseAnonKey);
  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
  if (error) throw error;
 
@@ -81,10 +81,8 @@ export default function LoginPage() {
  if (!email) { setError('Please enter your email first'); return; }
  try {
  const { createClient } = await import('@supabase/supabase-js');
- const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
- const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
  if (supabaseUrl && supabaseKey) {
- const supabase = createClient(supabaseUrl, supabaseKey);
+ const supabase = createClient(supabaseUrl, supabaseAnonKey);
  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
  setError('');
  alert('Password reset email sent! Check your inbox.');

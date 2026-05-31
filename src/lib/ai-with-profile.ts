@@ -1,12 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { buildChurchContext, getLiturgicalSeason, ChurchProfile } from './church-profile';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 // Get church profile for AI context - reads from church_settings + user_metadata
 export async function getChurchProfile(userId: string): Promise<ChurchProfile | null> {
   try {
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     
     // Get church_settings (basic info like church_name, pastor_name)
     const { data: settings } = await supabase
@@ -59,9 +61,9 @@ IMPORTANT: Tailor your content specifically for this church's denomination, cong
 // Get user's writing habits for AI personalization
 export async function getUserHabits(userId: string): Promise<string> {
   try {
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     
     const { data: { user } } = await supabase.auth.admin.getUserById(userId);
     const meta = user?.user_metadata || {};

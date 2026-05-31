@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 function getAIConfig() {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
@@ -191,9 +193,9 @@ export async function POST(request: NextRequest) {
     // If user is logged in, save messages to Supabase
     if (userId) {
       try {
-        const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+        const supabaseUrl = (supabaseUrl);
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
         // Save the user's last message and the assistant response
         const lastUserMsg = messages[messages.length - 1];

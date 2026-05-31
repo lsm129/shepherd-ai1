@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isBrevoConfigured, sendEmailSequence } from '@/lib/brevo';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,9 +33,9 @@ export async function POST(request: NextRequest) {
 
     // Save to scheduled_emails table for tracking
     try {
-      const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+      const supabaseUrl = (supabaseUrl);
       const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
       for (const result of results) {
         await supabase.from('scheduled_emails').insert({

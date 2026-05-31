@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { PLANS, type PlanId } from '@/lib/pricing';
 import { DENOMINATIONS, CONGREGATION_SIZES, WORSHIP_STYLES } from '@/lib/church-profile';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 const US_STATES = [
   { value: 'AL', label: 'Alabama' }, { value: 'AK', label: 'Alaska' }, { value: 'AZ', label: 'Arizona' },
@@ -62,10 +64,8 @@ export default function SettingsPage() {
     async function loadSettings() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-        const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
         if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;
         setUserId(session.user.id);
@@ -118,7 +118,6 @@ export default function SettingsPage() {
     setUploading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
       const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
       if (!supabaseUrl || !serviceKey) { setUploading(false); return; }
       const supabaseAdmin = createClient(supabaseUrl, serviceKey);
@@ -140,10 +139,8 @@ export default function SettingsPage() {
     setLoading(true); setError('');
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
       if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           const fullAddress = [addressCity, addressState, addressZip].filter(Boolean).join(', ');
@@ -175,10 +172,8 @@ export default function SettingsPage() {
     setCheckoutLoading(planId);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
       let userEmail = '';
-      if (supabaseUrl && supabaseKey) { const supabase = createClient(supabaseUrl, supabaseKey); const { data: { session } } = await supabase.auth.getSession(); if (session?.user?.email) userEmail = session.user.email; }
+      if (supabaseUrl && supabaseKey) { const supabase = createClient(supabaseUrl, supabaseAnonKey); const { data: { session } } = await supabase.auth.getSession(); if (session?.user?.email) userEmail = session.user.email; }
       const response = await fetch('/api/creem/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ planId, userId, userEmail: userEmail || undefined, billingCycle }) });
       const data = await response.json();
       if (data.checkoutUrl) { window.location.href = data.checkoutUrl; } else { setError(data.error || 'Failed to create checkout session'); }

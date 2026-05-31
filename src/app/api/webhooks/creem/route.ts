@@ -3,6 +3,8 @@ import * as crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { CREEM_WEBHOOK_SECRET, CREEM_PRODUCTS, CREEM_ANNUAL_PRODUCTS } from '@/lib/creem';
 import { earnPoints } from '@/lib/points';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
 
 // Reverse map: Creem product ID -> plan ID (both monthly and annual)
 const PRODUCT_TO_PLAN: Record<string, string> = {};
@@ -42,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Creem Webhook] ${eventType}`, JSON.stringify(eventObject).substring(0, 500));
 
-    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(
       supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
