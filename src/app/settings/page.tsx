@@ -62,8 +62,8 @@ export default function SettingsPage() {
     async function loadSettings() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+        const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
         if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { data: { session } } = await supabase.auth.getSession();
@@ -118,7 +118,7 @@ export default function SettingsPage() {
     setUploading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
       const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
       if (!supabaseUrl || !serviceKey) { setUploading(false); return; }
       const supabaseAdmin = createClient(supabaseUrl, serviceKey);
@@ -140,8 +140,8 @@ export default function SettingsPage() {
     setLoading(true); setError('');
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
       if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { data: { session } } = await supabase.auth.getSession();
@@ -175,8 +175,8 @@ export default function SettingsPage() {
     setCheckoutLoading(planId);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
+      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
       let userEmail = '';
       if (supabaseUrl && supabaseKey) { const supabase = createClient(supabaseUrl, supabaseKey); const { data: { session } } = await supabase.auth.getSession(); if (session?.user?.email) userEmail = session.user.email; }
       const response = await fetch('/api/creem/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ planId, userId, userEmail: userEmail || undefined, billingCycle }) });

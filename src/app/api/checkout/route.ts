@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already has this plan or higher
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseUrl = ((process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co') || 'https://hsunvuixqesjcoohbrmp.supabase.co');
     const supabaseAdmin = createClient(
       supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
