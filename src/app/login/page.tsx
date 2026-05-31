@@ -58,8 +58,8 @@ export default function LoginPage() {
         </div>
 
         <div className="card" style={{ padding: '32px' }}>
-          <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>Welcome Back / 欢迎回来</h1>
-          <p style={{ textAlign: 'center', color: '#666', marginBottom: '32px' }}>Sign in to your account / 登录您的账号</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>Welcome Back</h1>
+          <p style={{ textAlign: 'center', color: '#666', marginBottom: '32px' }}>Sign in to your account</p>
 
           {error && (
             <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '12px', marginBottom: '24px', fontSize: '14px', color: '#dc2626' }}>
@@ -69,16 +69,16 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label className="form-label">Email / 邮箱</label>
+              <label className="form-label">Email</label>
               <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
             </div>
             <div className="form-group">
-              <label className="form-label">Password / 密码</label>
-              <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password / 输入密码" required />
+              <label className="form-label">Password</label>
+              <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" required />
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
               <button type="button" onClick={async () => {
-                if (!email) { setError('Please enter your email first, then click Forgot Password / 请先输入邮箱'); return; }
+                if (!email) { setError('Please enter your email first'); return; }
                 try {
                   const { createClient } = await import('@supabase/supabase-js');
                   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -87,21 +87,21 @@ export default function LoginPage() {
                     const supabase = createClient(supabaseUrl, supabaseKey);
                     await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
                     setError('');
-                    alert('Password reset email sent! Check your inbox. / 密码重置邮件已发送！');
+                    alert('Password reset email sent! Check your inbox.');
                   }
                 } catch (err: any) { setError(err.message || 'Failed to send reset email'); }
               }} style={{ background: 'none', border: 'none', color: '#1e3a5f', cursor: 'pointer', fontSize: '14px', fontWeight: '500', padding: 0 }}>
-                Forgot Password? / 忘记密码？
+                Forgot Password?
               </button>
             </div>
             <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '8px' }} disabled={loading}>
-              {loading ? 'Signing in... / 登录中...' : 'Sign In / 登录'}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           <div style={{ textAlign: 'center', marginTop: '24px', color: '#666', fontSize: '14px' }}>
             Don&apos;t have an account? / 没有账号？{' '}
-            <Link href="/register" style={{ color: '#1e3a5f', fontWeight: '600' }}>Sign up free / 免费注册</Link>
+            <Link href="/register" style={{ color: '#1e3a5f', fontWeight: '600' }}>Sign up free</Link>
           </div>
         </div>
       </div>

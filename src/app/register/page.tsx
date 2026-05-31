@@ -42,8 +42,8 @@ export default function RegisterPage() {
 
   const handleStep1 = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) { setError('Passwords do not match / 密码不匹配'); return; }
-    if (password.length < 6) { setError('Password must be at least 6 characters / 密码至少6位'); return; }
+    if (password !== confirmPassword) { setError('Passwords do not match'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
     setError('');
     if (role === 'congregant') {
       setStep(3);
@@ -92,7 +92,7 @@ export default function RegisterPage() {
 
   const handleSubmitPastor = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!churchName.trim()) { setError('Church name is required / 教会名称必填'); return; }
+    if (!churchName.trim()) { setError('Church name is required'); return; }
     setError('');
     setLoading(true);
     try {
@@ -166,7 +166,7 @@ export default function RegisterPage() {
       }
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || 'Failed to create account / 创建账号失败');
+      setError(err.message || 'Failed to create account');
     } finally {
       setLoading(false);
     }
@@ -174,8 +174,8 @@ export default function RegisterPage() {
 
   const handleSubmitCongregant = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!churchCode.trim()) { setError('Church invitation code is required / 教会邀请码必填'); return; }
-    if (!churchCodeValid) { setError('Invalid church invitation code / 无效的教会邀请码'); return; }
+    if (!churchCode.trim()) { setError('Church invitation code is required'); return; }
+    if (!churchCodeValid) { setError('Invalid church invitation code'); return; }
     setError('');
     setLoading(true);
     try {
@@ -189,7 +189,7 @@ export default function RegisterPage() {
         .select('referrer_id')
         .eq('referral_code', churchCode.trim())
         .single();
-      if (!referral) throw new Error('Invalid church code / 无效的教会邀请码');
+      if (!referral) throw new Error('Invalid church code');
       const pastorUserId = referral.referrer_id;
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -205,7 +205,7 @@ export default function RegisterPage() {
       if (error) throw error;
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || 'Failed to create account / 创建账号失败');
+      setError(err.message || 'Failed to create account');
     } finally {
       setLoading(false);
     }
@@ -218,12 +218,12 @@ export default function RegisterPage() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' }}>
         <div style={{ width: '100%', maxWidth: '420px', padding: '24px' }}>
           <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Check Your Email / 查收邮件</h1>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Check Your Email</h1>
             <p style={{ color: '#666', marginBottom: '24px' }}>
               We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
               <br />我们已向 <strong>{email}</strong> 发送确认链接，请点击激活账号。
             </p>
-            <Link href="/login" className="btn-primary">Back to Login / 返回登录</Link>
+            <Link href="/login" className="btn-primary">Back to Login</Link>
           </div>
         </div>
       </div>
@@ -254,10 +254,10 @@ export default function RegisterPage() {
           </div>
 
           <h1 style={{ fontSize: mobile ? '20px' : '24px', fontWeight: 'bold', textAlign: 'center', marginBottom: '4px' }}>
-            {step === 1 ? 'Create Your Account / 创建账号' : step === 2 ? 'Tell Us About Your Church / 教会信息' : 'Join Your Church / 加入教会'}
+            {step === 1 ? 'Create Your Account' : step === 2 ? 'Tell Us About Your Church' : 'Join Your Church'}
           </h1>
           <p style={{ textAlign: 'center', color: '#666', marginBottom: '24px', fontSize: '14px' }}>
-            {step === 1 ? 'Start free, upgrade anytime / 免费开始' : step === 2 ? 'This helps AI tailor content for your congregation / 帮助AI为您定制内容' : 'Enter your church invitation code / 输入教会邀请码'}
+            {step === 1 ? 'Start free, upgrade anytime' : step === 2 ? 'This helps AI tailor content for your congregation' : 'Enter your church invitation code'}
           </p>
 
           {refCode && step === 1 && (
@@ -275,7 +275,7 @@ export default function RegisterPage() {
           {step === 1 ? (
             <form onSubmit={handleStep1}>
               <div className="form-group">
-                <label className="form-label">I am a... / 我是... *</label>
+                <label className="form-label">I am a... **</label>
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
                   <button
                     type="button"
@@ -286,8 +286,8 @@ export default function RegisterPage() {
                     }}
                   >
                     <div style={{ fontSize: '32px', marginBottom: '4px' }}>⛪</div>
-                    <div style={{ fontWeight: '700', color: '#1e3a5f', fontSize: '14px' }}>Pastor / 牧师</div>
-                    <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>I manage a church / 我管理教会</div>
+                    <div style={{ fontWeight: '700', color: '#1e3a5f', fontSize: '14px' }}>Pastor</div>
+                    <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>I manage a church</div>
                   </button>
                   <button
                     type="button"
@@ -298,18 +298,18 @@ export default function RegisterPage() {
                     }}
                   >
                     <div style={{ fontSize: '32px', marginBottom: '4px' }}>🙋</div>
-                    <div style={{ fontWeight: '700', color: '#1e3a5f', fontSize: '14px' }}>Church Member / 会众</div>
-                    <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>I join a church / 我加入教会</div>
+                    <div style={{ fontWeight: '700', color: '#1e3a5f', fontSize: '14px' }}>Church Member</div>
+                    <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>I join a church</div>
                   </button>
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Email / 邮箱</label>
+                <label className="form-label">Email</label>
                 <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
               </div>
               <div className="form-group">
-                <label className="form-label">Password / 密码</label>
-                <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters / 至少6位" required />
+                <label className="form-label">Password</label>
+                <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" required />
               </div>
               <div className="form-group">
                 <label className="form-label">Confirm Password / 确认密码</label>
