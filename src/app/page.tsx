@@ -1,22 +1,41 @@
 'use client';
 import Link from "next/link";
+import { useState, useEffect } from 'react';
 
 const allFeatures = [
-  { icon: '📧', title: 'Visitor Follow-up', desc: 'Personalized 6-week email sequences for new visitors. Warm, welcoming messages that make guests feel valued.', color: '#1e3a5f' },
-  { icon: '📰', title: 'Weekly Newsletter', desc: 'Transform your week highlights into professional, engaging newsletters your congregation will actually read.', color: '#4a90a4' },
-  { icon: '🙏', title: 'Prayer Management', desc: 'AI-generated responses with Bible verses for prayer requests. Congregants can submit prayers anytime.', color: '#8b5cf6' },
-  { icon: '📱', title: 'Sermon to Social Media', desc: 'Turn sermon notes into multiple engaging social media posts - Facebook, Instagram, Twitter, all at once.', color: '#ec4899' },
-  { icon: '📢', title: 'Announcements', desc: 'Generate polished church announcements for services, events, and special occasions in seconds.', color: '#f59e0b' },
-  { icon: '📖', title: 'Daily Devotional', desc: 'Bible verses, meditation prompts, life application, and closing prayer - generated fresh every day.', color: '#10b981' },
-  { icon: '⚡', title: 'Batch Content', desc: 'One sermon to 50 social media posts. One theme to a month of devotionals. Scale your ministry content.', color: '#6366f1' },
-  { icon: '📋', title: 'Template Marketplace', desc: 'Share your gift, bless thousands. Browse and use sermon outlines and templates from pastors worldwide.', color: '#22c55e' },
-  { icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from ministry leaders around the world. Ask questions, get answers.', color: '#0ea5e9' },
-  { icon: '🧠', title: 'AI Habit Learning', desc: 'ShepherdAI learns your style, tone, and preferences over time. The more you use it, the better it gets.', color: '#f97316' },
+  { icon: '📧', title: 'Visitor Follow-up', desc: 'Personalized 6-week email sequences for new visitors. Warm, welcoming messages that make guests feel valued.', color: '#1e3a5f', href: '/visitor-followup' },
+  { icon: '📰', title: 'Weekly Newsletter', desc: 'Transform your week highlights into professional, engaging newsletters your congregation will actually read.', color: '#4a90a4', href: '/weekly-newsletter' },
+  { icon: '🙏', title: 'Prayer Management', desc: 'AI-generated responses with Bible verses for prayer requests. Congregants can submit prayers anytime.', color: '#8b5cf6', href: '/prayer-requests' },
+  { icon: '📱', title: 'Sermon to Social Media', desc: 'Turn sermon notes into multiple engaging social media posts - Facebook, Instagram, Twitter, all at once.', color: '#ec4899', href: '/sermon-social' },
+  { icon: '📢', title: 'Announcements', desc: 'Generate polished church announcements for services, events, and special occasions in seconds.', color: '#f59e0b', href: '/church-announcement' },
+  { icon: '📖', title: 'Daily Devotional', desc: 'Bible verses, meditation prompts, life application, and closing prayer - generated fresh every day.', color: '#10b981', href: '/daily-devotional' },
+  { icon: '⚡', title: 'Batch Content', desc: 'One sermon to 50 social media posts. One theme to a month of devotionals. Scale your ministry content.', color: '#6366f1', href: '/batch-content' },
+  { icon: '📋', title: 'Template Marketplace', desc: 'Share your gift, bless thousands. Browse and use sermon outlines and templates from pastors worldwide.', color: '#22c55e', href: '/templates' },
+  { icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from ministry leaders around the world. Ask questions, get answers.', color: '#0ea5e9', href: '/community' },
+  { icon: '🧠', title: 'AI Habit Learning', desc: 'ShepherdAI learns your style, tone, and preferences over time. The more you use it, the better it gets.', color: '#f97316', href: '/settings' },
 ];
 
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey) return;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsLoggedIn(!!session);
+      } catch (e) {}
+    }
+    checkAuth();
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh' }}>
+      {!isLoggedIn && (
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--border)', zIndex: 100 }}>
         <div className="page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
@@ -32,8 +51,9 @@ export default function Home() {
           </div>
         </div>
       </nav>
+      )}
 
-      <section style={{ paddingTop: '160px', paddingBottom: '120px', background: 'linear-gradient(180deg, #f8fafc 0%, white 100%)' }}>
+      <section style={{ paddingTop: isLoggedIn ? '80px' : '160px', paddingBottom: '120px', background: 'linear-gradient(180deg, #f8fafc 0%, white 100%)' }}>
         <div className="page-container" style={{ textAlign: 'center' }}>
           <div className="badge badge-primary" style={{ marginBottom: '24px', fontSize: '14px', padding: '8px 20px' }}>AI-Powered Ministry Platform</div>
           <h1 style={{ fontSize: '56px', fontWeight: 'bold', color: 'var(--primary)', lineHeight: '1.2', marginBottom: '24px', maxWidth: '800px', margin: '0 auto 24px' }}>
@@ -58,11 +78,16 @@ export default function Home() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {allFeatures.map((f, i) => (
-              <div key={i} className="dashboard-card" style={{ textAlign: 'left' }}>
-                <div style={{ width: '48px', height: '48px', background: f.color + '15', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', fontSize: '24px' }}>{f.icon}</div>
-                <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text)' }}>{f.title}</h3>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '14px' }}>{f.desc}</p>
-              </div>
+              <Link key={i} href={f.href} style={{ textDecoration: 'none' }}>
+                <div className="dashboard-card" style={{ textAlign: 'left', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.12)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = ''; }}>
+                  <div style={{ width: '48px', height: '48px', background: f.color + '15', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', fontSize: '24px' }}>{f.icon}</div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text)' }}>{f.title}</h3>
+                  <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '14px' }}>{f.desc}</p>
+                  <div style={{ color: f.color, fontWeight: '600', fontSize: '14px', marginTop: '12px' }}>Learn More →</div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
