@@ -199,7 +199,7 @@ export default function SettingsPage() {
   const currentPlanData = PLANS[currentPlan];
 
   return (
-    <div>
+        <div>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text)', marginBottom: '8px' }}>⚙️ Settings</h1>
         <p style={{ color: 'var(--text-secondary)' }}>Configure your church information, AI voice, and API settings</p>
@@ -333,7 +333,7 @@ export default function SettingsPage() {
                     </button>
                   )}
                 </div>
-              );
+        );
             })}
           </div>
         </div>

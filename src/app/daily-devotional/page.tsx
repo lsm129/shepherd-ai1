@@ -130,7 +130,7 @@ export default function DailyDevotionalPage() {
   }
 
   return (
-    <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ padding: isMobile ? '16px' : '0' }}>
       <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
         <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
           Daily Devotional 每日灵修
@@ -358,5 +358,5 @@ export default function DailyDevotionalPage() {
         </div>
       )}
     </div>
-  );
+        );
 }

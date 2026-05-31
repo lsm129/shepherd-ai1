@@ -139,7 +139,7 @@ export default function VisitorFollowupPage() {
 
   if (step === 'form') {
     return (
-      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ padding: isMobile ? '16px' : '0' }}>
         <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
           <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Visitor Follow-up Agent 访客跟进助手</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Enter visitor information and let AI create a personalized 6-week follow-up sequence. 输入访客信息，AI生成个性化6周跟进邮件</p>
@@ -210,7 +210,7 @@ export default function VisitorFollowupPage() {
           </div>
         </div>
       </div>
-    );
+        );
   }
 
   if (step === 'preview') {

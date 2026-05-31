@@ -249,7 +249,7 @@ export default function SermonSocialPage() {
     const isEditing = editingPlatform === platform;
     const editText = editTexts[platform] ?? content;
     return (
-      <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ fontSize: '18px', fontWeight: 'bold', color }}>{icon} {title}</h3>
@@ -367,7 +367,7 @@ export default function SermonSocialPage() {
           </div>
         )}
       </div>
-    );
+        );
   }
 
   return (

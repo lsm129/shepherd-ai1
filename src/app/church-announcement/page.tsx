@@ -99,7 +99,7 @@ export default function ChurchAnnouncementPage() {
   ];
 
   return (
-    <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ padding: isMobile ? '16px' : '0' }}>
       <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
         <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>
           Church Announcement Generator 教会公告生成器
@@ -216,5 +216,5 @@ export default function ChurchAnnouncementPage() {
         </div>
       )}
     </div>
-  );
+        );
 }

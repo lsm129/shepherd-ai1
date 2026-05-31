@@ -149,7 +149,7 @@ export default function WeeklyNewsletterPage() {
 
   if (step === 'form') {
     return (
-      <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ padding: isMobile ? '16px' : '0' }}>
         <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
           <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>Weekly Newsletter Agent 周刊助手</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Enter your week highlights and let AI create a beautiful newsletter. 输入本周亮点，AI生成精美周刊</p>
@@ -189,7 +189,7 @@ export default function WeeklyNewsletterPage() {
           </form>
         </div>
       </div>
-    );
+        );
   }
 
   if (step === 'preview') {

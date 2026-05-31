@@ -188,7 +188,7 @@ export default function PrayerRequestsPage() {
   const filteredEntries = filter === 'all' ? entries : filter === 'pending' ? entries.filter(e => e.status === 'pending') : entries.filter(e => e.urgency === 'high' && e.status === 'pending');
 
   return (
-    <div style={{ padding: isMobile ? '16px' : '0' }}>
+        <div style={{ padding: isMobile ? '16px' : '0' }}>
       <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
         <h1 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '8px' }}>🙏 Prayer Request Manager 代祷管理</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: isMobile ? '14px' : '16px' }}>Congregation members submit prayer requests via your shareable link. You review and AI helps you respond. 会众通过分享链接提交代祷事项，您审阅并由AI协助回复</p>
@@ -344,5 +344,5 @@ export default function PrayerRequestsPage() {
         ))
       )}
     </div>
-  );
+        );
 }

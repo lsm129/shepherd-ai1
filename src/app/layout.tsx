@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ConditionalShell from "@/components/ConditionalShell";
 
 export const metadata: Metadata = {
   title: "ShepherdAI - AI-Powered Church Management Platform",
@@ -31,7 +32,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className="antialiased">
-        {children}
+        <ConditionalShell>{children}</ConditionalShell>
       </body>
     </html>
   );

@@ -183,14 +183,14 @@ export default function TemplatesPage() {
   // Email not verified
   if (!emailVerified) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
         <div style={{ background: 'white', borderRadius: '16px', padding: '48px', maxWidth: '480px', width: '100%', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', textAlign: 'center' }}>
           <div style={{ fontSize: '64px', marginBottom: '16px' }}>📧</div>
           <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '12px' }}>Verify Your Email</h1>
           <p style={{ color: '#666', lineHeight: '1.6' }}>Please verify your email to access the Template Marketplace.</p>
         </div>
       </div>
-    );
+        );
   }
 
   const getCategoryEmoji = (cat?: string) => {
