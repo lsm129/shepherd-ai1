@@ -137,10 +137,10 @@ export default function BatchContentPage() {
  {/* Header */}
  <div className="text-center mb-8">
  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
- ✨ {'Batch Content Creator'}
+ ✨ {'Content Studio'}
  </h1>
  <p className="mt-2 text-gray-600 dark:text-gray-400">
- {'Turn one sermon into multiple social media posts'}
+ {'Plan your content calendar — any topic, all platforms, one workflow'}
  </p>
  </div>
 

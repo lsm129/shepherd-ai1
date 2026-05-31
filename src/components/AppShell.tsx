@@ -17,6 +17,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState<string | undefined>(undefined);
   const [userRole, setUserRole] = useState<'pastor' | 'congregant'>('pastor');
+  const [userPlan, setUserPlan] = useState<string>('free');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const pathname = usePathname();
   const [chatOpen, setChatOpen] = useState(false);
@@ -47,6 +48,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           const meta = session.user.user_metadata || {};
           const role = meta.role || 'pastor';
           setUserRole(role as 'pastor' | 'congregant');
+          // Fetch plan
+          try {
+            const r = await fetch('/api/subscription?userId=' + session.user.id);
+            const d = await r.json();
+            if (!cancelled && d.plan) setUserPlan(d.plan);
+          } catch {}
           if (role !== 'congregant') {
             try {
               const { data } = await supabase.from('referrals').select('referral_code').eq('referrer_id', session.user.id).single();
@@ -79,6 +86,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pastorNavItems = [
     { href: '/', label: 'Home', icon: '🏠' },
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+    ...(userPlan === 'growth' ? [{ href: '/church-community', label: 'My Church', icon: '⛪' }] : []),
     { href: '/community', label: 'Community', icon: '🌍' },
     { href: '/settings', label: 'Settings', icon: '⚙️' },
   ];

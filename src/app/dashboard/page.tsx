@@ -92,9 +92,10 @@ export default function DashboardPage() {
  { href: '/sermon-social', icon: '📱', title: 'Sermon → Social Media', desc: 'Transform sermon notes into engaging social media posts.', color: '#ec4899', saves: '2 hrs/wk' },
  { href: '/church-announcement', icon: '📢', title: 'Announcements', desc: 'Generate polished church announcements for services and events.', color: '#f59e0b', saves: '1 hr/wk' },
  { href: '/daily-devotional', icon: '📖', title: 'Daily Devotional', desc: 'Bible verses, meditation, application, and prayer.', color: '#10b981', saves: '1.5 hrs/wk' },
- { href: '/batch-content', icon: '✨', title: 'Batch Content', desc: 'One sermon → multiple social media posts at once.', color: '#6366f1', saves: '3 hrs/wk' },
+ { href: '/batch-content', icon: '🎬', title: 'Content Studio', desc: 'Plan your content calendar — any topic, all platforms, one workflow.', color: '#6366f1', saves: '3 hrs/wk' },
  { href: '/templates', icon: '📋', title: 'Template Marketplace', desc: 'Share & browse sermon outlines from fellow pastors.', color: '#22c55e', saves: '2 hrs/wk' },
  { href: '/community', icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from pastors worldwide.', color: '#0ea5e9', saves: '' },
+ { href: '/church-community', icon: '⛪', title: 'My Church Community', desc: 'Private hub for your congregation — announcements, devotionals, prayer wall.', color: '#7c3aed', saves: '' },
  { href: '/settings', icon: '⚙️', title: 'Church Settings', desc: 'Configure your church profile, plan, and preferences.', color: '#64748b', saves: '' },
  ];
 
