@@ -35,7 +35,6 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh' }}>
-      {!isLoggedIn && (
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--border)', zIndex: 100 }}>
         <div className="page-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
@@ -46,12 +45,27 @@ export default function Home() {
             <a href="#features" className="nav-link">Features</a>
             <a href="#pricing" className="nav-link">Pricing</a>
             <Link href="/about" className="nav-link">About</Link>
-            <Link href="/login" className="btn-ghost">Log In</Link>
-            <Link href="/register" className="btn-primary">Get Started Free</Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/dashboard" className="btn-primary">Dashboard</Link>
+                <button onClick={async () => {
+                  try {
+                    const { createClient } = await import('@supabase/supabase-js');
+                    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+                    await supabase.auth.signOut();
+                    window.location.reload();
+                  } catch(e) {}
+                }} style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '8px 16px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', color: '#666' }}>Logout</button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="btn-ghost">Log In</Link>
+                <Link href="/register" className="btn-primary">Get Started Free</Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
-      )}
 
       <section style={{ paddingTop: isLoggedIn ? '80px' : '160px', paddingBottom: '120px', background: 'linear-gradient(180deg, #f8fafc 0%, white 100%)' }}>
         <div className="page-container" style={{ textAlign: 'center' }}>
