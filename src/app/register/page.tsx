@@ -28,6 +28,9 @@ const US_STATES = [
 
 export { US_STATES };
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I';
+
 export default function RegisterPage() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -82,8 +85,8 @@ export default function RegisterPage() {
     setVerifyingCode(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
+      const supabaseUrl = SUPABASE_URL;
+      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setVerifyingCode(false); return; }
       const supabase = createClient(supabaseUrl, supabaseKey);
       const { data: referral } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', code.trim()).single();
@@ -109,8 +112,8 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
+      const supabaseUrl = SUPABASE_URL;
+      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
       const supabase = createClient(supabaseUrl, supabaseKey);
       const fullAddress = `${addressCity.trim()}, ${addressState} ${addressZip.trim()}`;
@@ -144,7 +147,7 @@ export default function RegisterPage() {
           } catch (e) { console.error(e); }
         }
       }
-      setSuccess(true);
+      router.push('/dashboard');
     } catch (err: any) { setError(err.message || 'Failed to create account'); }
     finally { setLoading(false); }
   };
@@ -155,28 +158,45 @@ export default function RegisterPage() {
     if (!congregantCity.trim()) { setError('City is required'); return; }
     if (!congregantState) { setError('State is required'); return; }
     if (!congregantZip.trim()) { setError('ZIP code is required'); return; }
-    if (!churchCode.trim()) { setError('Church invitation code is required'); return; }
-    if (!churchCodeValid) { setError('Invalid church invitation code'); return; }
+    if (churchCode.trim() && churchCodeValid === false) { setError('Invalid church invitation code'); return; }
+    
+    
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://hsunvuixqesjcoohbrmp.supabase.co');
-      const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I');
+      const supabaseUrl = SUPABASE_URL;
+      const supabaseKey = SUPABASE_ANON_KEY;
       if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
       const supabase = createClient(supabaseUrl, supabaseKey);
-      const { data: referral } = await supabase.from('referrals').select('referrer_id').eq('referral_code', churchCode.trim()).single();
-      if (!referral) throw new Error('Invalid church code');
+      const signUpData: any = {
+        role: 'congregant', full_name: congregantName.trim(),
+        address_city: congregantCity.trim(), address_state: congregantState, address_zip: congregantZip.trim(),
+        diagnosis_pending: true,
+      };
+      let churchReferral: any = null;
+      if (churchCode.trim() && churchCodeValid) {
+        const { data: referral } = await supabase.from('referrals').select('referrer_id').eq('referral_code', churchCode.trim()).single();
+        if (referral) {
+          signUpData.church_code = churchCode.trim();
+          signUpData.joined_churches = [referral.referrer_id];
+          churchReferral = referral;
+        }
+      }
       const { data, error } = await supabase.auth.signUp({
         email, password,
-        options: { data: {
-          role: 'congregant', full_name: congregantName.trim(),
-          church_code: churchCode.trim(), joined_churches: [referral.referrer_id],
-          address_city: congregantCity.trim(), address_state: congregantState, address_zip: congregantZip.trim(),
-          diagnosis_pending: true,
-        }}
+        options: { data: signUpData }
       });
       if (error) throw error;
-      setSuccess(true);
+      // Give bonus points if church code was used
+      if (churchReferral && data.user) {
+        try {
+          const BONUS = 2000;
+          const supabaseAdm = (await import('@supabase/supabase-js')).createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+          try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', churchReferral.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', churchReferral.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: churchReferral.referrer_id, action: 'member_joined_bonus', points: BONUS, balance_after: nb, description: 'Bonus: church member joined via your code' }); } } catch (e) { console.error(e); }
+          try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'join_church_bonus', points: BONUS, balance_after: nb, description: 'Bonus: joined a church community' }); } } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); }
+      }
+      router.push(role === 'congregant' ? '/member/dashboard' : '/dashboard');
     } catch (err: any) { setError(err.message || 'Failed to create account'); }
     finally { setLoading(false); }
   };
@@ -188,10 +208,9 @@ export default function RegisterPage() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' }}>
         <div style={{ width: '100%', maxWidth: '420px', padding: '24px' }}>
           <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>✉️</div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Check Your Email</h1>
-            <p style={{ color: '#666', marginBottom: '24px' }}>We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account and view your Ministry Health Report.</p>
-            <Link href="/login" className="btn-primary">Back to Login</Link>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Account Created!</h1>
+            <p style={{ color: '#666', marginBottom: '24px' }}>Welcome to ShepherdAI! Redirecting you now...</p>
           </div>
         </div>
       </div>
@@ -282,16 +301,16 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Church Invitation Code{req}</label>
-                <input type="text" className="input" value={churchCode} onChange={(e) => { setChurchCode(e.target.value); setChurchCodeValid(null); setChurchCodeChurch(''); }} onBlur={() => verifyChurchCode(churchCode)} placeholder="e.g. SHEP-ABC123" required />
+                <label className="form-label">Church Invitation Code <span style={{ color: '#16a34a', fontWeight: 'normal', fontSize: '12px' }}> (optional)</span></label>
+                <input type="text" className="input" value={churchCode} onChange={(e) => { setChurchCode(e.target.value); setChurchCodeValid(null); setChurchCodeChurch(''); }} onBlur={() => verifyChurchCode(churchCode)} placeholder="e.g. SHEP-ABC123" />
                 {verifyingCode && <div style={{ fontSize: '13px', color: '#6366f1', marginTop: '4px' }}>Verifying...</div>}
                 {churchCodeValid === true && <div style={{ fontSize: '13px', color: '#16a34a', marginTop: '4px', background: '#f0fdf4', padding: '8px 12px', borderRadius: '6px', border: '1px solid #22c55e' }}>✅ Found: <strong>{churchCodeChurch}</strong></div>}
-                {churchCodeValid === false && <div style={{ fontSize: '13px', color: '#dc2626', marginTop: '4px', background: '#fef2f2', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ef4444' }}>❌ Invalid code. Ask your pastor for the invitation code.</div>}
-                <div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>Ask your pastor for the invitation code</div>
+                {churchCodeValid === false && <div style={{ fontSize: '13px', color: '#dc2626', marginTop: '4px', background: '#fef2f2', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ef4444' }}>❌ Invalid code. Enter your church code to join your community and earn 2,000 bonus points.</div>}
+                <div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>Enter your church code to join your community and earn 2,000 bonus points</div>
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <button type="button" className="btn-primary" style={{ flex: 1, background: '#6b7280' }} onClick={() => setStep(1)}>← Back</button>
-                <button type="submit" className="btn-primary" style={{ flex: 2 }} disabled={loading || !churchCodeValid}>{loading ? 'Creating...' : 'Create Account'}</button>
+                <button type="submit" className="btn-primary" style={{ flex: 2 }} disabled={loading}>{loading ? 'Creating...' : 'Create Account'}</button>
               </div>
             </form>
           )}
