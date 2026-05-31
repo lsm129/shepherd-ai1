@@ -1,16 +1,15 @@
 import { Resend } from 'resend';
+import { resendApiKey } from './resend-config';
 
 // Resend Email API Integration
 // Free plan: 3,000 emails/month
 // Domain: shepherdaitech.com (Verified)
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-
-export const resend = new Resend(RESEND_API_KEY);
+export const resend = new Resend(resendApiKey);
 
 // 检查是否已配置Resend
 export const isResendConfigured = () => {
-  return !!RESEND_API_KEY && RESEND_API_KEY !== '' && RESEND_API_KEY !== 'your-resend-api-key' && RESEND_API_KEY.startsWith('re_');
+  return !!resendApiKey && resendApiKey !== '' && resendApiKey !== 'your-resend-api-key' && resendApiKey.startsWith('re_');
 };
 
 // 发送邮件
@@ -99,7 +98,6 @@ export async function sendEmailSequence({
       });
     }
 
-    // 每封邮件间隔500ms
     if (emails.indexOf(email) < emails.length - 1) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
