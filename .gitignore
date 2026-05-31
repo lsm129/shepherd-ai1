@@ -42,3 +42,4 @@ next-env.d.ts
 dist/
 shepherdai-*.zip
 SECRET.md
+supabase/.temp/
