@@ -77,7 +77,7 @@ export default function Home() {
             Stop spending hours on visitor follow-up and newsletter writing. ShepherdAI handles the busywork so you can focus on what matters - shepherding your flock.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/register" className="btn-primary" style={{ fontSize: '18px', padding: '16px 32px' }}>Start Free Today</Link>
+            <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ fontSize: '18px', padding: '16px 32px' }}>{isLoggedIn ? "Go to Dashboard" : "Start Free Today"}</Link>
             <a href="#features" className="btn-secondary" style={{ fontSize: '18px', padding: '16px 32px' }}>See All Features</a>
           </div>
           <p style={{ marginTop: '24px', color: 'var(--text-secondary)', fontSize: '14px' }}>No credit card required. Free plan available forever</p>
@@ -152,7 +152,7 @@ export default function Home() {
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Daily devotional</li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Community knowledge base</li>
               </ul>
-              <Link href="/register" className="btn-primary" style={{ width: '100%' }}>Start Free</Link>
+              <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ width: '100%' }}>{isLoggedIn ? "Go to Dashboard" : "Start Free"}</Link>
             </div>
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text)' }}>Starter</h3>
@@ -166,7 +166,7 @@ export default function Home() {
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Template marketplace</li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Congregant portal (25 seats)</li>
               </ul>
-              <Link href="/register" className="btn-primary" style={{ width: '100%' }}>Start Free Trial</Link>
+              <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ width: '100%' }}>{isLoggedIn ? "Go to Dashboard" : "Start Free Trial"}</Link>
             </div>
             <div className="pricing-card">
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text)' }}>Pro</h3>
@@ -181,7 +181,7 @@ export default function Home() {
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Share templates and earn</li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Unlimited congregant seats</li>
               </ul>
-              <Link href="/register" className="btn-primary" style={{ width: '100%' }}>Start Free Trial</Link>
+              <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ width: '100%' }}>{isLoggedIn ? "Go to Dashboard" : "Start Free Trial"}</Link>
             </div>
             <div className="pricing-card">
               <div style={{ marginBottom: '12px' }}><span style={{ background: 'linear-gradient(135deg, #f5a623, #f7c948)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: '700' }}>BEST VALUE</span></div>
@@ -197,7 +197,7 @@ export default function Home() {
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Community knowledge base</li>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: 'var(--text-secondary)' }}><span style={{ color: 'var(--success)' }}>✓</span> Dedicated account manager</li>
               </ul>
-              <Link href="/register" className="btn-primary" style={{ width: '100%' }}>Start Free Trial</Link>
+              <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ width: '100%' }}>{isLoggedIn ? "Go to Dashboard" : "Start Free Trial"}</Link>
             </div>
           </div>
           <div style={{ textAlign: 'center', marginTop: '48px', padding: '24px', background: '#f0fdf4', borderRadius: '16px', maxWidth: '800px', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -211,7 +211,7 @@ export default function Home() {
         <div className="page-container" style={{ textAlign: 'center' }}>
           <h2 style={{ fontSize: '40px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>Ready to Serve Your Flock Better?</h2>
           <p style={{ fontSize: '18px', color: 'rgba(255,255,255,0.8)', marginBottom: '32px' }}>Join hundreds of pastors who are saving hours every week with ShepherdAI</p>
-          <Link href="/register" className="btn-primary" style={{ fontSize: '18px', padding: '16px 40px', background: 'white', color: 'var(--primary)' }}>Start Your Free Account</Link>
+          <Link href={isLoggedIn ? "/dashboard" : "/register"} className="btn-primary" style={{ fontSize: '18px', padding: '16px 40px', background: 'white', color: 'var(--primary)' }}>{isLoggedIn ? "Go to Dashboard" : "Start Your Free Account"}</Link>
         </div>
       </section>
 
