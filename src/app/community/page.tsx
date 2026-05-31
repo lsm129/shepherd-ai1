@@ -237,8 +237,7 @@ export default function CommunityPage() {
  "Iron sharpens iron" — Share what works, learn from others.
  </p>
  <p style={{ color: '#999', fontSize: '13px', marginTop: '4px' }}>
- 「Iron sharpens iron」—
- </p>
+  </p>
  </div>
  {userId && (
  <button
@@ -257,7 +256,7 @@ export default function CommunityPage() {
  type="text"
  value={searchQuery}
  onChange={e => setSearchQuery(e.target.value)}
- placeholder="Search tips, ideas, experiences...、ideas、experiences..."
+ placeholder="Search tips, ideas, experiences...ideas, experiences..."
  style={{ flex: 1, minWidth: '200px', padding: '12px 16px', borderRadius: '12px', border: '1px solid #ddd', fontSize: '14px' }}
  />
  <select value={category} onChange={e => setCategory(e.target.value)} style={{ padding: '12px', borderRadius: '12px', border: '1px solid #ddd', fontSize: '14px', background: 'white' }}>
@@ -300,7 +299,7 @@ export default function CommunityPage() {
  Your ministry experience can help another pastor. Share a tip, idea, or testimony.
  </p>
  <p style={{ color: '#999', fontSize: '13px' }}>
- 、ideas or testimonies。
+ Share your ideas or testimonies.
  </p>
  {userId && (
  <button
@@ -345,7 +344,7 @@ export default function CommunityPage() {
 
  {post.tags && post.tags.length > 0 && (
  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
- {post.tags.map((tag, i) => (
+ {(post.tags || []).map((tag, i) => (
  <span key={i} style={{ background: '#f1f5f9', color: '#475569', fontSize: '12px', padding: '4px 10px', borderRadius: '20px' }}>
  #{tag}
  </span>
@@ -382,7 +381,7 @@ export default function CommunityPage() {
  Share a ministry tip, leadership lesson, outreach idea, or anything that could bless another pastor. Earn <strong>50 points</strong> for sharing!
  </p>
  <p style={{ color: '#999', fontSize: '13px', marginBottom: '20px' }}>
- 、leadership insights、outreach ideas，or anything that can bless other pastors。Share to earn<strong>50points</strong>！
+ Share leadership insights, outreach ideas, or anything that can bless other pastors. Share to earn <strong>50 points</strong>!
  </p>
 
  <div style={{ marginBottom: '16px' }}>
@@ -479,7 +478,7 @@ export default function CommunityPage() {
 
  {selectedPost.tags && selectedPost.tags.length > 0 && (
  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
- {selectedPost.tags.map((tag, i) => (
+ {(selectedPost.tags || []).map((tag, i) => (
  <span key={i} style={{ background: '#f1f5f9', color: '#475569', fontSize: '12px', padding: '4px 10px', borderRadius: '20px' }}>
  #{tag}
  </span>
