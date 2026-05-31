@@ -54,7 +54,7 @@ export default function Home() {
             maxWidth: '800px',
             margin: '0 auto 24px',
           }}>
-            Your AI Assistant for
+            Your AI Ministry Platform for
             <br />
             <span style={{ color: 'var(--secondary)' }}>Growing Church Community</span>
           </h1>
@@ -96,7 +96,7 @@ export default function Home() {
               Everything You Need to Serve Better
             </h2>
             <p style={{ fontSize: '18px', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-              Powerful AI tools designed specifically for small church pastors
+              Powerful AI tools designed specifically for church pastors
             </p>
           </div>
           
@@ -508,14 +508,14 @@ export default function Home() {
           </div>
           
           <div style={{ display: 'flex', gap: '32px', fontSize: '14px' }}>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }}>Privacy Policy</a>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }}>Terms of Service</a>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }}>Contact</a>
+            <a href="/privacy" style={{ color: 'rgba(255,255,255,0.7)' }}>Privacy Policy</a>
+            <a href="/terms" style={{ color: 'rgba(255,255,255,0.7)' }}>Terms of Service</a>
+            <a href="/feedback" style={{ color: 'rgba(255,255,255,0.7)' }}>Contact</a>
           </div>
         </div>
         
         <div className="page-container" style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', fontSize: '14px' }}>
-          <p>© 2024 ShepherdAI. All rights reserved. Built with ❤️ for church pastors.</p>
+          <p>© 2026 ShepherdAI. All rights reserved. Built with ❤️ for church pastors.</p>
         </div>
       </footer>
     </div>
