@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     let dbQuery = supabase
       .from('generations')
-      .select('id, user_id, tool_type, input_summary, content, created_at')
+      .select('id, user_id, tool_type, input_summary, created_at')
       .eq('tool_type', 'sermon_template');
 
     if (query) {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       .map((t: any) => {
         let contentObj: any = {};
         try {
-          contentObj = JSON.parse(t.content || '{}');
+          contentObj = JSON.parse(t.input_summary || '{}');
         } catch {}
 
         if (contentObj.is_public !== true) return null;
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
           user_id: t.user_id,
           tool_type: t.tool_type,
           input_summary: t.input_summary,
-          content: t.content,
+          input_summary: t.input_summary,
           created_at: t.created_at,
           template_title: contentObj.template_title || '',
           template_description: contentObj.template_description || '',
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
     let existingContent: any = {};
     try {
-      existingContent = JSON.parse(generation.content || '{}');
+      existingContent = JSON.parse(generation.input_summary || '{}');
     } catch {}
 
     const templateContent = {
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
       .from('generations')
       .update({
         tool_type: 'sermon_template',
-        content: JSON.stringify(templateContent),
+        input_summary: JSON.stringify(templateContent),
       })
       .eq('id', generationId);
 

@@ -171,9 +171,9 @@ export default function TemplatesPage() {
 
   function handleUseTemplate(template: Template) {
     // Redirect to sermon-social with template content pre-filled
-    const content = template.content || '';
+    const templateContent = template.input_summary || '';
     const params = new URLSearchParams();
-    params.set('templateContent', content);
+    params.set("templateContent", templateContent);
     params.set('templateTitle', template.template_title || '');
     router.push(`/sermon-social?${params.toString()}`);
   }
@@ -299,7 +299,7 @@ export default function TemplatesPage() {
           {templates.map((template) => {
             const parsed = (() => {
               try {
-                return JSON.parse(template.content || '{}');
+                return JSON.parse(template.input_summary || '{}');
               } catch { return {}; }
             })();
             const title = template.template_title || parsed.template_title || 'Untitled Template';
@@ -551,7 +551,7 @@ export default function TemplatesPage() {
             >
               {(() => {
                 try {
-                  const parsed = JSON.parse(selectedTemplate.content || '{}');
+                  const parsed = JSON.parse(selectedTemplate.input_summary || '{}');
                   if (parsed.outline || parsed.sections || parsed.main_points) {
                     return (
                       <div>
@@ -566,7 +566,7 @@ export default function TemplatesPage() {
                   }
                   return JSON.stringify(parsed, null, 2);
                 } catch {
-                  return selectedTemplate.content || 'No content';
+                  return selectedTemplate.input_summary || 'No content';
                 }
               })()}
             </div>

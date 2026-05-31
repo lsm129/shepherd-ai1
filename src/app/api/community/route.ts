@@ -20,17 +20,15 @@ export async function GET(request: NextRequest) {
 
     const supabase = getAdminClient();
 
+    // generations table only has: id, user_id, tool_type, input_summary, created_at
+    // We store all post data as JSON in input_summary
     let dbQuery = supabase
       .from('generations')
-      .select('id, user_id, tool_type, input_summary, content, created_at')
+      .select('id, user_id, tool_type, input_summary, created_at')
       .eq('tool_type', 'community_post');
 
     if (query) {
-      dbQuery = dbQuery.or(`input_summary.ilike.%${query}%,content.ilike.%${query}%`);
-    }
-
-    if (category) {
-      dbQuery = dbQuery.ilike('content', `%"category":"${category}"%`);
+      dbQuery = dbQuery.ilike('input_summary', `%${query}%`);
     }
 
     if (sort === 'newest') {
@@ -51,15 +49,15 @@ export async function GET(request: NextRequest) {
 
     const parsedPosts = (posts || []).map((p: any) => {
       let contentObj: any = {};
-      try { contentObj = JSON.parse(p.content || '{}'); } catch {}
+      try { contentObj = JSON.parse(p.input_summary || '{}'); } catch {
+        contentObj = { title: p.input_summary || 'Untitled', body: '' };
+      }
 
       return {
         id: p.id,
         user_id: p.user_id,
-        input_summary: p.input_summary,
-        content: p.content,
         created_at: p.created_at,
-        title: contentObj.title || p.input_summary || 'Untitled',
+        title: contentObj.title || 'Untitled',
         body: contentObj.body || '',
         category: contentObj.category || 'general',
         tags: contentObj.tags || [],
@@ -71,8 +69,14 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Fill author names
-    const authorIds = [...new Set(parsedPosts.map((p: any) => p.user_id))];
+    // Filter by category after parsing
+    let filtered = parsedPosts;
+    if (category) {
+      filtered = parsedPosts.filter((p: any) => p.category === category);
+    }
+
+    // Fill author names from church_settings
+    const authorIds = [...new Set(filtered.map((p: any) => p.user_id))];
     if (authorIds.length > 0) {
       const { data: profiles } = await supabase
         .from('church_settings')
@@ -82,7 +86,7 @@ export async function GET(request: NextRequest) {
       const profileMap: Record<string, any> = {};
       (profiles || []).forEach((p: any) => { profileMap[p.user_id] = p; });
 
-      parsedPosts.forEach((p: any) => {
+      filtered.forEach((p: any) => {
         if ((!p.author_name || p.author_name === 'A Fellow Pastor') && profileMap[p.user_id]) {
           p.author_name = profileMap[p.user_id].pastor_name || 'A Fellow Pastor';
           p.church_name = p.church_name || profileMap[p.user_id].church_name || '';
@@ -91,10 +95,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (sort === 'popular') {
-      parsedPosts.sort((a: any, b: any) => (b.likes || 0) - (a.likes || 0));
+      filtered.sort((a: any, b: any) => (b.likes || 0) - (a.likes || 0));
     }
 
-    return NextResponse.json({ posts: parsedPosts, page, hasMore: parsedPosts.length === limit });
+    return NextResponse.json({ posts: filtered, page, hasMore: filtered.length === limit });
   } catch (error: any) {
     console.error('Community GET error:', error);
     return NextResponse.json({ error: error.message || 'Failed to load posts' }, { status: 500 });
@@ -114,8 +118,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title must be 200 characters or less' }, { status: 400 });
     }
 
-    if (body.length > 10000) {
-      return NextResponse.json({ error: 'Body must be 10000 characters or less' }, { status: 400 });
+    if (body.length > 5000) {
+      return NextResponse.json({ error: 'Content must be 5000 characters or less' }, { status: 400 });
     }
 
     const supabase = getAdminClient();
@@ -134,14 +138,15 @@ export async function POST(request: NextRequest) {
     const authorName = settings?.pastor_name || 'A Fellow Pastor';
     const churchName = settings?.church_name || '';
 
-    const content = JSON.stringify({
+    // Store all data as JSON in input_summary (since no content column)
+    const inputSummary = JSON.stringify({
       title: title.trim(),
       body: body.trim(),
       category: category || 'general',
       tags: Array.isArray(tags) ? tags.slice(0, 5) : [],
       likes: 0,
       views: 0,
-      liked_by: [],
+      liked_by: [] as string[],
       author_name: authorName,
       church_name: churchName,
     });
@@ -151,8 +156,7 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: userId,
         tool_type: 'community_post',
-        input_summary: title.trim().substring(0, 200),
-        content,
+        input_summary: inputSummary,
       })
       .select('id')
       .single();
@@ -190,7 +194,7 @@ export async function PATCH(request: NextRequest) {
 
     const { data: post, error: fetchError } = await supabase
       .from('generations')
-      .select('content, user_id')
+      .select('input_summary, user_id')
       .eq('id', postId)
       .eq('tool_type', 'community_post')
       .single();
@@ -200,7 +204,9 @@ export async function PATCH(request: NextRequest) {
     }
 
     let contentObj: any = {};
-    try { contentObj = JSON.parse(post.content || '{}'); } catch {}
+    try { contentObj = JSON.parse(post.input_summary || '{}'); } catch {
+      contentObj = { title: post.input_summary, body: '' };
+    }
 
     if (action === 'like') {
       const likedBy: string[] = contentObj.liked_by || [];
@@ -222,7 +228,7 @@ export async function PATCH(request: NextRequest) {
 
     const { error: updateError } = await supabase
       .from('generations')
-      .update({ content: JSON.stringify(contentObj) })
+      .update({ input_summary: JSON.stringify(contentObj) })
       .eq('id', postId);
 
     if (updateError) {
