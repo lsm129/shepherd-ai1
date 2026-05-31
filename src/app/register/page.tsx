@@ -85,7 +85,7 @@ export default function RegisterPage() {
     setVerifyingCode(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      if (!supabaseUrl || !supabaseKey) { setVerifyingCode(false); return; }
+      if (!supabaseUrl || !supabaseAnonKey) { setVerifyingCode(false); return; }
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const { data: referral } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', code.trim()).single();
       if (referral) {
@@ -110,12 +110,12 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
+      if (!supabaseUrl || !supabaseAnonKey) { setError('System not configured.'); setLoading(false); return; }
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const fullAddress = `${addressCity.trim()}, ${addressState} ${addressZip.trim()}`;
       const { data, error } = await supabase.auth.signUp({
         email, password,
-        options: { data: {
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: {
           role: 'pastor', referred_by: refCode || null,
           church_name: churchName, pastor_name: pastorName,
           denomination, congregation_size: congregationSize, worship_style: worshipStyle,
@@ -135,7 +135,7 @@ export default function RegisterPage() {
             const { data: referrer } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', refCode).single();
             if (referrer) {
               await supabase.from('referrals').update({ referred_email: email, referred_id: data.user.id, status: 'completed' }).eq('referral_code', refCode).is('referred_id', null);
-              const BONUS = 2000;
+              const BONUS = 50;
               const supabaseAdm = (await import('@supabase/supabase-js')).createClient((supabaseUrl), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
               try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', referrer.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', referrer.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: referrer.referrer_id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: friend signed up' }); } } catch (e) { console.error(e); }
               try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: signed up via referral' }); } } catch (e) { console.error(e); }
@@ -160,7 +160,7 @@ export default function RegisterPage() {
     setError(''); setLoading(true);
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      if (!supabaseUrl || !supabaseKey) { setError('System not configured.'); setLoading(false); return; }
+      if (!supabaseUrl || !supabaseAnonKey) { setError('System not configured.'); setLoading(false); return; }
       const supabase = createClient(supabaseUrl, supabaseAnonKey);
       const signUpData: any = {
         role: 'congregant', full_name: congregantName.trim(),
@@ -178,13 +178,13 @@ export default function RegisterPage() {
       }
       const { data, error } = await supabase.auth.signUp({
         email, password,
-        options: { data: signUpData }
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: signUpData }
       });
       if (error) throw error;
       // Give bonus points if church code was used
       if (churchReferral && data.user) {
         try {
-          const BONUS = 2000;
+          const BONUS = 50;
           const supabaseAdm = (await import('@supabase/supabase-js')).createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
           try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', churchReferral.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', churchReferral.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: churchReferral.referrer_id, action: 'member_joined_bonus', points: BONUS, balance_after: nb, description: 'Bonus: church member joined via your code' }); } } catch (e) { console.error(e); }
           try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'join_church_bonus', points: BONUS, balance_after: nb, description: 'Bonus: joined a church community' }); } } catch (e) { console.error(e); }
@@ -237,7 +237,7 @@ export default function RegisterPage() {
           </p>
           {refCode && step === 1 && (
             <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '12px', marginBottom: '20px', textAlign: 'center', fontSize: '14px', color: '#92400e' }}>
-              🎁 You were referred! You and your friend will each get <strong>2,000 bonus points</strong>.
+              🎁 You were referred! You and your friend will each get <strong>50 bonus points</strong>.
             </div>
           )}
           {error && <div style={{ background: '#fee2e2', border: '1px solid #ef4444', borderRadius: '8px', padding: '12px', marginBottom: '24px', fontSize: '14px', color: '#dc2626' }}>{error}</div>}
@@ -299,8 +299,8 @@ export default function RegisterPage() {
                 <input type="text" className="input" value={churchCode} onChange={(e) => { setChurchCode(e.target.value); setChurchCodeValid(null); setChurchCodeChurch(''); }} onBlur={() => verifyChurchCode(churchCode)} placeholder="e.g. SHEP-ABC123" />
                 {verifyingCode && <div style={{ fontSize: '13px', color: '#6366f1', marginTop: '4px' }}>Verifying...</div>}
                 {churchCodeValid === true && <div style={{ fontSize: '13px', color: '#16a34a', marginTop: '4px', background: '#f0fdf4', padding: '8px 12px', borderRadius: '6px', border: '1px solid #22c55e' }}>✅ Found: <strong>{churchCodeChurch}</strong></div>}
-                {churchCodeValid === false && <div style={{ fontSize: '13px', color: '#dc2626', marginTop: '4px', background: '#fef2f2', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ef4444' }}>❌ Invalid code. Enter your church code to join your community and earn 2,000 bonus points.</div>}
-                <div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>Enter your church code to join your community and earn 2,000 bonus points</div>
+                {churchCodeValid === false && <div style={{ fontSize: '13px', color: '#dc2626', marginTop: '4px', background: '#fef2f2', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ef4444' }}>❌ Invalid code. Enter your church code to join your community and earn 50 bonus points.</div>}
+                <div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>Enter your church code to join your community and earn 50 bonus points</div>
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <button type="button" className="btn-primary" style={{ flex: 1, background: '#6b7280' }} onClick={() => setStep(1)}>← Back</button>

@@ -1,12 +1,16 @@
 import { Resend } from 'resend';
 
-// 创建Resend客户端
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// Resend Email API Integration
+// Free plan: 3,000 emails/month
+// Domain: shepherdaitech.com (Verified)
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+export const resend = new Resend(RESEND_API_KEY);
 
 // 检查是否已配置Resend
 export const isResendConfigured = () => {
-  return process.env.RESEND_API_KEY !== '' && 
-         process.env.RESEND_API_KEY !== 'your-resend-api-key';
+  return !!RESEND_API_KEY && RESEND_API_KEY !== '' && RESEND_API_KEY !== 'your-resend-api-key' && RESEND_API_KEY.startsWith('re_');
 };
 
 // 发送邮件
@@ -26,7 +30,7 @@ export async function sendEmail({
   }
 
   const { data, error } = await resend.emails.send({
-    from: from || 'ShepherdAI <noreply@shepherdai.com>',
+    from: from || 'ShepherdAI <hello@shepherdaitech.com>',
     to: [to],
     subject,
     html,
@@ -39,7 +43,7 @@ export async function sendEmail({
   return data;
 }
 
-// 发送邮件序列
+// 发送邮件序列（用于访客跟进等场景）
 export async function sendEmailSequence({
   emails,
   recipientEmail,
@@ -53,80 +57,102 @@ export async function sendEmailSequence({
   fromName?: string;
   fromEmail?: string;
 }) {
-  const results = [];
+  const results: Array<{ week: number; messageId: string | null; scheduledFor: string; status: string }> = [];
 
   for (const email of emails) {
-    // 添加签名
+    const scheduledDate = new Date();
+    scheduledDate.setDate(scheduledDate.getDate() + (email.week - 1) * 7);
+
     const fullBody = `
-      <p>Hi ${recipientName},</p>
-      <p>${email.body}</p>
-      <p>God bless,<br/>${fromName || 'Your Church'}</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+        <p style="font-size: 16px;">Hi ${recipientName},</p>
+        <p style="font-size: 16px; line-height: 1.6;">${email.body}</p>
+        <p style="font-size: 16px;">God bless,<br/>${fromName || 'Your Church'}</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="font-size: 12px; color: #999;">Sent with ShepherdAI</p>
+      </div>
     `;
 
-    const data = await sendEmail({
-      to: recipientEmail,
-      subject: email.subject,
-      html: fullBody,
-      from: fromEmail ? `${fromName || 'Church'} <${fromEmail}>` : undefined,
-    });
+    const isFirstEmail = email.week === 1;
 
-    results.push({ week: email.week, messageId: data?.id });
+    try {
+      const data = await sendEmail({
+        to: recipientEmail,
+        subject: email.subject,
+        html: fullBody,
+        from: fromEmail ? `${fromName || 'Church'} <${fromEmail}>` : `${fromName || 'ShepherdAI'} <hello@shepherdaitech.com>`,
+      });
 
-    // 每封邮件间隔5秒，避免被标记为垃圾邮件
+      results.push({
+        week: email.week,
+        messageId: data?.id || null,
+        scheduledFor: scheduledDate.toISOString(),
+        status: isFirstEmail ? 'sent' : 'scheduled',
+      });
+    } catch (err) {
+      console.error(`Failed to send week ${email.week} email:`, err);
+      results.push({
+        week: email.week,
+        messageId: null,
+        scheduledFor: scheduledDate.toISOString(),
+        status: 'failed',
+      });
+    }
+
+    // 每封邮件间隔500ms
     if (emails.indexOf(email) < emails.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
 
   return results;
 }
 
-// 发送每周通讯
+// 发送每周通讯/群发
 export async function sendNewsletter({
-  content,
   subject,
+  htmlContent,
   recipients,
   fromName,
   fromEmail,
 }: {
-  content: string;
   subject: string;
+  htmlContent: string;
   recipients: string[];
   fromName?: string;
   fromEmail?: string;
 }) {
-  const html = content.replace(/\n/g, '<br/>');
-
-  const results = [];
+  let sent = 0;
+  let failed = 0;
 
   for (const recipient of recipients) {
-    const data = await sendEmail({
-      to: recipient,
-      subject,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: #1e3a5f; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0;">${fromName || 'Our Church'}</h1>
-            <p style="margin: 10px 0 0 0;">Weekly Newsletter</p>
+    try {
+      await sendEmail({
+        to: recipient,
+        subject,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: #1e3a5f; color: white; padding: 20px; text-align: center;">
+              <h1 style="margin: 0;">${fromName || 'Our Church'}</h1>
+              <p style="margin: 10px 0 0 0;">Weekly Newsletter</p>
+            </div>
+            <div style="padding: 20px;">
+              ${htmlContent}
+            </div>
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #666;">
+              <p>Sent with ShepherdAI</p>
+            </div>
           </div>
-          <div style="padding: 20px;">
-            ${html}
-          </div>
-          <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #666;">
-            <p>Sent with ShepherdAI</p>
-          </div>
-        </div>
-      `,
-      from: fromEmail ? `${fromName || 'Church'} <${fromEmail}>` : undefined,
-    });
-
-    results.push({ recipient, messageId: data?.id });
-
-    // 每封邮件间隔3秒
-    if (recipients.indexOf(recipient) < recipients.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 3000));
+        `,
+        from: fromEmail ? `${fromName || 'Church'} <${fromEmail}>` : `${fromName || 'ShepherdAI'} <hello@shepherdaitech.com>`,
+      });
+      sent++;
+    } catch (err) {
+      console.error(`Failed to send newsletter to ${recipient}:`, err);
+      failed++;
     }
+    await new Promise(resolve => setTimeout(resolve, 200));
   }
 
-  return results;
+  return { sent, failed };
 }

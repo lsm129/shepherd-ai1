@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isBrevoConfigured, sendNewsletter } from '@/lib/brevo';
+import { isResendConfigured, sendNewsletter } from '@/lib/resend';
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isBrevoConfigured()) {
+    if (!isResendConfigured()) {
       return NextResponse.json(
-        { error: 'Email service not configured. BREVO_API_KEY is missing.' },
+        { error: 'Email service not configured. RESEND_API_KEY is missing.' },
         { status: 500 }
       );
     }
@@ -20,25 +20,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Wrap content in newsletter template
-    const fullHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-        <div style="background: #1e3a5f; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
-          <h1 style="margin: 0; font-size: 24px;">${fromName || 'Our Church'}</h1>
-          <p style="margin: 8px 0 0 0; opacity: 0.9;">Weekly Newsletter</p>
-        </div>
-        <div style="padding: 24px; border: 1px solid #eee; border-top: none;">
-          ${htmlContent.replace(/\n/g, '<br/>')}
-        </div>
-        <div style="background: #f5f5f5; padding: 16px; text-align: center; font-size: 12px; color: #999; border-radius: 0 0 8px 8px;">
-          <p style="margin: 0;">Sent with ShepherdAI</p>
-        </div>
-      </div>
-    `;
-
     const result = await sendNewsletter({
       subject,
-      htmlContent: fullHtml,
+      htmlContent,
       recipients,
       fromName,
     });

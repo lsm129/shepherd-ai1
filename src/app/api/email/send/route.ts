@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isBrevoConfigured, sendEmailSequence } from '@/lib/brevo';
+import { isResendConfigured, sendEmailSequence } from '@/lib/resend';
 import { createClient } from '@supabase/supabase-js';
-import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { getSupabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isBrevoConfigured()) {
+    if (!isResendConfigured()) {
       return NextResponse.json(
-        { error: 'Email service not configured. BREVO_API_KEY is missing.' },
+        { error: 'Email service not configured. RESEND_API_KEY is missing.' },
         { status: 500 }
       );
     }
@@ -28,14 +28,11 @@ export async function POST(request: NextRequest) {
       recipientEmail,
       recipientName,
       fromName,
-      startDate,
     });
 
     // Save to scheduled_emails table for tracking
     try {
-      const supabaseUrl = (supabaseUrl);
-      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      const supabase = createClient(getSupabaseUrl(), process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
       for (const result of results) {
         await supabase.from('scheduled_emails').insert({

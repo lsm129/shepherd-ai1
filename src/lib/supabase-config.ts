@@ -7,8 +7,7 @@ const CORRECT_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 
 const OLD_URL = 'https://ruwttvhetgfmnrcrxwtx.supabase.co';
 
-// Check if the env var has the old/wrong value
-function getSupabaseUrl(): string {
+export function getSupabaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!envUrl || envUrl === OLD_URL || envUrl.includes('ruwttvhetgfmnrcrxwtx')) {
     return CORRECT_URL;
@@ -16,7 +15,7 @@ function getSupabaseUrl(): string {
   return envUrl;
 }
 
-function getSupabaseAnonKey(): string {
+export function getSupabaseAnonKey(): string {
   const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   // If the key contains the old project ref, use the correct one
   if (envKey && envKey.includes('ruwttvhetgfmnrcrxwtx')) {
