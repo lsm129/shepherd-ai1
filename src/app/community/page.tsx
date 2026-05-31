@@ -125,7 +125,7 @@ export default function CommunityPage() {
  });
  const data = await res.json();
  if (data.success) {
- setPublishMsg('✅ Published! +50 points！+50points');
+ setPublishMsg('✅ Published! +50 points');
  setNewForm({ title: '', body: '', category: 'general', tags: '' });
  loadPosts();
  setTimeout(() => { setShowNewPost(false); setPublishMsg(''); }, 2000);
@@ -299,7 +299,7 @@ export default function CommunityPage() {
  Your ministry experience can help another pastor. Share a tip, idea, or testimony.
  </p>
  <p style={{ color: '#999', fontSize: '13px' }}>
- Share your ideas or testimonies.
+ Your experience can bless another ministry.
  </p>
  {userId && (
  <button
@@ -381,7 +381,6 @@ export default function CommunityPage() {
  Share a ministry tip, leadership lesson, outreach idea, or anything that could bless another pastor. Earn <strong>50 points</strong> for sharing!
  </p>
  <p style={{ color: '#999', fontSize: '13px', marginBottom: '20px' }}>
- Share leadership insights, outreach ideas, or anything that can bless other pastors. Share to earn <strong>50 points</strong>!
  </p>
 
  <div style={{ marginBottom: '16px' }}>
@@ -429,7 +428,7 @@ export default function CommunityPage() {
 
  <div style={{ marginBottom: '20px' }}>
  <label style={{ display: 'block', fontWeight: 600, marginBottom: '8px', color: '#1e3a5f', fontSize: '14px' }}>
- Tags (comma-separated)（comma separated）
+ Tags (comma-separated)
  </label>
  <input
  type="text"
@@ -451,7 +450,7 @@ export default function CommunityPage() {
  disabled={publishing}
  style={{ width: '100%', padding: '14px', borderRadius: '12px', border: 'none', background: publishing ? '#ccc' : '#22c55e', color: 'white', fontSize: '16px', fontWeight: 600, cursor: publishing ? 'not-allowed' : 'pointer' }}
  >
- {publishing ? 'Publishing......' : '✨ Publish & Earn 50 Points50points'}
+ {publishing ? 'Publishing...' : '✨ Publish & Earn 50 Points'}
  </button>
  </div>
  </div>

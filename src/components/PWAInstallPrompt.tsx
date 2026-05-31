@@ -99,7 +99,7 @@ export default function PWAInstallPrompt() {
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: '700', fontSize: '15px', color: '#1e3a5f', marginBottom: '2px' }}>
-          📲 Add to Home Screen / 添加到主屏幕
+          📲 Add to Home Screen
         </div>
         {isIOS ? (
           <div style={{ fontSize: '13px', color: '#666', lineHeight: '1.4' }}>
@@ -107,7 +107,7 @@ export default function PWAInstallPrompt() {
           </div>
         ) : (
           <div style={{ fontSize: '13px', color: '#666', lineHeight: '1.4' }}>
-            Use ShepherdAI like an App — one tap to open! / 像App一样使用！
+            Use ShepherdAI like an App — one tap to open!
           </div>
         )}
       </div>
@@ -141,7 +141,7 @@ export default function PWAInstallPrompt() {
               cursor: 'pointer',
             }}
           >
-            Install / 安装
+            Install
           </button>
         )}
       </div>
