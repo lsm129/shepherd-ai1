@@ -1,8 +1,9 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import AppShell from './AppShell';
+import AppShellErrorBoundary from './AppShellErrorBoundary';
 
-const ALWAYS_PUBLIC_PAGES = ['/login', '/register', '/privacy', '/terms', '/about', '/faq', '/reset-password', '/prayer/submit', '/community'];
+const ALWAYS_PUBLIC_PAGES = ['/login', '/register', '/privacy', '/terms', '/about', '/faq', '/reset-password', '/prayer/submit'];
 
 export default function ConditionalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -14,5 +15,5 @@ export default function ConditionalShell({ children }: { children: React.ReactNo
   }
 
   // All other pages get AppShell nav
-  return <AppShell>{children}</AppShell>;
+  return <AppShellErrorBoundary><AppShell>{children}</AppShell></AppShellErrorBoundary>;
 }

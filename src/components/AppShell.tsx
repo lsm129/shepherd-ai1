@@ -31,14 +31,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
+    let cancelled = false;
     async function checkAuth() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        if (!supabaseUrl || !supabaseKey) return;
+        if (!supabaseUrl || !supabaseKey || cancelled) return;
         const supabase = createClient(supabaseUrl, supabaseKey);
         const { data: { session } } = await supabase.auth.getSession();
+        if (cancelled) return;
         if (session) {
           setIsLoggedIn(true);
           setUserId(session.user.id);
@@ -46,16 +48,23 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           const role = meta.role || 'pastor';
           setUserRole(role as 'pastor' | 'congregant');
           if (role !== 'congregant') {
-            const { data } = await supabase.from('referrals').select('referral_code').eq('referrer_id', session.user.id).single();
-            if (data) setReferralCode(data.referral_code);
-            const { count } = await supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', session.user.id).eq('status', 'completed');
-            setReferralCount(count || 0);
+            try {
+              const { data } = await supabase.from('referrals').select('referral_code').eq('referrer_id', session.user.id).single();
+              if (!cancelled && data) setReferralCode(data.referral_code);
+              const { count } = await supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', session.user.id).eq('status', 'completed');
+              if (!cancelled) setReferralCount(count || 0);
+            } catch (refErr) {
+              // Referrals table might not exist for this user - that's OK
+            }
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('AppShell auth check error:', e);
+      }
     }
     checkAuth();
-  }, [pathname]);
+    return () => { cancelled = true; };
+  }, []);  // Only run once on mount, not on every pathname change
 
   useEffect(() => { if (chatOpen && chatInputRef.current) chatInputRef.current.focus(); }, [chatOpen]);
   useEffect(() => { chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [chatMessages, chatLoading]);
