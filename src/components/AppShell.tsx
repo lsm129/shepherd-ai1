@@ -94,13 +94,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pastorNavItems = [
     { href: '/', label: 'Home', icon: '🏠' },
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/visitor-followup', label: 'Follow-up', icon: '📧' },
-    { href: '/prayer-requests', label: 'Prayers', icon: '🙏' },
-    { href: '/daily-devotional', label: 'Devotional', icon: '📖' },
-    { href: '/church-announcement', label: 'Announcements', icon: '📢' },
-    { href: '/sermon-social', label: 'Sermon Social', icon: '✝️' },
-    { href: '/batch-content', label: 'Batch Content', icon: '⚡' },
-    { href: '/templates', label: 'Templates', icon: '📋' },
     { href: '/community', label: 'Community', icon: '🌍' },
     { href: '/settings', label: 'Settings', icon: '⚙️' },
   ];
@@ -132,20 +125,30 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               ))}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {userRole === 'congregant' && (
               <span style={{ background: '#dbeafe', color: '#1e40af', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>🙋 Member</span>
             )}
             {userRole === 'pastor' && referralCode && (
-              <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                📩 Invite Congregation
+              <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                📩 Invite
               </button>
             )}
             {userRole === 'pastor' && (
-              <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #f5a623 0%, #f7c948 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                🎁 Refer & Earn
+              <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #f5a623 0%, #f7c948 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                🎁 Earn
               </button>
             )}
+            <button onClick={async () => {
+              try {
+                const { createClient } = await import('@supabase/supabase-js');
+                const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+                await supabase.auth.signOut();
+                window.location.href = '/';
+              } catch(e) {}
+            }} style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', color: '#666' }}>
+              Logout
+            </button>
             <button onClick={() => setShowMobileMenu(!showMobileMenu)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', display: 'none' }} className="mobile-menu-btn">☰</button>
           </div>
         </nav>
