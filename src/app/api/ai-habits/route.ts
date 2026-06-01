@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
     const userId = request.nextUrl.searchParams.get('userId');
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
 
-    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -40,7 +39,6 @@ export async function POST(request: NextRequest) {
     const { userId, action, platform, originalText, editedText, toolType } = body;
     if (!userId || !action) return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
 
-    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

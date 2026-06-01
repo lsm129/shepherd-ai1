@@ -25,7 +25,6 @@ export const REWARDS: Record<string, { cost: number; label: string; value: numbe
 
 // --- Supabase admin client (server-side only) ---
 export function getAdminClient() {
-  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   return createClient(supabaseUrl, supabaseServiceKey);
 }

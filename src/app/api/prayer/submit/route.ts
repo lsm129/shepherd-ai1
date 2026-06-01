@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
     const { name, request: prayerRequest, anonymous, churchId, userId } = body;
     if (!prayerRequest) return NextResponse.json({ error: 'Prayer request is required' }, { status: 400 });
 
-    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

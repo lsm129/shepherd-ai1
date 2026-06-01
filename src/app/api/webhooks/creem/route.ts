@@ -44,7 +44,6 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Creem Webhook] ${eventType}`, JSON.stringify(eventObject).substring(0, 500));
 
-    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(
       supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY!

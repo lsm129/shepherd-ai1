@@ -5,7 +5,6 @@ import { PLANS, type PlanId } from './pricing';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
 
-const supabaseUrl = (supabaseUrl);
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 interface QuotaResult {

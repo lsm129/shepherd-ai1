@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
 
-const supabaseUrl = (supabaseUrl);
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export async function getUserIdFromRequest(request: Request): Promise<string | null> {

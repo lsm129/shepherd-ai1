@@ -6,7 +6,6 @@ import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 // Get church profile for AI context - reads from church_settings + user_metadata
 export async function getChurchProfile(userId: string): Promise<ChurchProfile | null> {
   try {
-    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     
@@ -61,7 +60,6 @@ IMPORTANT: Tailor your content specifically for this church's denomination, cong
 // Get user's writing habits for AI personalization
 export async function getUserHabits(userId: string): Promise<string> {
   try {
-    const supabaseUrl = (supabaseUrl);
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     

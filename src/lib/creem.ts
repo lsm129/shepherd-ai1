@@ -216,7 +216,6 @@ export async function updateUserPlan(
   creemCustomerId?: string,
   creemSubscriptionId?: string
 ): Promise<void> {
-  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -241,7 +240,6 @@ export async function getUserPlan(userId: string): Promise<{
   creemCustomerId?: string;
   creemSubscriptionId?: string;
 }> {
-  const supabaseUrl = (supabaseUrl);
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 

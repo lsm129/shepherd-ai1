@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user exists
-    const supabaseUrl = (supabaseUrl);
     const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userId);
     if (!user) {

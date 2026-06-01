@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user exists
-    const supabaseUrl = (supabaseUrl);
     const supabaseAuth = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
     const { data: { user } } = await supabaseAuth.auth.admin.getUserById(userId);
     if (!user) {

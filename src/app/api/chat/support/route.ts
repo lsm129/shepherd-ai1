@@ -193,7 +193,6 @@ export async function POST(request: NextRequest) {
     // If user is logged in, save messages to Supabase
     if (userId) {
       try {
-        const supabaseUrl = (supabaseUrl);
         const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

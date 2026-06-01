@@ -4,7 +4,6 @@ import { checkQuota, recordGeneration } from '@/lib/quota';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
 
-const supabaseUrl = (supabaseUrl);
 const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY!;
 

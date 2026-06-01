@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's Creem customer ID from Supabase
-    const supabaseUrl = (supabaseUrl);
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
