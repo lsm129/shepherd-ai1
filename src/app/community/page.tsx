@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
-import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
+import { usePlan, canAccess } from '@/lib/plan-gate';
 
 
 interface CommunityPost {
@@ -42,8 +42,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function CommunityPage() {
-  const { plan, loading: planLoading } = usePlan();
-  if (!planLoading && !canAccess(plan, 'growth')) return <LockedFeature minPlan="growth" title="Community Knowledge Base" />;
+  const { plan } = usePlan();
 
  const [mounted, setMounted] = useState(false);
  const [mobile, setMobile] = useState(false);
@@ -245,7 +244,7 @@ export default function CommunityPage() {
  </div>
  {userId && (
  <button
- onClick={() => setShowNewPost(true)}
+ onClick={() => { if (!canAccess(plan, 'starter')) { setPublishMsg('🔒 Publishing requires Starter plan or higher. Upgrade to share your wisdom!'); return; } setShowNewPost(true); }}
  style={{ background: '#22c55e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
  >
  ✍️ Share Wisdom
@@ -307,7 +306,7 @@ export default function CommunityPage() {
  </p>
  {userId && (
  <button
- onClick={() => setShowNewPost(true)}
+ onClick={() => { if (!canAccess(plan, 'starter')) { setPublishMsg('🔒 Publishing requires Starter plan or higher. Upgrade to share your wisdom!'); return; } setShowNewPost(true); }}
  style={{ marginTop: '16px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
  >
  ✍️ Share Now

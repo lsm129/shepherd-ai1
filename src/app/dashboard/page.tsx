@@ -105,8 +105,8 @@ export default function DashboardPage() {
     { href: '/weekly-newsletter', icon: '📰', title: 'Weekly Newsletter', desc: 'Transform highlights into professional newsletters.', color: '#4a90a4', saves: '2 hrs/wk', minPlan: 'starter' },
     { href: '/templates', icon: '📋', title: 'Template Marketplace', desc: 'Share & browse sermon outlines from fellow pastors.', color: '#22c55e', saves: '2 hrs/wk', minPlan: 'starter' },
     { href: '/batch-content', icon: '🎬', title: 'Content Studio', desc: 'Plan your content calendar — any topic, all platforms, one workflow.', color: '#6366f1', saves: '3 hrs/wk', minPlan: 'pro' },
-    { href: '/diagnosis', icon: '🏥', title: 'Ministry Health Report', desc: 'See how your church is doing and get personalized recommendations.', color: '#ef4444', saves: '', minPlan: 'pro' },
-    { href: '/community', icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from pastors worldwide.', color: '#0ea5e9', saves: '', minPlan: 'growth' },
+    { href: '/diagnosis', icon: '🏥', title: 'Ministry Health Report', desc: 'See how your church is doing and get personalized recommendations.', color: '#ef4444', saves: '', minPlan: 'free' },
+    { href: '/community', icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from pastors worldwide.', color: '#0ea5e9', saves: '', minPlan: 'free' },
     { href: '/settings', icon: '⚙️', title: 'Church Settings', desc: 'Configure your church profile, plan, and preferences.', color: '#64748b', saves: '', minPlan: 'free' },
   ];
 
