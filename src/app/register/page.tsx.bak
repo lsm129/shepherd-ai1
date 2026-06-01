@@ -109,22 +109,41 @@ export default function RegisterPage() {
     if (!addressZip.trim()) { setError('ZIP code is required'); return; }
     setError(''); setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email, password, role: 'pastor',
-          metadata: {
-            church_name: churchName, pastor_name: pastorName,
-            denomination, congregation_size: congregationSize, worship_style: worshipStyle,
-            address_city: addressCity.trim(), address_state: addressState, address_zip: addressZip.trim(),
-            diagnosis_pending: true, referred_by: refCode || null,
-          },
-        }),
+      const { createClient } = await import('@supabase/supabase-js');
+      if (!supabaseUrl || !supabaseAnonKey) { setError('System not configured.'); setLoading(false); return; }
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      const fullAddress = `${addressCity.trim()}, ${addressState} ${addressZip.trim()}`;
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: {
+          role: 'pastor', referred_by: refCode || null,
+          church_name: churchName, pastor_name: pastorName,
+          denomination, congregation_size: congregationSize, worship_style: worshipStyle,
+          address_city: addressCity.trim(), address_state: addressState, address_zip: addressZip.trim(),
+          diagnosis_pending: true,
+        }}
       });
-      const result = await res.json();
-      if (!res.ok) { throw new Error(result.error || 'Registration failed'); }
-      setSuccess(true);
+      if (error) throw error;
+      if (data.user) {
+        const supabaseAdmin = (await import('@supabase/supabase-js')).createClient((supabaseUrl), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+        await supabaseAdmin.from('church_settings').upsert({
+          user_id: data.user.id, church_name: churchName, pastor_name: pastorName,
+          denomination, congregation_size: congregationSize, worship_style: worshipStyle, address: fullAddress,
+        });
+        if (refCode) {
+          try {
+            const { data: referrer } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', refCode).single();
+            if (referrer) {
+              await supabase.from('referrals').update({ referred_email: email, referred_id: data.user.id, status: 'completed' }).eq('referral_code', refCode).is('referred_id', null);
+              const BONUS = 50;
+              const supabaseAdm = (await import('@supabase/supabase-js')).createClient((supabaseUrl), process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+              try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', referrer.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', referrer.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: referrer.referrer_id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: friend signed up' }); } } catch (e) { console.error(e); }
+              try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'referral_bonus', points: BONUS, balance_after: nb, description: 'Referral bonus: signed up via referral' }); } } catch (e) { console.error(e); }
+            }
+          } catch (e) { console.error(e); }
+        }
+      }
+      router.push('/dashboard');
     } catch (err: any) { setError(err.message || 'Failed to create account'); }
     finally { setLoading(false); }
   };
@@ -136,25 +155,42 @@ export default function RegisterPage() {
     if (!congregantState) { setError('State is required'); return; }
     if (!congregantZip.trim()) { setError('ZIP code is required'); return; }
     if (churchCode.trim() && churchCodeValid === false) { setError('Invalid church invitation code'); return; }
+    
+    
     setError(''); setLoading(true);
     try {
-      const metadata: any = {
-        full_name: congregantName.trim(),
+      const { createClient } = await import('@supabase/supabase-js');
+      if (!supabaseUrl || !supabaseAnonKey) { setError('System not configured.'); setLoading(false); return; }
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      const signUpData: any = {
+        role: 'congregant', full_name: congregantName.trim(),
         address_city: congregantCity.trim(), address_state: congregantState, address_zip: congregantZip.trim(),
         diagnosis_pending: true,
       };
+      let churchReferral: any = null;
       if (churchCode.trim() && churchCodeValid) {
-        metadata.church_code = churchCode.trim();
-        metadata.referred_by = churchCode.trim();
+        const { data: referral } = await supabase.from('referrals').select('referrer_id').eq('referral_code', churchCode.trim()).single();
+        if (referral) {
+          signUpData.church_code = churchCode.trim();
+          signUpData.joined_churches = [referral.referrer_id];
+          churchReferral = referral;
+        }
       }
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role: 'congregant', metadata }),
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: signUpData }
       });
-      const result = await res.json();
-      if (!res.ok) { throw new Error(result.error || 'Registration failed'); }
-      setSuccess(true);
+      if (error) throw error;
+      // Give bonus points if church code was used
+      if (churchReferral && data.user) {
+        try {
+          const BONUS = 50;
+          const supabaseAdm = (await import('@supabase/supabase-js')).createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+          try { const { data: rp } = await supabaseAdm.from('profiles').select('points_balance').eq('id', churchReferral.referrer_id).single(); if (rp) { const nb = (rp.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', churchReferral.referrer_id); await supabaseAdm.from('points_transactions').insert({ user_id: churchReferral.referrer_id, action: 'member_joined_bonus', points: BONUS, balance_after: nb, description: 'Bonus: church member joined via your code' }); } } catch (e) { console.error(e); }
+          try { const { data: rep } = await supabaseAdm.from('profiles').select('points_balance').eq('id', data.user.id).single(); if (rep) { const nb = (rep.points_balance || 0) + BONUS; await supabaseAdm.from('profiles').update({ points_balance: nb }).eq('id', data.user.id); await supabaseAdm.from('points_transactions').insert({ user_id: data.user.id, action: 'join_church_bonus', points: BONUS, balance_after: nb, description: 'Bonus: joined a church community' }); } } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); }
+      }
+      router.push(role === 'congregant' ? '/member/dashboard' : '/dashboard');
     } catch (err: any) { setError(err.message || 'Failed to create account'); }
     finally { setLoading(false); }
   };
@@ -166,9 +202,9 @@ export default function RegisterPage() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' }}>
         <div style={{ width: '100%', maxWidth: '420px', padding: '24px' }}>
           <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📧</div>
-            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Check Your Email!</h1>
-            <p style={{ color: '#666', marginBottom: '24px' }}>Please check your email to confirm your account, then sign in. If you don't see the email, check your spam folder.</p>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+            <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Account Created!</h1>
+            <p style={{ color: '#666', marginBottom: '24px' }}>Welcome to ShepherdAI! Redirecting you now...</p>
           </div>
         </div>
       </div>
