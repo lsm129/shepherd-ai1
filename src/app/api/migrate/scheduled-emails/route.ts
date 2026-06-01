@@ -5,8 +5,8 @@ import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 
 export async function GET() {
   try {
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { error: checkError } = await supabase
       .from('scheduled_emails')

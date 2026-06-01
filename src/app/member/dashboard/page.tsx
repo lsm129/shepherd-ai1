@@ -41,7 +41,7 @@ export default function MemberDashboardPage() {
     async function checkAuth() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        if (!supabaseUrl || !supabaseKey) return;
+        if (!supabaseUrl || !supabaseAnonKey) return;
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { router.push('/login'); return; }
@@ -136,7 +136,7 @@ export default function MemberDashboardPage() {
   const handleSignOut = async () => {
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      if (supabaseUrl && supabaseKey) {
+      if (supabaseUrl && supabaseAnonKey) {
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         await supabase.auth.signOut();
       }

@@ -24,7 +24,7 @@ export default function Home() {
     async function checkAuth() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        if (!supabaseUrl || !supabaseKey) return;
+        if (!supabaseUrl || !supabaseAnonKey) return;
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         setIsLoggedIn(!!session);

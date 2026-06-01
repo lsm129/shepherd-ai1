@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Find emails that are 'scheduled' and past their scheduled time
     // These should have been sent by Brevo already, mark them as sent

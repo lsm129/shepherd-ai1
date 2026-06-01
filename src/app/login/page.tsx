@@ -19,7 +19,7 @@ export default function LoginPage() {
  try {
  const { createClient } = await import('@supabase/supabase-js');
  
- if (!supabaseUrl || !supabaseKey) {
+ if (!supabaseUrl || !supabaseAnonKey) {
  setError('System not configured. Please contact support.');
  setLoading(false);
  return;
@@ -81,7 +81,7 @@ export default function LoginPage() {
  if (!email) { setError('Please enter your email first'); return; }
  try {
  const { createClient } = await import('@supabase/supabase-js');
- if (supabaseUrl && supabaseKey) {
+ if (supabaseUrl && supabaseAnonKey) {
  const supabase = createClient(supabaseUrl, supabaseAnonKey);
  await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
  setError('');

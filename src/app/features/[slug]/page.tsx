@@ -153,7 +153,7 @@ export default function FeaturePage() {
     (async () => {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
+        if (supabaseUrl && supabaseAnonKey && supabaseUrl !== 'your-supabase-url') {
           const supabase = createClient(supabaseUrl, supabaseAnonKey);
           const { data: { session } } = await supabase.auth.getSession();
           setIsLoggedIn(!!session);

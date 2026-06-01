@@ -28,7 +28,7 @@ export default function DiagnosisPage() {
     (async () => {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        if (!supabaseUrl || !supabaseKey) return;
+        if (!supabaseUrl || !supabaseAnonKey) return;
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;

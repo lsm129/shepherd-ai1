@@ -10,7 +10,7 @@ export default function TermsOfService() {
  async function checkAuth() {
  try {
  const { createClient } = await import('@supabase/supabase-js');
- if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
+ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'your-supabase-url') return;
  const supabase = createClient(supabaseUrl, supabaseAnonKey);
  const { data: { session } } = await supabase.auth.getSession();
  setIsLoggedIn(!!session);

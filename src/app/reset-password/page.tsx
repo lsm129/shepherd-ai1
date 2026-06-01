@@ -17,7 +17,7 @@ export default function ResetPasswordPage() {
  useEffect(() => {
  const checkSession = async () => {
  const { createClient } = await import('@supabase/supabase-js');
- if (!supabaseUrl || !supabaseKey) return;
+ if (!supabaseUrl || !supabaseAnonKey) return;
  const supabase = createClient(supabaseUrl, supabaseAnonKey);
  const { data } = await supabase.auth.getSession();
  if (!data.session) {
@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
  try {
  const { createClient } = await import('@supabase/supabase-js');
  
- if (!supabaseUrl || !supabaseKey) {
+ if (!supabaseUrl || !supabaseAnonKey) {
  setError('System not configured. Please contact support.');
  setLoading(false);
  return;

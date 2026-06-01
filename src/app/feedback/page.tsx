@@ -31,7 +31,7 @@ export default function FeedbackPage() {
  setLoadingList(true);
  try {
  const { createClient } = await import('@supabase/supabase-js');
- if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') {
+ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'your-supabase-url') {
  setLoadingList(false);
  return;
  }
@@ -64,7 +64,7 @@ export default function FeedbackPage() {
  try {
  const { createClient } = await import('@supabase/supabase-js');
 
- if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') {
+ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'your-supabase-url') {
  setError('Supabase is not configured. Please set up your environment variables.');
  setLoading(false);
  return;

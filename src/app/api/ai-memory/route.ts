@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     const userId = request.nextUrl.searchParams.get('userId');
     if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
 
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get user metadata (profile data)
     const { data: { user } } = await supabase.auth.admin.getUserById(userId);
@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing userId, field, or value' }, { status: 400 });
     }
 
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Update user metadata
     const { data: { user } } = await supabase.auth.admin.getUserById(userId);

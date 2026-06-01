@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     const { name, request: prayerRequest, anonymous, churchId, userId } = body;
     if (!prayerRequest) return NextResponse.json({ error: 'Prayer request is required' }, { status: 400 });
 
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Store in generations table (prayer_requests table requires DDL which is blocked by MFA)
     const inputSummary = JSON.stringify({

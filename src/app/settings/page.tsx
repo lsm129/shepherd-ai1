@@ -64,7 +64,7 @@ export default function SettingsPage() {
     async function loadSettings() {
       try {
         const { createClient } = await import('@supabase/supabase-js');
-        if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your-supabase-url') return;
+        if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'your-supabase-url') return;
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;
@@ -139,7 +139,7 @@ export default function SettingsPage() {
     setLoading(true); setError('');
     try {
       const { createClient } = await import('@supabase/supabase-js');
-      if (supabaseUrl && supabaseKey && supabaseUrl !== 'your-supabase-url') {
+      if (supabaseUrl && supabaseAnonKey && supabaseUrl !== 'your-supabase-url') {
         const supabase = createClient(supabaseUrl, supabaseAnonKey);
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
@@ -173,7 +173,7 @@ export default function SettingsPage() {
     try {
       const { createClient } = await import('@supabase/supabase-js');
       let userEmail = '';
-      if (supabaseUrl && supabaseKey) { const supabase = createClient(supabaseUrl, supabaseAnonKey); const { data: { session } } = await supabase.auth.getSession(); if (session?.user?.email) userEmail = session.user.email; }
+      if (supabaseUrl && supabaseAnonKey) { const supabase = createClient(supabaseUrl, supabaseAnonKey); const { data: { session } } = await supabase.auth.getSession(); if (session?.user?.email) userEmail = session.user.email; }
       const response = await fetch('/api/creem/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ planId, userId, userEmail: userEmail || undefined, billingCycle }) });
       const data = await response.json();
       if (data.checkoutUrl) { window.location.href = data.checkoutUrl; } else { setError(data.error || 'Failed to create checkout session'); }

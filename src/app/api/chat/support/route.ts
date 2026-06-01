@@ -193,8 +193,8 @@ export async function POST(request: NextRequest) {
     // If user is logged in, save messages to Supabase
     if (userId) {
       try {
-        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
         // Save the user's last message and the assistant response
         const lastUserMsg = messages[messages.length - 1];
