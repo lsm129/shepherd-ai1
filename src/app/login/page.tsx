@@ -10,7 +10,22 @@ export default function LoginPage() {
  const [password, setPassword] = useState('');
  const [error, setError] = useState('');
  const [loading, setLoading] = useState(false);
+ const [successMsg, setSuccessMsg] = useState('');
  const router = useRouter();
+
+ // Handle URL params for verification messages
+ useState(() => {
+   if (typeof window !== 'undefined') {
+     const params = new URLSearchParams(window.location.search);
+     if (params.get('verified') === 'true') {
+       setSuccessMsg('Email confirmed! You can now sign in.');
+     } else if (params.get('error') === 'invalid_or_expired_token') {
+       setError('Verification link expired. Please register again.');
+     } else if (params.get('error') === 'confirm_failed') {
+       setError('Email confirmation failed. Please try again.');
+     }
+   }
+ });
 
  const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
