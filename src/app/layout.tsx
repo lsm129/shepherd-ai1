@@ -27,11 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" translate="no">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased notranslate">
         <ConditionalShell>{children}</ConditionalShell>
       </body>
     </html>
