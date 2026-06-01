@@ -107,6 +107,7 @@ export default function RegisterPage() {
     if (!addressCity.trim()) { setError('City is required'); return; }
     if (!addressState) { setError('State is required'); return; }
     if (!addressZip.trim()) { setError('ZIP code is required'); return; }
+    if (churchCode.trim() && churchCodeValid === false) { setError('Invalid church invitation code'); return; }
     setError(''); setLoading(true);
     try {
       const res = await fetch('/api/auth/register', {
@@ -119,6 +120,7 @@ export default function RegisterPage() {
             denomination, congregation_size: congregationSize, worship_style: worshipStyle,
             address_city: addressCity.trim(), address_state: addressState, address_zip: addressZip.trim(),
             diagnosis_pending: true, referred_by: refCode || null,
+            ...(churchCode.trim() && churchCodeValid ? { church_code: churchCode.trim(), referred_by: churchCode.trim() } : {}),
           },
         }),
       });
@@ -241,6 +243,14 @@ export default function RegisterPage() {
                   <div style={{ flex: '1 1 80px' }} className="form-group"><label className="form-label">State{req}</label><select style={selectStyle} value={addressState} onChange={(e) => setAddressState(e.target.value)} required><option value="">State</option>{US_STATES.map(s => <option key={s.value} value={s.value}>{s.value}</option>)}</select></div>
                   <div style={{ flex: '1 1 80px' }} className="form-group"><label className="form-label">ZIP{req}</label><input type="text" className="input" value={addressZip} onChange={(e) => setAddressZip(e.target.value)} placeholder="77001" required /></div>
                 </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Church Invitation Code <span style={{ color: '#16a34a', fontWeight: 'normal', fontSize: '12px' }}> (optional)</span></label>
+                <input type="text" className="input" value={churchCode} onChange={(e) => { setChurchCode(e.target.value); setChurchCodeValid(null); setChurchCodeChurch(''); }} onBlur={() => verifyChurchCode(churchCode)} placeholder="e.g. B8F83A26" />
+                {verifyingCode && <div style={{ fontSize: '13px', color: '#6366f1', marginTop: '4px' }}>Verifying...</div>}
+                {churchCodeValid === true && <div style={{ fontSize: '13px', color: '#16a34a', marginTop: '4px', background: '#f0fdf4', padding: '8px 12px', borderRadius: '6px', border: '1px solid #22c55e' }}>✅ Found: <strong>{churchCodeChurch}</strong></div>}
+                {churchCodeValid === false && <div style={{ fontSize: '13px', color: '#dc2626', marginTop: '4px', background: '#fef2f2', padding: '8px 12px', borderRadius: '6px', border: '1px solid #ef4444' }}>❌ Invalid code</div>}
+                <div style={{ fontSize: '12px', color: '#999', marginTop: '6px' }}>Enter another pastor's invitation code to earn 50 bonus points</div>
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <button type="button" className="btn-primary" style={{ flex: 1, background: '#6b7280' }} onClick={() => setStep(1)}>← Back</button>

@@ -150,14 +150,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {userRole === 'congregant' && (
               <span style={{ background: '#dbeafe', color: '#1e40af', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>🙋 Member</span>
             )}
-            {userRole === 'pastor' && referralCode && (
+            {userRole === 'pastor' && (
               <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
                 📩 Invite
-              </button>
-            )}
-            {userRole === 'pastor' && (
-              <button onClick={() => setShowReferral(true)} style={{ background: 'linear-gradient(135deg, #f5a623 0%, #f7c948 100%)', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
-                🎁 Earn
               </button>
             )}
             <button onClick={async () => {
@@ -190,8 +185,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {showReferralButton && (
-        <button onClick={() => setShowReferral(true)} style={{ position: 'fixed', bottom: '24px', right: '24px', background: 'linear-gradient(135deg, #f5a623 0%, #f7c948 100%)', color: 'white', border: 'none', borderRadius: '50%', width: '60px', height: '60px', fontSize: '24px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(245, 166, 35, 0.4)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-          🎁
+        <button onClick={() => setShowReferral(true)} style={{ position: 'fixed', bottom: '24px', right: '24px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', color: 'white', border: 'none', borderRadius: '50%', width: '60px', height: '60px', fontSize: '24px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(5, 150, 105, 0.4)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+          📩
         </button>
       )}
 
@@ -226,8 +221,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {userRole === 'pastor' && (
               <>
                 <div style={{ fontSize: '48px', marginBottom: '16px' }}>📩</div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>Invite Your Congregation</h2>
-                <p style={{ color: '#666', marginBottom: '16px', fontSize: '14px' }}>Share this invitation code with your church members.</p>
+                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#1e3a5f' }}>Invite Others to ShepherdAI</h2>
+                <p style={{ color: '#666', marginBottom: '16px', fontSize: '14px' }}>Share your invitation code with church members or other pastors. Both you and they earn 50 bonus points!</p>
                 {referralCode && (
                   <>
                     <div style={{ background: '#f0fdf4', border: '2px solid #22c55e', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>

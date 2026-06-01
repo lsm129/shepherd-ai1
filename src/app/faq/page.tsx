@@ -47,7 +47,7 @@ export default function FAQPage() {
  },
  {
  q: 'How much does it cost?',
- a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. Starter is $29/mo for 50 generations and 3 core tools. Pro is $49/mo for 200 generations and all 7 AI tools. Growth is $99/mo for unlimited generations, multi-campus support, and priority assistance. No credit card required to start.',
+ a: 'ShepherdAI offers a generous Free plan with 10 AI generations per month. Starter is $19/mo for 100 generations and 3 core tools. Pro is $39/mo for 300 generations and all 7 AI tools. Growth is $79/mo for unlimited generations, multi-campus support, and priority assistance. No credit card required to start.',
  },
  {
  q: 'Can I cancel anytime?',
@@ -77,7 +77,7 @@ export default function FAQPage() {
  <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#1e3a5f' }}>ShepherdAI</span>
  </Link>
  <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
- <Link href="/login" className="btn-ghost">Log In</Link>
+ {isLoggedIn ? (<Link href="/dashboard" className="btn-ghost">Dashboard</Link>) : (<Link href="/login" className="btn-ghost">Log In</Link>)}
  <Link href={ctaHref} className="btn-primary" style={{ textDecoration: 'none' }}>{isLoggedIn ? 'Go to Dashboard' : 'Get Started Free'}</Link>
  </div>
  </div>
