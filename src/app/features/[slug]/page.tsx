@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 
 interface FeatureData {
@@ -38,6 +39,7 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$3,900/year',
     toolPath: '/visitor-followup',
+    minPlan: 'free',
   },
   'weekly-newsletter': {
     emoji: '📰',
@@ -58,6 +60,7 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$2,600/year',
     toolPath: '/weekly-newsletter',
+    minPlan: 'starter',
   },
   'prayer-requests': {
     emoji: '🙏',
@@ -78,6 +81,7 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$1,950/year',
     toolPath: '/prayer-requests',
+    minPlan: 'free',
   },
   'sermon-social': {
     emoji: '📱',
@@ -98,6 +102,7 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$2,600/year',
     toolPath: '/sermon-social',
+    minPlan: 'starter',
   },
   'church-announcement': {
     emoji: '📢',
@@ -118,6 +123,7 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$1,300/year',
     toolPath: '/church-announcement',
+    minPlan: 'free',
   },
   'daily-devotional': {
     emoji: '📖',
@@ -138,13 +144,18 @@ const featuresMap: Record<string, FeatureData> = {
     ],
     savings: '$1,950/year',
     toolPath: '/daily-devotional',
+    minPlan: 'starter',
   },
 };
 
 export default function FeaturePage() {
+  const { plan, loading: planLoading } = usePlan();
   const params = useParams();
   const slug = params.slug as string;
   const feature = featuresMap[slug];
+  if (!planLoading && feature?.minPlan && !canAccess(plan, feature.minPlan)) {
+    return <LockedFeature minPlan={feature.minPlan} title={feature.title} />;
+  }
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
