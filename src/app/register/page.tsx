@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { DENOMINATIONS, CONGREGATION_SIZES, WORSHIP_STYLES } from '@/lib/church-profile';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { trackRegistered } from '@/lib/analytics';
 
 
 type UserRole = 'pastor' | 'congregant';
@@ -126,6 +127,7 @@ export default function RegisterPage() {
       });
       const result = await res.json();
       if (!res.ok) { throw new Error(result.error || 'Registration failed'); }
+      trackRegistered('pastor', !!(metadata.referred_by || metadata.church_code));
       setSuccess(true);
     } catch (err: any) { setError(err.message || 'Failed to create account'); }
     finally { setLoading(false); }

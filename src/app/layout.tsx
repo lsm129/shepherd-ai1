@@ -3,6 +3,7 @@ import "./globals.css";
 import ConditionalShell from "@/components/ConditionalShell";
 import TranslationSanitizer from "@/components/TranslationSanitizer";
 import GlobalErrorBoundary from "@/components/GlobalErrorBoundary";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   title: "ShepherdAI - AI-Powered Church Management Platform",
@@ -34,11 +35,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className="antialiased">
-        <GlobalErrorBoundary>
-          <TranslationSanitizer>
-            <ConditionalShell>{children}</ConditionalShell>
-          </TranslationSanitizer>
-        </GlobalErrorBoundary>
+        <AnalyticsTracker>
+          <GlobalErrorBoundary>
+            <TranslationSanitizer>
+              <ConditionalShell>{children}</ConditionalShell>
+            </TranslationSanitizer>
+          </GlobalErrorBoundary>
+        </AnalyticsTracker>
       </body>
     </html>
   );

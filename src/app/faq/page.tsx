@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { trackPricingViewed, trackCheckoutStarted } from '@/lib/analytics';
 
 
 export default function FAQPage() {
@@ -11,6 +12,7 @@ export default function FAQPage() {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
  useEffect(() => {
+    trackPricingViewed('faq_page');
  setMounted(true);
  async function checkAuth() {
  try {

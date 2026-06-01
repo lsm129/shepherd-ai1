@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
 import { usePlan, canAccess } from '@/lib/plan-gate';
+import { trackUpgradePromptShown, trackUpgradePromptClicked, trackCommunityPublished } from '@/lib/analytics';
 
 
 interface CommunityPost {
@@ -132,6 +133,7 @@ export default function CommunityPage() {
  const data = await res.json();
  if (data.success) {
  setPublishMsg('✅ Published! +50 points');
+            trackCommunityPublished(plan || 'free');
  setNewForm({ title: '', body: '', category: 'general', tags: '' });
  loadPosts();
  setTimeout(() => { setShowNewPost(false); setPublishMsg(''); }, 2000);
@@ -247,7 +249,7 @@ export default function CommunityPage() {
  </div>
  {userId && (
  <button
- onClick={() => { if (!canAccess(plan, 'starter')) { setShowUpgradePrompt(true); return; } setShowNewPost(true); }}
+ onClick={() => { if (!canAccess(plan, 'starter')) { setShowUpgradePrompt(true); trackUpgradePromptShown('community_publish'); return; } setShowNewPost(true); }}
  style={{ background: '#22c55e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
  >
  ✍️ Share Wisdom
@@ -473,7 +475,7 @@ export default function CommunityPage() {
  Publishing to the Community Knowledge Base requires a <strong style={{ color: '#1e3a5f' }}>Starter plan</strong> or higher. Browse and read are always free!
  </p>
  <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
- <a href="/faq#pricing" style={{ background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
+ <a href="/faq#pricing" onClick={() => trackUpgradePromptClicked('community_publish')} style={{ background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
  💎 View Plans
  </a>
  <button onClick={() => setShowUpgradePrompt(false)} style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', color: '#666' }}>

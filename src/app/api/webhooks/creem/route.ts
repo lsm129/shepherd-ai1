@@ -91,6 +91,19 @@ export async function POST(request: NextRequest) {
           })
           .eq('id', targetUserId);
 
+        // Track payment conversion in PostHog (server-side)
+        try {
+          const phKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+          const phHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
+          if (phKey && targetUserId) {
+            fetch(`${phHost}/capture/`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token: phKey, event: 'checkout_completed', properties: { distinct_id: targetUserId, plan: planId, product_id: product?.id, billing: metadata?.billing || 'monthly' } }),
+            }).catch(() => {});
+          }
+        } catch (e) { console.error('PostHog tracking error:', e); }
+
         if (profileError) {
           console.error('Failed to update profile plan:', profileError);
         } else {

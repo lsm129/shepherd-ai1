@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { identifyUser } from '@/lib/analytics';
 
 
 export default function LoginPage() {
@@ -43,8 +44,11 @@ export default function LoginPage() {
  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
  if (error) throw error;
 
- // Redirect based on role
+ // Identify user for analytics
  const meta = data.user?.user_metadata || {};
+ identifyUser(data.user.id, data.user.email || '', meta.plan || 'free', meta.role || 'pastor');
+
+ // Redirect based on role
  const role = meta.role || 'pastor';
  if (role === 'congregant') {
  router.push('/member/dashboard');
