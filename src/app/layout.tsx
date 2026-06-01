@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ConditionalShell from "@/components/ConditionalShell";
+import TranslationSanitizer from "@/components/TranslationSanitizer";
+import GlobalErrorBoundary from "@/components/GlobalErrorBoundary";
 
 export const metadata: Metadata = {
   title: "ShepherdAI - AI-Powered Church Management Platform",
@@ -27,12 +29,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" translate="no">
+    <html lang="en">
       <head>
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
-      <body className="antialiased notranslate">
-        <ConditionalShell>{children}</ConditionalShell>
+      <body className="antialiased">
+        <GlobalErrorBoundary>
+          <TranslationSanitizer>
+            <ConditionalShell>{children}</ConditionalShell>
+          </TranslationSanitizer>
+        </GlobalErrorBoundary>
       </body>
     </html>
   );
