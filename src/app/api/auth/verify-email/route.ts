@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   // Confirm the user's email via admin API
   try {
     const confirmRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${parsed.userId}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         'apikey': SUPABASE_SERVICE_KEY,
         'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
       signal: AbortSignal.timeout(15000),
     });
 
+    console.log('Verify-email: confirming user', parsed.userId, 'status:', confirmRes.status);
     if (!confirmRes.ok) {
       const errText = await confirmRes.text();
       console.error('Email confirm failed:', confirmRes.status, errText);
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
       if (profiles?.length > 0) {
         const newBalance = (profiles[0].points_balance || 0) + regBonus;
         await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${parsed.userId}`, {
-          method: 'PATCH', headers: { ...supabaseHeaders, 'Prefer': 'return=minimal' },
+          method: 'PUT', headers: { ...supabaseHeaders, 'Prefer': 'return=minimal' },
           body: JSON.stringify({ points_balance: newBalance }),
         });
         await fetch(`${SUPABASE_URL}/rest/v1/points_transactions`, {
