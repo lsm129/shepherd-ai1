@@ -84,15 +84,15 @@ export default function RegisterPage() {
     if (!code.trim()) { setChurchCodeValid(null); setChurchCodeChurch(''); return; }
     setVerifyingCode(true);
     try {
-      const { createClient } = await import('@supabase/supabase-js');
-      if (!supabaseUrl || !supabaseAnonKey) { setVerifyingCode(false); return; }
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
-      const { data: referral } = await supabase.from('referrals').select('referrer_id, referral_code').eq('referral_code', code.trim()).single();
-      if (referral) {
-        const { data: churchData } = await supabase.from('church_settings').select('church_name').eq('user_id', referral.referrer_id).single();
+      const res = await fetch(`/api/referrals/validate?code=${encodeURIComponent(code.trim())}`);
+      const data = await res.json();
+      if (data.valid) {
         setChurchCodeValid(true);
-        setChurchCodeChurch(churchData?.church_name || 'Unknown Church');
-      } else { setChurchCodeValid(false); setChurchCodeChurch(''); }
+        setChurchCodeChurch(data.churchName || 'Unknown Church');
+      } else {
+        setChurchCodeValid(false);
+        setChurchCodeChurch('');
+      }
     } catch { setChurchCodeValid(false); setChurchCodeChurch(''); }
     finally { setVerifyingCode(false); }
   };
