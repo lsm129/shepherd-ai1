@@ -13,16 +13,16 @@ const CREEM_API_BASE = 'https://api.creem.io/v1';
 
 // Creem product IDs for each plan (monthly)
 export const CREEM_PRODUCTS: Record<Exclude<PlanId, 'free'>, string> = {
-  starter: 'prod_89GZ0Mr4cUbRkaH1guqcD',
-  pro: 'prod_6mHoeoWBuxR3qsJdAfQWo0',
-  growth: 'prod_LtkwTRkzN7R7brJIoCh5Q',
+  starter: 'prod_3Av1v0XK7Eglf0prqEZXUg',
+  pro: 'prod_2WcfpcakaMmjSMBIMLdikG',
+  growth: 'prod_1scixDX166NXlXkIdGckWW',
 };
 
 // Creem product IDs for annual plans (20% off)
 export const CREEM_ANNUAL_PRODUCTS: Record<Exclude<PlanId, 'free'>, string> = {
-  starter: '', // TODO: Fill in after creating annual product in Creem
-  pro: '', // TODO: Fill in after creating annual product in Creem
-  growth: '', // TODO: Fill in after creating annual product in Creem
+  starter: 'prod_761U0bBPstrqlxWZdMmlEb',
+  pro: 'prod_5ZaFuO5sa0YF3YZZBh7qjf',
+  growth: 'prod_31gKtMQgUQFh6HhMnGdxZ6',
 };
 
 // Map Creem product ID back to plan ID (checks both monthly and annual)
