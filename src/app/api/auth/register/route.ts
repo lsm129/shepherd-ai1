@@ -19,22 +19,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Server not configured' }, { status: 500 });
     }
 
-    // Use admin API to create user - this bypasses SMTP entirely
-    // We'll send the confirmation email ourselves via Resend
     const adminHeaders = {
       'apikey': SUPABASE_SERVICE_KEY,
       'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
       'Content-Type': 'application/json',
     };
 
-    // Create user with email_confirm=false (user needs to confirm)
+    // Create user with email_confirm=TRUE - user can log in immediately
+    // We send a welcome email via Resend instead of a confirmation email
     const createUserRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
       method: 'POST',
       headers: adminHeaders,
       body: JSON.stringify({
         email,
         password,
-        email_confirm: false,
+        email_confirm: true, // Auto-confirm email since Supabase SMTP is broken
         user_metadata: {
           role: role || 'congregant',
           ...metadata,
@@ -48,13 +47,32 @@ export async function POST(req: NextRequest) {
     if (!createUserRes.ok) {
       console.error('Admin create user failed:', createUserData);
       const errMsg = createUserData.msg || createUserData.error_description || createUserData.message || 'Registration failed';
+      // Handle duplicate email
+      if (errMsg.includes('already been registered') || errMsg.includes('already exists')) {
+        return NextResponse.json({ error: 'An account with this email already exists. Please sign in.' }, { status: 409 });
+      }
       return NextResponse.json({ error: errMsg }, { status: createUserRes.status });
     }
 
     const userId = createUserData.id;
-    const confirmToken = createUserData.confirmation_token || createUserData.email_change_token_new;
 
-    // If pastor, create church_settings
+    // Create profile if not exists
+    if (userId) {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            id: userId,
+            email: email,
+            points_balance: 0,
+            plan: 'free',
+          }),
+        });
+      } catch (e) { console.error('Profile create error:', e); }
+    }
+
+    // If pastor, create church_settings + referral code
     if (role === 'pastor' && userId && metadata) {
       try {
         const fullAddress = [metadata.address_city, metadata.address_state, metadata.address_zip].filter(Boolean).join(', ');
@@ -67,10 +85,22 @@ export async function POST(req: NextRequest) {
             worship_style: metadata.worship_style, address: fullAddress,
           }),
         });
-      } catch (e) { console.error('church_settings error:', e); }
+
+        // Generate a referral code for this pastor
+        const refCode = metadata.church_name?.substring(0, 2).toUpperCase() + userId.substring(0, 6).toUpperCase();
+        await fetch(`${SUPABASE_URL}/rest/v1/referrals`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+          body: JSON.stringify({
+            referrer_id: userId,
+            referral_code: refCode,
+            status: 'active',
+          }),
+        });
+      } catch (e) { console.error('church_settings/referral error:', e); }
     }
 
-    // Handle referral code
+    // Handle referral code (for congregants)
     if (metadata?.referred_by && userId) {
       try {
         const refRes = await fetch(`${SUPABASE_URL}/rest/v1/referrals?referral_code=eq.${metadata.referred_by}&select=referrer_id`, {
@@ -107,41 +137,39 @@ export async function POST(req: NextRequest) {
       } catch (e) { console.error('Referral error:', e); }
     }
 
-    // Send confirmation email via Resend (bypass broken Supabase SMTP)
+    // Send welcome email via Resend
     try {
-      const confirmUrl = `${APP_URL}/auth/callback?token_hash=${confirmToken}&type=signup`;
+      const name = metadata?.pastor_name || metadata?.full_name || '';
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           from: 'ShepherdAI <hello@shepherdaitech.com>',
           to: email,
-          subject: 'Confirm your ShepherdAI account',
+          subject: 'Welcome to ShepherdAI!',
           html: `
             <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:20px;">
               <div style="text-align:center;margin-bottom:24px;">
                 <h1 style="color:#1e3a5f;">ShepherdAI</h1>
               </div>
               <div style="background:#f9f9f9;border-radius:12px;padding:24px;">
-                <h2 style="color:#333;">Welcome${metadata?.pastor_name ? ', ' + metadata.pastor_name : metadata?.full_name ? ', ' + metadata.full_name : ''}!</h2>
-                <p style="color:#666;">Please confirm your email address to activate your account.</p>
-                <a href="${confirmUrl}" style="display:inline-block;background:#1e3a5f;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0;">Confirm Email</a>
-                <p style="color:#999;font-size:12px;">If the button doesn't work, copy this link:<br>${confirmUrl}</p>
+                <h2 style="color:#333;">Welcome${name ? ', ' + name : ''}! 🎉</h2>
+                <p style="color:#666;">Your account is ready. You can now sign in and start using ShepherdAI.</p>
+                <a href="${APP_URL}/login" style="display:inline-block;background:#1e3a5f;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0;">Sign In Now</a>
+                ${role === 'pastor' ? '<p style="color:#666;font-size:14px;">As a pastor, you can manage your church, generate AI content, and invite your congregation.</p>' : '<p style="color:#666;font-size:14px;">You can join your church community, access devotionals, and use AI-powered features.</p>'}
               </div>
             </div>`,
         }),
         signal: AbortSignal.timeout(15000),
       });
-      console.log('Confirmation email sent via Resend to:', email);
     } catch (emailErr) {
-      console.error('Resend email error:', emailErr);
-      // Don't fail the registration if email sending fails
+      console.error('Resend welcome email error:', emailErr);
     }
 
     return NextResponse.json({
       success: true,
       user: { id: userId, email },
-      message: 'Account created! Please check your email to confirm.',
+      message: 'Account created! You can now sign in.',
     });
 
   } catch (err: any) {
