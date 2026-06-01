@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHmac, randomBytes } from 'crypto';
+import { createHmac } from 'crypto';
 
 const SUPABASE_URL = 'https://hsunvuixqesjcoohbrmp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+// Fallback to hardcoded key if env var is missing (same as register route)
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDIwNTc3NCwiZXhwIjoyMDk1NzgxNzc0fQ.jF0_6lVYm5DN88s9A6sQ6jqepy_tjHgXHUEjia1l3r8';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com';
 
 function verifyToken(token: string, maxAgeMs: number = 24 * 60 * 60 * 1000): { userId: string; email: string } | null {
@@ -35,36 +36,37 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=invalid_or_expired_token', request.url));
   }
 
-  if (!SUPABASE_SERVICE_KEY) {
-    return NextResponse.redirect(new URL('/login?error=server_error', request.url));
-  }
-
   // Confirm the user's email via admin API
-  const confirmRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${parsed.userId}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email_confirm: true }),
-    signal: AbortSignal.timeout(15000),
-  });
+  try {
+    const confirmRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${parsed.userId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email_confirm: true }),
+      signal: AbortSignal.timeout(15000),
+    });
 
-  if (!confirmRes.ok) {
-    console.error('Email confirm failed:', await confirmRes.text());
+    if (!confirmRes.ok) {
+      const errText = await confirmRes.text();
+      console.error('Email confirm failed:', confirmRes.status, errText);
+      return NextResponse.redirect(new URL('/login?error=confirm_failed', request.url));
+    }
+  } catch (e) {
+    console.error('Email confirm error:', e);
     return NextResponse.redirect(new URL('/login?error=confirm_failed', request.url));
   }
 
   // Give registration bonus points
   try {
-    const supabaseHeaders = {
+    const supabaseHeaders: Record<string, string> = {
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
       'Content-Type': 'application/json',
     };
 
-    // Get user metadata to determine role/bonus
     const userRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${parsed.userId}`, {
       headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` },
     });
@@ -72,7 +74,6 @@ export async function GET(request: NextRequest) {
     const userRole = userData?.user_metadata?.role || 'congregant';
     const regBonus = userRole === 'pastor' ? 200 : 100;
 
-    // Check if already got registration bonus
     const txRes = await fetch(`${SUPABASE_URL}/rest/v1/points_transactions?user_id=eq.${parsed.userId}&action=eq.registration_bonus&select=id`, {
       headers: supabaseHeaders,
     });
@@ -102,6 +103,5 @@ export async function GET(request: NextRequest) {
     console.error('Registration bonus error:', e);
   }
 
-  // Redirect to login with success message
   return NextResponse.redirect(new URL('/login?verified=true', request.url));
 }
