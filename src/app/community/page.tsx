@@ -60,6 +60,9 @@ export default function CommunityPage() {
  const [publishing, setPublishing] = useState(false);
  const [publishMsg, setPublishMsg] = useState('');
 
+ // Upgrade prompt
+ const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+
  // Detail modal
  const [selectedPost, setSelectedPost] = useState<CommunityPost | null>(null);
 
@@ -244,7 +247,7 @@ export default function CommunityPage() {
  </div>
  {userId && (
  <button
- onClick={() => { if (!canAccess(plan, 'starter')) { setPublishMsg('🔒 Publishing requires Starter plan or higher. Upgrade to share your wisdom!'); return; } setShowNewPost(true); }}
+ onClick={() => { if (!canAccess(plan, 'starter')) { setShowUpgradePrompt(true); return; } setShowNewPost(true); }}
  style={{ background: '#22c55e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
  >
  ✍️ Share Wisdom
@@ -306,7 +309,7 @@ export default function CommunityPage() {
  </p>
  {userId && (
  <button
- onClick={() => { if (!canAccess(plan, 'starter')) { setPublishMsg('🔒 Publishing requires Starter plan or higher. Upgrade to share your wisdom!'); return; } setShowNewPost(true); }}
+ onClick={() => { if (!canAccess(plan, 'starter')) { setShowUpgradePrompt(true); return; } setShowNewPost(true); }}
  style={{ marginTop: '16px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
  >
  ✍️ Share Now
@@ -455,6 +458,28 @@ export default function CommunityPage() {
  >
  {publishing ? 'Publishing...' : '✨ Publish & Earn 50 Points'}
  </button>
+ </div>
+ </div>
+ )}
+
+
+ {/* Upgrade Prompt Modal */}
+ {showUpgradePrompt && (
+ <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '16px' }}>
+ <div style={{ background: 'white', borderRadius: '16px', padding: mobile ? '20px' : '32px', maxWidth: '480px', width: '100%', textAlign: 'center' }}>
+ <div style={{ fontSize: '64px', marginBottom: '16px' }}>🔒</div>
+ <h2 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e3a5f', marginBottom: '12px' }}>Upgrade to Publish</h2>
+ <p style={{ color: '#666', lineHeight: '1.7', marginBottom: '24px', fontSize: '15px' }}>
+ Publishing to the Community Knowledge Base requires a <strong style={{ color: '#1e3a5f' }}>Starter plan</strong> or higher. Browse and read are always free!
+ </p>
+ <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+ <a href="/faq#pricing" style={{ background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
+ 💎 View Plans
+ </a>
+ <button onClick={() => setShowUpgradePrompt(false)} style={{ background: 'none', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', color: '#666' }}>
+ Maybe Later
+ </button>
+ </div>
  </div>
  </div>
  )}
