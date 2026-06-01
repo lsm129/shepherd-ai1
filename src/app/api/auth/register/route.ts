@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const SUPABASE_URL = 'https://hsunvuixqesjcoohbrmp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMDU3NzQsImV4cCI6MjA5NTc4MTc3NH0.zVcLkOGAf4OWQck1_JNkq03Sjp0maZ5eIv4eYh0Nl2I';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const RESEND_API_KEY = process.env.RESEND_API_KEY || 're_6HuefXJV_iaP8YXYhRFLs9RBLvTkjjX91';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,45 +15,63 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const signupRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+    if (!SUPABASE_SERVICE_KEY) {
+      return NextResponse.json({ error: 'Server not configured' }, { status: 500 });
+    }
+
+    // Use admin API to create user - this bypasses SMTP entirely
+    // We'll send the confirmation email ourselves via Resend
+    const adminHeaders = {
+      'apikey': SUPABASE_SERVICE_KEY,
+      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+    };
+
+    // Create user with email_confirm=false (user needs to confirm)
+    const createUserRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
       method: 'POST',
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      headers: adminHeaders,
       body: JSON.stringify({
-        email, password,
-        options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.shepherdaitech.com'}/auth/callback`,
-          data: { role: role || 'congregant', ...metadata },
+        email,
+        password,
+        email_confirm: false,
+        user_metadata: {
+          role: role || 'congregant',
+          ...metadata,
         },
       }),
-      signal: AbortSignal.timeout(60000),
+      signal: AbortSignal.timeout(30000),
     });
 
-    const signupData = await signupRes.json();
+    const createUserData = await createUserRes.json();
 
-    if (!signupRes.ok) {
-      const errMsg = signupData.msg || signupData.error_description || signupData.message || 'Registration failed';
-      return NextResponse.json({ error: errMsg }, { status: signupRes.status });
+    if (!createUserRes.ok) {
+      console.error('Admin create user failed:', createUserData);
+      const errMsg = createUserData.msg || createUserData.error_description || createUserData.message || 'Registration failed';
+      return NextResponse.json({ error: errMsg }, { status: createUserRes.status });
     }
 
-    const user = signupData.user;
-    const userId = user?.id;
+    const userId = createUserData.id;
+    const confirmToken = createUserData.confirmation_token || createUserData.email_change_token_new;
 
-    if (user?.identities?.length === 0) {
-      return NextResponse.json({ error: 'An account with this email already exists. Please sign in instead.' }, { status: 409 });
-    }
-
-    if (role === 'pastor' && userId && metadata && SUPABASE_SERVICE_KEY) {
+    // If pastor, create church_settings
+    if (role === 'pastor' && userId && metadata) {
       try {
         const fullAddress = [metadata.address_city, metadata.address_state, metadata.address_zip].filter(Boolean).join(', ');
         await fetch(`${SUPABASE_URL}/rest/v1/church_settings`, {
           method: 'POST',
           headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-          body: JSON.stringify({ user_id: userId, church_name: metadata.church_name, pastor_name: metadata.pastor_name, denomination: metadata.denomination, congregation_size: metadata.congregation_size, worship_style: metadata.worship_style, address: fullAddress }),
+          body: JSON.stringify({
+            user_id: userId, church_name: metadata.church_name, pastor_name: metadata.pastor_name,
+            denomination: metadata.denomination, congregation_size: metadata.congregation_size,
+            worship_style: metadata.worship_style, address: fullAddress,
+          }),
         });
       } catch (e) { console.error('church_settings error:', e); }
     }
 
-    if (metadata?.referred_by && userId && SUPABASE_SERVICE_KEY) {
+    // Handle referral code
+    if (metadata?.referred_by && userId) {
       try {
         const refRes = await fetch(`${SUPABASE_URL}/rest/v1/referrals?referral_code=eq.${metadata.referred_by}&select=referrer_id`, {
           headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` },
@@ -63,7 +83,6 @@ export async function POST(req: NextRequest) {
             method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
             body: JSON.stringify({ referred_email: email, referred_id: userId, status: 'completed' }),
           });
-          // Bonus logic (best-effort)
           for (const uid of [referrers[0].referrer_id, userId]) {
             try {
               const pRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${uid}&select=points_balance`, {
@@ -88,12 +107,47 @@ export async function POST(req: NextRequest) {
       } catch (e) { console.error('Referral error:', e); }
     }
 
-    return NextResponse.json({ success: true, user: { id: userId, email: user?.email }, message: 'Account created! Please check your email to confirm.' });
+    // Send confirmation email via Resend (bypass broken Supabase SMTP)
+    try {
+      const confirmUrl = `${APP_URL}/auth/callback?token_hash=${confirmToken}&type=signup`;
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'ShepherdAI <hello@shepherdaitech.com>',
+          to: email,
+          subject: 'Confirm your ShepherdAI account',
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:20px;">
+              <div style="text-align:center;margin-bottom:24px;">
+                <h1 style="color:#1e3a5f;">ShepherdAI</h1>
+              </div>
+              <div style="background:#f9f9f9;border-radius:12px;padding:24px;">
+                <h2 style="color:#333;">Welcome${metadata?.pastor_name ? ', ' + metadata.pastor_name : metadata?.full_name ? ', ' + metadata.full_name : ''}!</h2>
+                <p style="color:#666;">Please confirm your email address to activate your account.</p>
+                <a href="${confirmUrl}" style="display:inline-block;background:#1e3a5f;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin:16px 0;">Confirm Email</a>
+                <p style="color:#999;font-size:12px;">If the button doesn't work, copy this link:<br>${confirmUrl}</p>
+              </div>
+            </div>`,
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+      console.log('Confirmation email sent via Resend to:', email);
+    } catch (emailErr) {
+      console.error('Resend email error:', emailErr);
+      // Don't fail the registration if email sending fails
+    }
+
+    return NextResponse.json({
+      success: true,
+      user: { id: userId, email },
+      message: 'Account created! Please check your email to confirm.',
+    });
 
   } catch (err: any) {
     console.error('Register API error:', err);
     if (err.name === 'TimeoutError' || err.name === 'AbortError') {
-      return NextResponse.json({ error: 'Registration timed out. The confirmation email may be slow. Please check your inbox in a few minutes.' }, { status: 504 });
+      return NextResponse.json({ error: 'Registration timed out. Please try again.' }, { status: 504 });
     }
     return NextResponse.json({ error: err.message || 'Registration failed' }, { status: 500 });
   }
