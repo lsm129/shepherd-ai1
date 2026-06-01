@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 
 interface CommunityPost {
@@ -41,6 +42,9 @@ const SORT_OPTIONS = [
 ];
 
 export default function CommunityPage() {
+  const { plan, loading: planLoading } = usePlan();
+  if (!planLoading && !canAccess(plan, 'growth')) return <LockedFeature minPlan="growth" title="Community Knowledge Base" />;
+
  const [mounted, setMounted] = useState(false);
  const [mobile, setMobile] = useState(false);
  const [posts, setPosts] = useState<CommunityPost[]>([]);

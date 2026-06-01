@@ -92,19 +92,22 @@ export default function DashboardPage() {
 
   if (!mounted) return null;
 
+  const PLAN_ORDER = ['free', 'starter', 'pro', 'growth'];
+  const canAccess = (minPlan: string) => PLAN_ORDER.indexOf(plan) >= PLAN_ORDER.indexOf(minPlan);
+
   const features = [
-    { href: '/visitor-followup', icon: '📧', title: 'Visitor Follow-up', desc: 'Personalized 6-week email sequences for new visitors.', color: '#1e3a5f', saves: '3 hrs/wk' },
-    { href: '/weekly-newsletter', icon: '📰', title: 'Weekly Newsletter', desc: 'Transform highlights into professional newsletters.', color: '#4a90a4', saves: '2 hrs/wk' },
-    { href: '/prayer-requests', icon: '🙏', title: 'Prayer Requests', desc: 'AI-generated responses with Bible verses for prayer requests.', color: '#8b5cf6', saves: '1.5 hrs/wk' },
-    { href: '/sermon-social', icon: '📱', title: 'Sermon → Social Media', desc: 'Transform sermon notes into engaging social media posts.', color: '#ec4899', saves: '2 hrs/wk' },
-    { href: '/church-announcement', icon: '📢', title: 'Announcements', desc: 'Generate polished church announcements for services and events.', color: '#f59e0b', saves: '1 hr/wk' },
-    { href: '/daily-devotional', icon: '📖', title: 'Daily Devotional', desc: 'Bible verses, meditation, application, and prayer.', color: '#10b981', saves: '1.5 hrs/wk' },
-    { href: '/batch-content', icon: '🎬', title: 'Content Studio', desc: 'Plan your content calendar — any topic, all platforms, one workflow.', color: '#6366f1', saves: '3 hrs/wk' },
-    { href: '/templates', icon: '📋', title: 'Template Marketplace', desc: 'Share & browse sermon outlines from fellow pastors.', color: '#22c55e', saves: '2 hrs/wk' },
-    { href: '/community', icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from pastors worldwide.', color: '#0ea5e9', saves: '' },
-    { href: '/church-community', icon: '⛪', title: 'My Church Community', desc: 'Private hub for your congregation — announcements, devotionals, prayer wall.', color: '#7c3aed', saves: '' },
-    { href: '/diagnosis', icon: '🏥', title: 'Ministry Health Report', desc: 'See how your church is doing and get personalized recommendations.', color: '#ef4444', saves: '' },
-    { href: '/settings', icon: '⚙️', title: 'Church Settings', desc: 'Configure your church profile, plan, and preferences.', color: '#64748b', saves: '' },
+    { href: '/visitor-followup', icon: '📧', title: 'Visitor Follow-up', desc: 'Personalized 6-week email sequences for new visitors.', color: '#1e3a5f', saves: '3 hrs/wk', minPlan: 'free' },
+    { href: '/prayer-requests', icon: '🙏', title: 'Prayer Requests', desc: 'AI-generated responses with Bible verses for prayer requests.', color: '#8b5cf6', saves: '1.5 hrs/wk', minPlan: 'free' },
+    { href: '/church-announcement', icon: '📢', title: 'Announcements', desc: 'Generate polished church announcements for services and events.', color: '#f59e0b', saves: '1 hr/wk', minPlan: 'free' },
+    { href: '/church-community', icon: '⛪', title: 'My Church Community', desc: 'Private hub for your congregation — announcements, devotionals, prayer wall.', color: '#7c3aed', saves: '', minPlan: 'free' },
+    { href: '/sermon-social', icon: '📱', title: 'Sermon → Social Media', desc: 'Transform sermon notes into engaging social media posts.', color: '#ec4899', saves: '2 hrs/wk', minPlan: 'starter' },
+    { href: '/daily-devotional', icon: '📖', title: 'Daily Devotional', desc: 'Bible verses, meditation, application, and prayer.', color: '#10b981', saves: '1.5 hrs/wk', minPlan: 'starter' },
+    { href: '/weekly-newsletter', icon: '📰', title: 'Weekly Newsletter', desc: 'Transform highlights into professional newsletters.', color: '#4a90a4', saves: '2 hrs/wk', minPlan: 'starter' },
+    { href: '/templates', icon: '📋', title: 'Template Marketplace', desc: 'Share & browse sermon outlines from fellow pastors.', color: '#22c55e', saves: '2 hrs/wk', minPlan: 'starter' },
+    { href: '/batch-content', icon: '🎬', title: 'Content Studio', desc: 'Plan your content calendar — any topic, all platforms, one workflow.', color: '#6366f1', saves: '3 hrs/wk', minPlan: 'pro' },
+    { href: '/diagnosis', icon: '🏥', title: 'Ministry Health Report', desc: 'See how your church is doing and get personalized recommendations.', color: '#ef4444', saves: '', minPlan: 'pro' },
+    { href: '/community', icon: '🌍', title: 'Community Knowledge Base', desc: 'Share wisdom and learn from pastors worldwide.', color: '#0ea5e9', saves: '', minPlan: 'growth' },
+    { href: '/settings', icon: '⚙️', title: 'Church Settings', desc: 'Configure your church profile, plan, and preferences.', color: '#64748b', saves: '', minPlan: 'free' },
   ];
 
   return (
@@ -172,12 +175,18 @@ export default function DashboardPage() {
       {/* All Features Grid */}
       <h2 style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '16px' }}>Your AI Assistants</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '32px' }}>
-        {features.map((feature) => (
-          <Link key={feature.href} href={feature.href} style={{ textDecoration: 'none' }}>
-            <div className="dashboard-card" style={{ height: '100%', cursor: 'pointer' }}>
+        {features.map((feature) => {
+          const locked = !canAccess(feature.minPlan);
+          const CardContent = () => (
+            <div className="dashboard-card" style={{ height: '100%', cursor: locked ? 'default' : 'pointer', position: 'relative', opacity: locked ? 0.6 : 1 }}>
+              {locked && (
+                <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#ef4444', color: 'white', fontSize: '10px', padding: '2px 8px', borderRadius: '4px', fontWeight: '700', textTransform: 'uppercase' }}>
+                  🔒 {feature.minPlan.charAt(0).toUpperCase() + feature.minPlan.slice(1)}+
+                </div>
+              )}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <span style={{ fontSize: '36px' }}>{feature.icon}</span>
-                {feature.saves && (
+                {feature.saves && !locked && (
                   <span className="badge badge-success" style={{ fontSize: '11px', padding: '3px 8px', fontWeight: '700' }}>
                     Saves {feature.saves}
                   </span>
@@ -185,10 +194,23 @@ export default function DashboardPage() {
               </div>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '6px' }}>{feature.title}</h3>
               <p style={{ color: '#666', lineHeight: '1.5', fontSize: '13px' }}>{feature.desc}</p>
-              <div style={{ color: feature.color, fontWeight: '600', fontSize: '13px', marginTop: '8px' }}>Get Started →</div>
+              {locked ? (
+                <div style={{ color: '#ef4444', fontWeight: '600', fontSize: '13px', marginTop: '8px' }}>Upgrade to Unlock →</div>
+              ) : (
+                <div style={{ color: feature.color, fontWeight: '600', fontSize: '13px', marginTop: '8px' }}>Get Started →</div>
+              )}
             </div>
-          </Link>
-        ))}
+          );
+          return locked ? (
+            <Link key={feature.href} href="/settings" style={{ textDecoration: 'none' }}>
+              <CardContent />
+            </Link>
+          ) : (
+            <Link key={feature.href} href={feature.href} style={{ textDecoration: 'none' }}>
+              <CardContent />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

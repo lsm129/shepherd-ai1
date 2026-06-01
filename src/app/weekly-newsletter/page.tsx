@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 
 function getSupabase() {
@@ -14,6 +15,9 @@ function getSupabase() {
 }
 
 export default function WeeklyNewsletterPage() {
+  const { plan, loading: planLoading } = usePlan();
+  if (!planLoading && !canAccess(plan, 'starter')) return <LockedFeature minPlan="starter" title="Weekly Newsletter" />;
+
  const [step, setStep] = useState<'form' | 'preview' | 'sent'>('form');
  const [mounted, setMounted] = useState(false);
  const [isMobile, setIsMobile] = useState(false);

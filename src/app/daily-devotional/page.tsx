@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 
 function getSupabase() {
@@ -28,6 +29,9 @@ const PRESET_TOPICS = [
 ];
 
 export default function DailyDevotionalPage() {
+  const { plan, loading: planLoading } = usePlan();
+  if (!planLoading && !canAccess(plan, 'starter')) return <LockedFeature minPlan="starter" title="Daily Devotional" />;
+
  const [mounted, setMounted] = useState(false);
  const [isMobile, setIsMobile] = useState(false);
  const [selectedTopic, setSelectedTopic] = useState('');

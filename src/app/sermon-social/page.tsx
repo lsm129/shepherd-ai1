@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
 import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 
 function getSupabase() {
@@ -18,6 +19,9 @@ interface SocialContent {
 }
 
 export default function SermonSocialPage() {
+  const { plan, loading: planLoading } = usePlan();
+  if (!planLoading && !canAccess(plan, 'starter')) return <LockedFeature minPlan="starter" title="Sermon Social" />;
+
  const [mounted, setMounted] = useState(false);
  const [mobile, setMobile] = useState(false);
  const [sermonNotes, setSermonNotes] = useState('');

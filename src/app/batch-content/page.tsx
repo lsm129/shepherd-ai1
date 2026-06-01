@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { noSelectStyle, noSelectEvents } from '@/lib/no-select';
+import { usePlan, canAccess, LockedFeature } from '@/lib/plan-gate';
 
 // Labels are inline strings
 
@@ -29,6 +30,9 @@ type GeneratedPost = {
 };
 
 export default function BatchContentPage() {
+  const { plan, loading: planLoading } = usePlan();
+  if (!planLoading && !canAccess(plan, 'pro')) return <LockedFeature minPlan="pro" title="Batch Content" />;
+
  const [sermonContent, setSermonContent] = useState('');
  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['all']);
  const [style, setStyle] = useState('inspirational');
