@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createCustomerPortal } from '@/lib/creem';
+import { createClient } from '@supabase/supabase-js';
+import { supabaseUrl, supabaseAnonKey } from '@/lib/supabase-config';
+
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { userId } = body;
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Missing required field: userId' },
+        { status: 400 }
+      );
+    }
+
+    // Get user's Creem customer ID from Supabase
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzdW52dWl4cWVzamNvb2hicm1wIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDIwNTc3NCwiZXhwIjoyMDk1NzgxNzc0fQ.jF0_6lVYm5DN88s9A6sQ6jqepy_tjHgXHUEjia1l3r8';
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('creem_customer_id, email')
+      .eq('id', userId)
+      .single();
+
+    if (error || !profile) {
+      return NextResponse.json(
+        { error: 'User profile not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!profile.creem_customer_id) {
+      return NextResponse.json(
+        { error: 'No Creem customer ID found. Please subscribe first.' },
+        { status: 400 }
+      );
+    }
+
+    const portalUrl = await createCustomerPortal(profile.creem_customer_id);
+
+    return NextResponse.json({ portalUrl });
+  } catch (error) {
+    console.error('Portal creation error:', error);
+    return NextResponse.json(
+      { error: 'Failed to create customer portal link' },
+      { status: 500 }
+    );
+  }
+}

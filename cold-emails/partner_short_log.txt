@@ -1,0 +1,13 @@
+
+[2026-06-11 09:42] === Partner short follow-up ===
+  OK: steven@protechserv.com (av)
+  OK: dwood@ciavl.com (av)
+  OK: ajmathieu@malphursgroup.com (consulting)
+  OK: help@theunstuckgroup.com (consulting)
+  OK: nickhonerkamp@kingdomconsultingteam.org (consulting)
+  OK: info@edgechurchconsulting.com (consulting)
+  OK: info@impactstewardship.com (consulting)
+  OK: theconsultants@tccg.business (consulting)
+  OK: tgobebo.rep@gabaptist.org (convention)
+  OK: mmarshall@gabaptist.org (convention)
+SUMMARY: Sent=10 Failed=0

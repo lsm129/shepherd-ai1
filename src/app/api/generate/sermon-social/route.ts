@@ -1,0 +1,128 @@
+import { recordGeneration } from '@/lib/quota';
+import { requireAuthAndQuota } from '@/lib/auth-middleware';
+import { earnPoints } from '@/lib/points';
+import { NextRequest, NextResponse } from 'next/server';
+import { getChurchProfile, buildAISystemPrompt, getUserHabits } from '@/lib/ai-with-profile';
+
+function getAIConfig() {
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (deepseekKey && deepseekKey !== 'your-deepseek-api-key') {
+    return {
+      apiKey: deepseekKey,
+      baseURL: 'https://api.deepseek.com',
+      model: 'deepseek-reasoner',
+      isReasoner: true,
+    };
+  }
+
+  if (openaiKey && openaiKey !== 'your-openai-api-key') {
+    return {
+      apiKey: openaiKey,
+      baseURL: 'https://api.openai.com/v1',
+      model: 'gpt-4o-mini',
+      isReasoner: false,
+    };
+  }
+
+  return { apiKey: '', baseURL: '', model: '', isReasoner: false };
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { apiKey, baseURL, model, isReasoner } = getAIConfig();
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'AI API key is not configured. Please add DEEPSEEK_API_KEY or OPENAI_API_KEY.' },
+        { status: 500 }
+      );
+    }
+
+    const body = await request.json();
+    const { sermon_notes, church_name, userId } = body;
+
+    if (!sermon_notes) {
+      return NextResponse.json({ error: 'Sermon notes are required' }, { status: 400 });
+    }
+
+    // Auth + Quota check
+    const auth = await requireAuthAndQuota(request, userId);
+    if (auth.error) return auth.error;
+
+    // Get church profile + user habits for personalized AI
+    const churchProfile = userId ? await getChurchProfile(userId) : null;
+    const habitsContext = userId ? await getUserHabits(userId) : '';
+
+    const basePrompt = `You are an AI assistant helping a church pastor turn sermon notes into social media content.`;
+    const systemPrompt = buildAISystemPrompt(basePrompt, churchProfile, habitsContext);
+
+    const userPrompt = `Turn these sermon notes into social media content: ${sermon_notes}
+Create posts for Facebook, Instagram, and Twitter/X.
+${isReasoner ? `Think step by step about: 1) What are the core themes? 2) Who is the target audience? 3) What tone works for each platform? 4) How to adapt the message for each platform's style?\n\nThen provide your final answer.\n` : ''}Return ONLY valid JSON with no other text: {"facebook": {"post": "..."}, "instagram": {"caption": "...", "hashtags": "..."}, "twitter": {"tweet": "..."}}`;
+
+    // Build request body - reasoner model doesn't support response_format or temperature
+    const requestBody: Record<string, any> = {
+      model,
+      messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }],
+    };
+
+    if (!isReasoner) {
+      requestBody.response_format = { type: 'json_object' };
+      requestBody.temperature = 0.7;
+    }
+
+    const response = await fetch(`${baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const message = data.choices?.[0]?.message;
+    const content = message?.content || '';
+
+    // Extract reasoning content for thinking display
+    const thinkingContent = message?.reasoning_content || '';
+
+    // Parse JSON from content - reasoner may wrap in markdown code blocks
+    let parsed: any = {};
+    try {
+      // Try direct parse first
+      parsed = JSON.parse(content);
+    } catch {
+      // Try extracting JSON from markdown code blocks or surrounding text
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/) || content.match(/(\{[\s\S]*\})/);
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[1].trim());
+      }
+    }
+
+    // Record generation and earn points
+    if (auth.userId) {
+      await recordGeneration(auth.userId, 'sermon_social', 'generated');
+      await earnPoints(auth.userId, 'generate_sermon').catch(e => console.error('Points error:', e));
+    }
+
+    return NextResponse.json({
+      nearLimit: auth.nearLimit,
+      success: true,
+      thinking: thinkingContent,
+      facebook: parsed.facebook || { post: '' },
+      instagram: parsed.instagram || { caption: '', hashtags: '' },
+      twitter: parsed.twitter || { tweet: '' },
+    });
+  } catch (error: any) {
+    console.error('Error:', error);
+    return NextResponse.json({ error: error.message || 'Failed to generate social media content' }, { status: 500 });
+  }
+}

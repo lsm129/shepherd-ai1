@@ -1,0 +1,19 @@
+ShepherdAI Cold Email Log - Day 2
+Started: 2026-06-06 23:37:22
+============================================================
+✅ Sent to faithfulword1@gmail.com (Faithful Word Baptist Church) - ID: 2c3e4477-8671-47c5-a672-5f803b8d67fb
+✅ Sent to contactus@nvbcphoenix.com (North Valley Baptist Church) - ID: 6b631183-4a89-4adc-836a-b2587650b8ef
+✅ Sent to nlbcphx84@gmail.com (New Life Baptist Church) - ID: 8a28a1c4-b93a-4ee5-97df-2f8e896312b0
+✅ Sent to latterrain2001@hotmail.com (Latter Rain Ministries) - ID: ed4213c8-73dc-4819-8b13-90603ff082d2
+✅ Sent to mountzionministries@hotmail.com (Mount Zion Ministries) - ID: c7e6b6b2-6701-4692-bb0d-7f861914f188
+--- Batch 1 pause (60s) ---
+✅ Sent to russ@l2today.com (L2 Church Denver) - ID: c6fe8571-ac10-4e5f-b68e-8bb29f55c306
+✅ Sent to info@plattparkchurch.org (Platt Park Church) - ID: 1b9078ca-f254-47a4-bd89-0c5e8350de80
+✅ Sent to office@rethinkbaptist.org (First Baptist Church Denver) - ID: 6e75eba3-6d39-4321-a643-562c8ff5709d
+❌ Failed: jeremys@edmondsumc.org (Edmonds UMC) - 
+✅ Sent to office@ffmc.org (First Free Methodist Church Seattle) - ID: 15396817-4cbe-4273-b720-f6f0bee75223
+--- Batch 2 pause (60s) ---
+✅ Sent to pastor@lakewaumc.org (Lake Wa UMC) - ID: 7a41018f-a5e7-409d-8e38-69df52b6cba9
+✅ Sent to kurt@cascadepdx.org (Cascade Church Portland) - ID: 7fca0136-a0a0-4d23-84e6-a499b008ce54
+❌ Failed: mtoupin@fbc-portland.org (First Baptist Church Portland) - 
+❌ Failed: karyn@fumcpdx.org (First UMC Portland) - 

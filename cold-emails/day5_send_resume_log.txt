@@ -1,0 +1,126 @@
+
+=== Resume Send - 2026-06-08 22:35:17 ===
+Queue: 119 emails
+  Failed: info@briarwoodjackson.org (Briarwood Drive Baptist Church Jackson) [DAY4] - QUOTA HIT
+  Skipped: info@countrywoods.net (Country Woods Baptist Church Jackson) - quota hit
+  Skipped: info@danielbaptist.org (Daniel Memorial Baptist Church Jackson) - quota hit
+  Skipped: info@mthelm.org (Mount Helm Baptist Church Jackson) - quota hit
+  Skipped: info@mountnebochurch.com (Mount Nebo Baptist Church Jackson) - quota hit
+  Skipped: info@collegehillchurch.org (College Hill Baptist Church Jackson) - quota hit
+  Skipped: info@lbcflowood.org (Liberty Baptist Church Flowood) - quota hit
+  Skipped: info@farishstreetbaptistchurch.org (Farish Street Baptist Church Jackson) - quota hit
+  Skipped: stpaulbcinc@gmail.com (Saint Paul Baptist Church Greensboro) - quota hit
+  Skipped: rlevette@webtv.net (Revelation Temple Greensboro) - quota hit
+  Skipped: emrlevette@webtv.net (Revelation Temple Greensboro Co-Pastor) - quota hit
+  Skipped: info@fbclodi.org (First Baptist Church Lodi Sacramento area) - quota hit
+  Skipped: office@antelopespringschurch.org (Antelope Springs Church Sacramento area) - quota hit
+  Skipped: john@hopeantelope.com (Hope Community Church Antelope) - quota hit
+  Skipped: churchoffice@creeksideeg.com (Creekside Christian Church Elk Grove) - quota hit
+  Skipped: office@oaktreeonline.org (Oak Tree Community Church) - quota hit
+  Skipped: info@sunrise.church (Sunrise Community Church Fair Oaks) - quota hit
+  Skipped: stephanie.valadez@oakhills.org (Oak Hills Church Folsom) - quota hit
+  Skipped: sacindian@gmail.com (Indian Christian Church Sacramento) - quota hit
+  Skipped: church@lhcc.us (Lincoln Hills Community Church) - quota hit
+  Skipped: info@gracecollectivechurch.org (Grace Collective Roseville) - quota hit
+  Skipped: info@thelifehousechurch.com (The LIFEhouse Church Rocklin) - quota hit
+  Skipped: info@gfchurch.com (Grace Family Church North Highlands) - quota hit
+  Skipped: markdahlin@yahoo.com (Living Hope Citrus Heights) - quota hit
+  Skipped: 1730pgccoffice@gmail.com (Pleasant Grove Community Church Roseville) - quota hit
+  Skipped: doruanin@gmail.com (Bethel Romanian Baptist Church Sacramento) - quota hit
+  Skipped: tcamposr@gmail.com (Casa de Luz Sacramento) - quota hit
+  Skipped: horizon@horizonweb.org (Horizon Community Church Galt) - quota hit
+  Skipped: benkondor@yahoo.com (Light To The World Church Granite Bay) - quota hit
+  Skipped: admin@secondslavic.com (Second Slavic Baptist Church North Highlands) - quota hit
+  Skipped: office@gracepointlodi.com (GracePoint Church Lodi) - quota hit
+  Skipped: info@stmarkaugusta.org (St. Mark Methodist Church Augusta) - quota hit
+  Skipped: secretary@stjohnaugusta.org (St. John UMC Augusta) - quota hit
+  Skipped: slumcadmin@gmail.com (Saint Luke UMC Augusta) - quota hit
+  Skipped: pastor@warren.church (Warren Baptist Church Augusta) - quota hit
+  Skipped: asburychurch1005@gmail.com (Asbury UMC Columbia SC) - quota hit
+  Skipped: james@trumc.org (Trenholm Road UMC Columbia) - quota hit
+  Skipped: mollie@trumc.org (Trenholm Road UMC Associate) - quota hit
+  Skipped: jdsonger@umcsc.org (Bethel UMC Columbia) - quota hit
+  Skipped: info@rumcsc.com (Rehoboth Columbia UMC) - quota hit
+  Skipped: donhargis@hotmail.com (Sierra Heights Baptist Church Fresno) - quota hit
+  Skipped: info@wichitafbc.org (Wichita KS Baptist Church) - quota hit
+  Skipped: fbcwichita@sbcglobal.net (First Baptist Church North Wichita) - quota hit
+  Skipped: dennis@ststephensboise.org (St. Stephen's Episcopal Boise) - quota hit
+  Skipped: info@oasiscity.church (Oasis City Church Boise) - quota hit
+  Skipped: info@truehopeboise.com (True Hope Church Boise) - quota hit
+  Skipped: fallsibc@gmail.com (Falls International Baptist Church Sioux Falls) - quota hit
+  Skipped: pastordave@sio.midco.net (David Severtson Sioux Falls UMC) - quota hit
+  Skipped: pastor@firstuachurch.net (First UA Church Roseville) - quota hit
+  Skipped: Info@evergreenmemphis.org (Evergreen Baptist Church Memphis) - quota hit
+  Skipped: jsalemi@fbcmemphis.org (First Baptist Church Memphis) - quota hit
+  Skipped: john@mycbcc.org (Covenant Baptist Church Memphis) - quota hit
+  Skipped: lwcministries1998@gmail.com (Living Water Baptist Church Memphis) - quota hit
+  Skipped: chuckh@fbchenderson.org (First Baptist Church Henderson Memphis area) - quota hit
+  Skipped: darren@stpaulchurchky.org (St. Paul United Methodist Church Louisville) - quota hit
+  Skipped: gfcdchurch@gmail.com (Greater Faith Church of Deliverance Louisville) - quota hit
+  Skipped: info@audubonbaptist.org (Audubon Baptist Church Louisville) - quota hit
+  Skipped: info@beechlandbaptist.org (Beechland Baptist Church Louisville) - quota hit
+  Skipped: info@bbclouisville.org (Beechmont Baptist Church Louisville) - quota hit
+  Skipped: info@beechwoodbaptist.com (Beechwood Baptist Church Louisville) - quota hit
+  Skipped: info@bethanylouisville.com (Bethany Baptist Church Louisville) - quota hit
+  Skipped: info@bethlehembaptist.com (Bethlehem Baptist Church Louisville) - quota hit
+  Skipped: info@brooksbaptist.com (Brooks Baptist Church Louisville) - quota hit
+  Skipped: info@burnettavebapt.com (Burnett Avenue Baptist Church Louisville) - quota hit
+  Skipped: info@cedarcreekbaptist.com (Cedar Creek Baptist Church Louisville) - quota hit
+  Skipped: info@chapelparkbaptist.org (Chapel Park Baptist Church Louisville) - quota hit
+  Skipped: info@ccclouisville.org (Christ Community Church Louisville) - quota hit
+  Skipped: info@cliftonbaptist.org (Clifton Baptist Church Louisville) - quota hit
+  Skipped: info@cloverleafbaptist.org (Cloverleaf Baptist Church Louisville) - quota hit
+  Skipped: info@deerparkbaptist.org (Deer Park Baptist Church Louisville) - quota hit
+  Skipped: info@ferncreekbaptist.org (Fern Creek Baptist Church Louisville) - quota hit
+  Skipped: info@fisherville-baptist.com (First Baptist Church of Fisherville Louisville) - quota hit
+  Skipped: info@fbcnewburg.org (Forest Baptist Church Louisville) - quota hit
+  Skipped: info@gbclouisville.com (Gethsemane Baptist Church Louisville) - quota hit
+  Skipped: info@gcbc.ws (Grace Community Baptist Church Louisville) - quota hit
+  Skipped: info@graceinlouisville.org (Grace Fellowship Louisville) - quota hit
+  Skipped: info@gracepointelouisville.org (GracePointe Baptist Church Louisville) - quota hit
+  Skipped: info@greatergalilee.com (Greater Galilee Baptist Church Louisville) - quota hit
+  Skipped: info@hbclouisville.com (Hazelwood Baptist Church Louisville) - quota hit
+  Skipped: info@hpfbc.com (Highland Park 1st Baptist Church Louisville) - quota hit
+  Skipped: info@hlbc.net (Hunsinger Lane Baptist Church Louisville) - quota hit
+  Skipped: info@hurstbournebc.org (Hurstbourne Baptist Church Louisville) - quota hit
+  Skipped: stcatherinesjax@bellsouth.net (St. Catherine's Episcopal Church Jacksonville) - quota hit
+  Skipped: pastor@fcmcjax.org (Faith Community Methodist Church Jacksonville) - quota hit
+  Skipped: ebenezerum@att.net (Ebenezer Methodist Church Jacksonville) - quota hit
+  Skipped: office@fumc-jax.org (First United Methodist Church Jacksonville) - quota hit
+  Skipped: pastoralcare@fbcjax.com (First Baptist Church Jacksonville) - quota hit
+  Skipped: theoffice@fbckcmo.net (First Baptist Church Kansas City) - quota hit
+  Skipped: office@crossroadschurchkc.org (Crossroads Church Kansas City) - quota hit
+  Skipped: greg@glorychurchkc.com (Glory Church Kansas City) - quota hit
+  Skipped: sheralyn@kccornerstone.com (Cornerstone Church Kansas City) - quota hit
+  Skipped: Pastordvaughn@gmail.com (Sanctuary of Faith Kansas City) - quota hit
+  Skipped: Mayra_rod21@yahoo.com (Pan de Vida Kansas City) - quota hit
+  Skipped: vincentmrogers@gmail.com (St. Andrew The Apostle Kansas City) - quota hit
+  Skipped: info@abidingfaithbc.org (Abiding Faith Baptist Kansas City) - quota hit
+  Skipped: info@cpbc.church (Connection Point Baptist Kansas City) - quota hit
+  Skipped: info@lifeconnectionchurch.com (LifeConnection Baptist Kansas City) - quota hit
+  Skipped: info@ubcommunity.org (United Believers Community Church Kansas City) - quota hit
+  Skipped: stanbroberts@hotmail.com (Peace United Church of Christ El Paso) - quota hit
+  Skipped: bccelp.office@gmail.com (Bethany Christian Church El Paso) - quota hit
+  Skipped: info@ctkpca.org (Christ the King Presbyterian El Paso) - quota hit
+  Skipped: revnancyw@faith-presbyterian.org (Faith Presbyterian Church El Paso) - quota hit
+  Skipped: info@communitybaptistep.org (Community Baptist Church El Paso) - quota hit
+  Skipped: adolfo.mata@hotmail.com (El Paso Tabernacle) - quota hit
+  Skipped: office@truchurchep.org (TruChurch El Paso) - quota hit
+  Skipped: albsovgra@msn.com (Albuquerque Sovereign Grace Baptist) - quota hit
+  Skipped: Pastorjimnicholson@gmail.com (Living Word Baptist Church Albuquerque) - quota hit
+  Skipped: montereybc@qwestoffice.net (Monterey Baptist Church Albuquerque) - quota hit
+  Skipped: mobc@mom-bc.com (Mount Olive Missionary Baptist Albuquerque) - quota hit
+  Skipped: info@bereanbaptistabq.com (Berean Baptist Church Albuquerque) - quota hit
+  Skipped: pastorpete@abqnaz.org (Sandia Church of the Nazarene Albuquerque) - quota hit
+  Skipped: jkwaters7707@gmail.com (Anchor Baptist Church Los Lunas NM) - quota hit
+  Skipped: wbc@wbcclovis.com (Westbrook Baptist Church Clovis NM) - quota hit
+  Skipped: pastorcorley@chbc-nm.org (College Heights Baptist Farmington NM) - quota hit
+  Skipped: kjvntagu@hotmail.com (Bible Baptist Church Aztec NM) - quota hit
+  Skipped: bibleevangelist@gmail.com (Lighthouse Baptist Church Aztec NM) - quota hit
+  Skipped: wesh@sfnaz.org (Spokane First Nazarene) - quota hit
+  Skipped: info@somaspokane.org (Soma Communities Spokane) - quota hit
+  Skipped: pmccspokane@yahoo.com (PMCC 4th Watch Spokane) - quota hit
+
+SUMMARY: Queued=119 Sent=0 Failed=1 QuotaHit=True
+Duration: 0s
+Completed: 2026-06-08 22:35:18

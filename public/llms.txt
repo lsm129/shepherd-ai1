@@ -1,0 +1,78 @@
+# ShepherdAI
+
+> ShepherdAI is a church management platform that helps pastors save 8+ hours per week by automating admin tasks — sermon-to-social media, visitor follow-up, prayer management, devotionals, newsletters, and more. Starting at $19/mo.
+
+## What ShepherdAI Does
+
+ShepherdAI automates the repetitive administrative work that consumes pastors' time, so they can focus on ministry and people instead of paperwork.
+
+### Core Features
+
+- **Visitor Follow-up**: AI writes 6 unique personalized emails per visitor based on their background. Pastor previews, edits, then auto-sends. No two emails are the same.
+- **Sermon to Social Media**: Turn sermon notes into multiple engaging social media posts (Facebook, Instagram, Twitter) in 2 minutes. AI shows its reasoning process.
+- **Prayer Management**: AI-generated responses with Bible verses for prayer requests. Congregants submit prayers anytime, community can like and reply.
+- **Daily Devotional**: Bible verses, meditation prompts, life application, and closing prayer — generated fresh every day with email delivery to congregation.
+- **Weekly Newsletter**: Transform week highlights into professional, engaging newsletters.
+- **Announcements**: Generate polished church announcements for services, events, and special occasions in seconds.
+- **Batch Content**: One sermon to 50 social media posts. One theme to a month of devotionals. Scale your ministry content.
+- **Template Marketplace**: Browse and use sermon outlines and templates from pastors worldwide.
+- **AI Style Learning**: ShepherdAI learns your writing style, tone, and preferences over time. The more you use it, the better it gets.
+- **AI Member Pastoral Plan**: When congregants join, AI analyzes their background and needs to generate a personalized pastoral care plan.
+- **Church Accounting**: Manual entry with automatic financial reports. Weekly, monthly, and annual statements.
+- **AI Church Reports**: Weekly, monthly, and annual ministry health reports with 6-dimension analysis and AI recommendations.
+- **Activity Planner**: AI generates complete event plans for 8 activity types — fellowship, outreach, holiday, retreat, VBS, and more.
+- **Congregant Engagement**: Points, badges, and daily devotionals keep congregation active. Reward participation automatically.
+- **Church Discovery**: Newcomers find and join your church online. AI matches them by location and denomination.
+- **Community Knowledge Base**: Share wisdom and learn from ministry leaders worldwide.
+
+### Pricing
+
+- **Free**: $0/mo — 3 tools, basic features, up to 25 congregants
+- **Starter**: $19/mo — 7 tools, visitor follow-up, sermon-to-social, devotionals, newsletters
+- **Pro**: $39/mo — 10 tools, batch content, AI style learning, accounting, advanced reports
+- **Growth**: $79/mo — All 15+ tools, unlimited congregants, priority support, activity planner, church discovery
+
+Annual plans available with discount. No credit card required for free plan.
+
+### Security & Trust
+
+- 256-bit AES encryption
+- GDPR compliant
+- Data never sold or shared
+- No credit card required to start
+- SOC 2 aligned practices
+
+### Who Is ShepherdAI For
+
+- Small to mid-size church pastors (under 200 members) who spend too much time on admin
+- Church administrators who manage communications, visitor follow-up, and newsletters
+- Associate pastors and ministry leaders who need content at scale
+- Church planters who need professional tools on a tight budget
+
+### Key Differentiators vs Competitors
+
+- Lowest starting price ($0 vs $49-72/mo from major competitors)
+- AI personalization (not just templates — learns your style)
+- Visitor follow-up with 6 unique emails per visitor (competitors offer manual or 1 generic email)
+- All-in-one platform (sermon tools + visitor follow-up + prayer + devotional + accounting + reports)
+- Free tier with real functionality (not just a trial)
+
+## Quick Links
+
+- Website: https://www.shepherdaitech.com
+- Pricing: https://www.shepherdaitech.com/pricing
+- Blog: https://www.shepherdaitech.com/blog
+- About: https://www.shepherdaitech.com/about
+- FAQ: https://www.shepherdaitech.com/faq
+- Partner Program: https://www.shepherdaitech.com/partner/apply
+
+## AI Models Used
+
+- DeepSeek AI for content generation, sermon analysis, and pastoral insights
+- All AI-generated content is clearly labeled
+- AI is a tool to assist pastors, never to replace pastoral judgment
+
+## Contact
+
+- Support: support@shepherdaitech.com
+- Partner Inquiries: support@shepherdaitech.com

@@ -1,0 +1,392 @@
+
+[2026-06-10 11:05] === New short template (mode=both) ===
+--- NEW contacts: 25 ---
+  OK NEW: jeremys@edmondsumc.org (Edmonds UMC) - variant 1
+  OK NEW: mtoupin@fbc-portland.org (First Baptist Church Portland) - variant 2
+  OK NEW: karyn@fumcpdx.org (First UMC Portland) - variant 3
+  OK NEW: alohaumcpastor@gmail.com (Aloha UMC) - variant 1
+  OK NEW: montavillaumchurch@gmail.com (Montavilla UMC) - variant 2
+  OK NEW: montrosebaptist@gmail.com (Montrose Baptist Church) - variant 3
+  OK NEW: pastor@wickerparklutheran.org (Wicker Park Lutheran Church) - variant 1
+  OK NEW: pastor@fbmco.org (First Baptist Missionary Church Oakleaf) - variant 2
+  OK NEW: smbcjacksonvillefl@gmail.com (Springhill Missionary Baptist Church) - variant 3
+  OK NEW: mornngstarfbc@nbmbcc.org (Morning Star Freewill Baptist Church) - variant 1
+  OK NEW: admin@ststephenbaptist.org (St. Stephen Baptist Church) - variant 2
+  OK NEW: pilgrimsrestmbc@gmail.com (Pilgrim's Rest MBC) - variant 3
+  OK NEW: pastor@alamocity.org (Alamo City Church) - variant 1
+  OK NEW: greaterfaithgfm@gmail.com (Greater Faith Ministries) - variant 2
+  OK NEW: info@reclaimsanantonio.com (Reclaim Church San Antonio) - variant 3
+  OK NEW: pastord1984@gmail.com (Providence Missionary Baptist Church) - variant 1
+  OK NEW: pastor@memorialmbc.org (Memorial Missionary Baptist Church) - variant 2
+  OK NEW: leonardfrench462@yahoo.com (Bridge of Hope Church Memphis) - variant 3
+  OK NEW: lordshand@gmail.com (Clarksdale Friendship Nazarene) - variant 1
+  OK NEW: prchr1b@aol.com (Harmony Baptist Church) - variant 2
+  OK NEW: theofficefbc@gmail.com (First Baptist Church of Louisville) - variant 3
+  OK NEW: alan.redditt@smbclouisville.org (St. Matthews Baptist Church) - variant 1
+  OK NEW: sbcc1349@yahoo.com (Shiloh Baptist Church) - variant 2
+  OK NEW: vumc@villagemethodist.org (Village UMC OKC) - variant 3
+  OK NEW: secretary@wesleyokc.org (Wesley UMC OKC) - variant 1
+--- FOLLOW-UP contacts: 25 ---
+  OK FOLLOWUP: bris9850@yahoo.com (New Morning Star Missionary Baptist Church)
+  OK FOLLOWUP: revbjlyons@aol.com (St. John Missionary Baptist Church)
+  OK FOLLOWUP: imageofgodbiblechurch@msn.com (Image of God Bible Church)
+  OK FOLLOWUP: fellowshipofhope@ihfc.net (Inner-Strength Ministries)
+  OK FOLLOWUP: joytemple@sbcglobal.net (Joy Temple Christian Center)
+  OK FOLLOWUP: kingdom-ajm@yahoo.com (Kingdom Business Youth Ministries)
+  OK FOLLOWUP: kwcc2005@aol.com (Kingdom Life Ministries)
+  OK FOLLOWUP: a118@aol.com (Life Line Temple Ministries)
+  OK FOLLOWUP: pmckinney67@hotmail.com (Holy Temple Evangelistic Ministries)
+  OK FOLLOWUP: pastor@atlantafirstumc.org (Atlanta First United Methodist Church)
+  OK FOLLOWUP: susan.gary.landry@ngumc.net (St. James UMC Atlanta)
+  OK FOLLOWUP: info@koinonianashville.com (Koinonia Nashville)
+  OK FOLLOWUP: paul@firstbaptistnashville.com (First Baptist Nashville)
+  OK FOLLOWUP: faithnazareneac@gmail.com (Ashland City Faith Community)
+  OK FOLLOWUP: erinnazarene@gmail.com (Erin Church of the Nazarene)
+  OK FOLLOWUP: information@nfcn.org (Nashville First Church)
+  OK FOLLOWUP: info@trevecca.church (Nashville Trevecca Community)
+  OK FOLLOWUP: oldhickorynazarene@gmail.com (Old Hickory Church)
+  OK FOLLOWUP: pastor@whitehousenaz.org (White House Church)
+  OK FOLLOWUP: wcnazarene@bellsouth.net (Woodlawn Community Church)
+  OK FOLLOWUP: jerry@harvestcharlotte.com (Harvest Charlotte)
+  OK FOLLOWUP: briandavis@plazabaptist.org (Plaza Baptist Church Charlotte)
+  OK FOLLOWUP: info@gracecovenantcharlotte.com (Grace Covenant Charlotte)
+  OK FOLLOWUP: warp@sllcs.org (St. Luke's Winter Springs)
+  OK FOLLOWUP: abarcott@gmail.com (Holy Cross Satellite Orlando)
+SUMMARY: Sent=50 Failed=0 Total_today=50
+New remaining: 119
+Followup remaining: 146
+
+[2026-06-11 23:21] === New short template (mode=both) ===
+--- NEW contacts: 25 ---
+  OK NEW: pastor@alamocity.org (Alamo City Church) - variant 1
+  OK NEW: greaterfaithgfm@gmail.com (Greater Faith Ministries) - variant 2
+  OK NEW: info@reclaimsanantonio.com (Reclaim Church San Antonio) - variant 3
+  OK NEW: pastord1984@gmail.com (Providence Missionary Baptist Church) - variant 1
+  OK NEW: pastor@memorialmbc.org (Memorial Missionary Baptist Church) - variant 2
+  OK NEW: leonardfrench462@yahoo.com (Bridge of Hope Church Memphis) - variant 3
+  OK NEW: lordshand@gmail.com (Clarksdale Friendship Nazarene) - variant 1
+  OK NEW: prchr1b@aol.com (Harmony Baptist Church) - variant 2
+  OK NEW: theofficefbc@gmail.com (First Baptist Church of Louisville) - variant 3
+  OK NEW: alan.redditt@smbclouisville.org (St. Matthews Baptist Church) - variant 1
+  OK NEW: sbcc1349@yahoo.com (Shiloh Baptist Church) - variant 2
+  OK NEW: vumc@villagemethodist.org (Village UMC OKC) - variant 3
+  OK NEW: secretary@wesleyokc.org (Wesley UMC OKC) - variant 1
+  OK NEW: pastorstevensmith@gmail.com (Resurrection Free Methodist Church) - variant 2
+  OK NEW: global@nokcmethodist.church (North OKC Methodist Church) - variant 3
+  OK NEW: info@gpbcindy.org (Garfield Park Baptist Church) - variant 1
+  OK NEW: jckitt16@aol.com (Crossroads Baptist Church) - variant 2
+  OK NEW: info@cmbcindy.org (Christ Missionary Baptist Church) - variant 3
+  OK NEW: macpastor1@yahoo.com (Breeding Tabernacle) - variant 1
+  OK NEW: joseph3846@gmail.com (Burton Temple) - variant 2
+  OK NEW: theminors4@yahoo.com (Emmanuel Church) - variant 3
+  OK NEW: lastmaroon1@gmail.com (Gershom Church) - variant 1
+  OK NEW: pastorjamesmctabcme@yahoo.com (McClendon Tabernacle) - variant 2
+  OK NEW: dallpinn2009@gmail.com (Murchison Temple) - variant 3
+  OK NEW: jmclqtt475@icloud.com (Samaritan Church) - variant 1
+--- FOLLOW-UP contacts: 25 ---
+  OK FOLLOWUP: jacob@thecross.family (theCross Eustis)
+  OK FOLLOWUP: revcountryman@gmail.com (Faith Viera Rockledge)
+  OK FOLLOWUP: tculbertson@sllcs.org (St. Luke's Winter Springs)
+  OK FOLLOWUP: pastor.james@hope-brevard.org (Hope Viera Melbourne)
+  OK FOLLOWUP: mathfitz@gmail.com (New City Church Ocoee)
+  OK FOLLOWUP: sop.fellowship01@gmail.com (Sanctuary of Praise Ministries)
+  OK FOLLOWUP: beawashere@gmail.com (Elmore Church)
+  OK FOLLOWUP: brenda@clarksvillegrace.org (Clarksville Grace Church)
+  OK FOLLOWUP: dcnaz3@comcast.net (Donelson Church Nashville)
+  OK FOLLOWUP: bethelnaz455@gmail.com (Bethel Church Nashville)
+  OK FOLLOWUP: nashvillegrace@gracenaz.com (Nashville Grace Church)
+  OK FOLLOWUP: welivetolove@yahoo.com (Love Alive Ministries)
+  OK FOLLOWUP: ltdministry@aol.com (Love Temple Deliverance)
+  OK FOLLOWUP: gmboone@aol.com (Kingdom Life Tabernacle)
+  OK FOLLOWUP: faithfulword1@gmail.com (Faithful Word Baptist Church)
+  OK FOLLOWUP: contactus@nvbcphoenix.com (North Valley Baptist Church)
+  OK FOLLOWUP: nlbcphx84@gmail.com (New Life Baptist Church)
+  OK FOLLOWUP: latterrain2001@hotmail.com (Latter Rain Ministries)
+  OK FOLLOWUP: mountzionministries@hotmail.com (Mount Zion Ministries)
+  OK FOLLOWUP: russ@l2today.com (L2 Church Denver)
+  OK FOLLOWUP: info@plattparkchurch.org (Platt Park Church)
+  OK FOLLOWUP: office@rethinkbaptist.org (First Baptist Church Denver)
+  OK FOLLOWUP: jeremys@edmondsumc.org (Edmonds UMC)
+  OK FOLLOWUP: office@ffmc.org (First Free Methodist Church Seattle)
+  OK FOLLOWUP: pastor@lakewaumc.org (Lake Wa UMC)
+SUMMARY: Sent=50 Failed=0 Total_today=50
+New remaining: 227
+Followup remaining: 151
+
+[2026-06-12 23:18] === New short template (mode=both) ===
+--- NEW contacts: 25 ---
+  OK NEW: revholmes@uniongrovebaptist.org (Union Grove Baptist Church) - variant 1
+  OK NEW: savesomeministries@gmail.com (This Rock Baptist Church) - variant 2
+  OK NEW: trinity@trinity-baptist.com (Trinity Baptist Church Columbus) - variant 3
+  OK NEW: pastor@northcolumbusbaptist.org (North Columbus Baptist Church) - variant 1
+  OK NEW: jasonlapat@yahoo.com (Old Paths Baptist Church) - variant 2
+  OK NEW: bcgrovecity@yahoo.com (Bible Baptist Church Grove City) - variant 3
+  OK NEW: pastorlance@hotmail.com (Calvary Baptist Church Bucyrus) - variant 1
+  OK NEW: pastorferguson@gmail.com (Bible Baptist Temple Campbell) - variant 2
+  OK NEW: info@welcometoopendoor.com (Open Door Baptist Church) - variant 3
+  OK NEW: pastor@clevelandbaptist.org (Cleveland Baptist Church) - variant 1
+  OK NEW: heritagebapt@verizon.net (Heritage Baptist Church) - variant 2
+  OK NEW: pastorclick@fremontbaptisttemple.com (Fremont Baptist Temple) - variant 3
+  OK NEW: gracebaptist5@gmail.com (Grace Baptist Church Marietta) - variant 1
+  OK NEW: bettytedwhitely@aol.com (Calvary Detroit UMC) - variant 2
+  OK NEW: ccumcac@aol.com (Cass Community UMC) - variant 3
+  OK NEW: conantave@sbcglobal.net (Conant Avenue UMC) - variant 1
+  OK NEW: elbuenpastorumc@gmail.com (El Buen Pastor UMC) - variant 2
+  OK NEW: fordmemorialumc@yahoo.com (Ford Memorial UMC) - variant 3
+  OK NEW: serving@metroumc.org (Metropolitan UMC Detroit) - variant 1
+  OK NEW: cartergrimmett@sbcglobal.net (Peoples UMC Detroit) - variant 2
+  OK NEW: scottumc@yahoo.com (Scott Memorial UMC) - variant 3
+  OK NEW: secondgrac@aol.com (Second Grace UMC) - variant 1
+  OK NEW: stpaulumcdet@aol.com (St Paul UMC Detroit) - variant 2
+  OK NEW: reveardley@gpumc.org (Grosse Pointe UMC) - variant 3
+  OK NEW: elizabeth@haumc.org (Hennepin Avenue UMC) - variant 1
+--- FOLLOW-UP contacts: 25 ---
+  OK FOLLOWUP: kurt@cascadepdx.org (Cascade Church Portland)
+  OK FOLLOWUP: mtoupin@fbc-portland.org (First Baptist Church Portland)
+  OK FOLLOWUP: karyn@fumcpdx.org (First UMC Portland)
+  OK FOLLOWUP: alohaumcpastor@gmail.com (Aloha UMC)
+  OK FOLLOWUP: montavillaumchurch@gmail.com (Montavilla UMC)
+  OK FOLLOWUP: montrosebaptist@gmail.com (Montrose Baptist Church)
+  OK FOLLOWUP: pastor@wickerparklutheran.org (Wicker Park Lutheran Church)
+  OK FOLLOWUP: pastor@fbmco.org (First Baptist Missionary Church Oakleaf)
+  OK FOLLOWUP: smbcjacksonvillefl@gmail.com (Springhill Missionary Baptist Church)
+  OK FOLLOWUP: mornngstarfbc@nbmbcc.org (Morning Star Freewill Baptist Church)
+  OK FOLLOWUP: admin@ststephenbaptist.org (St. Stephen Baptist Church)
+  OK FOLLOWUP: pilgrimsrestmbc@gmail.com (Pilgrim's Rest MBC)
+  OK FOLLOWUP: pastor@alamocity.org (Alamo City Church)
+  OK FOLLOWUP: greaterfaithgfm@gmail.com (Greater Faith Ministries)
+  OK FOLLOWUP: info@reclaimsanantonio.com (Reclaim Church San Antonio)
+  OK FOLLOWUP: pastord1984@gmail.com (Providence Missionary Baptist Church)
+  OK FOLLOWUP: pastor@memorialmbc.org (Memorial Missionary Baptist Church)
+  OK FOLLOWUP: leonardfrench462@yahoo.com (Bridge of Hope Church Memphis)
+  OK FOLLOWUP: lordshand@gmail.com (Clarksdale Friendship Nazarene)
+  OK FOLLOWUP: prchr1b@aol.com (Harmony Baptist Church)
+  OK FOLLOWUP: theofficefbc@gmail.com (First Baptist Church of Louisville)
+  OK FOLLOWUP: alan.redditt@smbclouisville.org (St. Matthews Baptist Church)
+  OK FOLLOWUP: sbcc1349@yahoo.com (Shiloh Baptist Church)
+  OK FOLLOWUP: vumc@villagemethodist.org (Village UMC OKC)
+  OK FOLLOWUP: secretary@wesleyokc.org (Wesley UMC OKC)
+SUMMARY: Sent=50 Failed=0 Total_today=50
+New remaining: 180
+Followup remaining: 173
+
+[2026-06-13 23:20] === New short template (mode=both) ===
+--- NEW contacts: 25 ---
+  OK NEW: revholmes@uniongrovebaptist.org (Union Grove Baptist Church) - variant 1
+  OK NEW: savesomeministries@gmail.com (This Rock Baptist Church) - variant 2
+  OK NEW: trinity@trinity-baptist.com (Trinity Baptist Church Columbus) - variant 3
+  OK NEW: pastor@northcolumbusbaptist.org (North Columbus Baptist Church) - variant 1
+  OK NEW: jasonlapat@yahoo.com (Old Paths Baptist Church) - variant 2
+  OK NEW: bcgrovecity@yahoo.com (Bible Baptist Church Grove City) - variant 3
+  OK NEW: pastorlance@hotmail.com (Calvary Baptist Church Bucyrus) - variant 1
+  OK NEW: pastorferguson@gmail.com (Bible Baptist Temple Campbell) - variant 2
+  OK NEW: info@welcometoopendoor.com (Open Door Baptist Church) - variant 3
+  OK NEW: pastor@clevelandbaptist.org (Cleveland Baptist Church) - variant 1
+  OK NEW: heritagebapt@verizon.net (Heritage Baptist Church) - variant 2
+  OK NEW: pastorclick@fremontbaptisttemple.com (Fremont Baptist Temple) - variant 3
+  OK NEW: gracebaptist5@gmail.com (Grace Baptist Church Marietta) - variant 1
+  OK NEW: bettytedwhitely@aol.com (Calvary Detroit UMC) - variant 2
+  OK NEW: ccumcac@aol.com (Cass Community UMC) - variant 3
+  OK NEW: conantave@sbcglobal.net (Conant Avenue UMC) - variant 1
+  OK NEW: elbuenpastorumc@gmail.com (El Buen Pastor UMC) - variant 2
+  OK NEW: fordmemorialumc@yahoo.com (Ford Memorial UMC) - variant 3
+  OK NEW: serving@metroumc.org (Metropolitan UMC Detroit) - variant 1
+  OK NEW: cartergrimmett@sbcglobal.net (Peoples UMC Detroit) - variant 2
+  OK NEW: scottumc@yahoo.com (Scott Memorial UMC) - variant 3
+  OK NEW: secondgrac@aol.com (Second Grace UMC) - variant 1
+  OK NEW: stpaulumcdet@aol.com (St Paul UMC Detroit) - variant 2
+  OK NEW: reveardley@gpumc.org (Grosse Pointe UMC) - variant 3
+  OK NEW: elizabeth@haumc.org (Hennepin Avenue UMC) - variant 1
+--- FOLLOW-UP contacts: 25 ---
+  OK FOLLOWUP: pastorstevensmith@gmail.com (Resurrection Free Methodist Church)
+  OK FOLLOWUP: global@nokcmethodist.church (North OKC Methodist Church)
+  OK FOLLOWUP: info@gpbcindy.org (Garfield Park Baptist Church)
+  OK FOLLOWUP: jckitt16@aol.com (Crossroads Baptist Church)
+  OK FOLLOWUP: info@cmbcindy.org (Christ Missionary Baptist Church)
+  OK FOLLOWUP: macpastor1@yahoo.com (Breeding Tabernacle)
+  OK FOLLOWUP: joseph3846@gmail.com (Burton Temple)
+  OK FOLLOWUP: theminors4@yahoo.com (Emmanuel Church)
+  OK FOLLOWUP: lastmaroon1@gmail.com (Gershom Church)
+  OK FOLLOWUP: pastorjamesmctabcme@yahoo.com (McClendon Tabernacle)
+  OK FOLLOWUP: dallpinn2009@gmail.com (Murchison Temple)
+  OK FOLLOWUP: jmclqtt475@icloud.com (Samaritan Church)
+  OK FOLLOWUP: gdebro@att.net (Refreshing Springs)
+  OK FOLLOWUP: highpraise47@yahoo.com (Stewart Memorial)
+  OK FOLLOWUP: tcmeindy@gmail.com (Trinity CME)
+  OK FOLLOWUP: womackcme@aol.com (Womack Memorial)
+  OK FOLLOWUP: pastortim@shadygrovechurch.net (Shady Grove Church)
+  OK FOLLOWUP: office@newhoperaleigh.org (New Hope Baptist Church Raleigh)
+  OK FOLLOWUP: jroberts@tbcraleigh.com (Trinity Baptist Church Raleigh)
+  OK FOLLOWUP: info@bayleaf.org (Bay Leaf Baptist Church)
+  OK FOLLOWUP: tmbcadmin@nc.rr.com (Tupper Memorial Baptist Church)
+  OK FOLLOWUP: jvalkjr@nc.rr.com (Albemarle Wesleyan Church)
+  OK FOLLOWUP: donaldleesouthern@gmail.com (Archdale Wesleyan Church)
+  OK FOLLOWUP: bmadren@windstream.net (Browers Wesleyan Church)
+  OK FOLLOWUP: cbdavis32671@gmail.com (Callicutt Wesleyan Church)
+SUMMARY: Sent=50 Failed=0 Total_today=50
+New remaining: 250
+Followup remaining: 148
+
+[2026-06-14 23:17] === New short template (mode=both) ===
+--- NEW contacts: 25 ---
+  OK NEW: revholmes@uniongrovebaptist.org (Union Grove Baptist Church) - variant 1
+  OK NEW: savesomeministries@gmail.com (This Rock Baptist Church) - variant 2
+  OK NEW: trinity@trinity-baptist.com (Trinity Baptist Church Columbus) - variant 3
+  OK NEW: pastor@northcolumbusbaptist.org (North Columbus Baptist Church) - variant 1
+  OK NEW: jasonlapat@yahoo.com (Old Paths Baptist Church) - variant 2
+  OK NEW: bcgrovecity@yahoo.com (Bible Baptist Church Grove City) - variant 3
+  OK NEW: pastorlance@hotmail.com (Calvary Baptist Church Bucyrus) - variant 1
+  OK NEW: pastorferguson@gmail.com (Bible Baptist Temple Campbell) - variant 2
+  OK NEW: info@welcometoopendoor.com (Open Door Baptist Church) - variant 3
+  OK NEW: pastor@clevelandbaptist.org (Cleveland Baptist Church) - variant 1
+  OK NEW: heritagebapt@verizon.net (Heritage Baptist Church) - variant 2
+  OK NEW: pastorclick@fremontbaptisttemple.com (Fremont Baptist Temple) - variant 3
+  OK NEW: gracebaptist5@gmail.com (Grace Baptist Church Marietta) - variant 1
+  OK NEW: bettytedwhitely@aol.com (Calvary Detroit UMC) - variant 2
+  OK NEW: ccumcac@aol.com (Cass Community UMC) - variant 3
+  OK NEW: conantave@sbcglobal.net (Conant Avenue UMC) - variant 1
+  OK NEW: elbuenpastorumc@gmail.com (El Buen Pastor UMC) - variant 2
+  OK NEW: fordmemorialumc@yahoo.com (Ford Memorial UMC) - variant 3
+  OK NEW: serving@metroumc.org (Metropolitan UMC Detroit) - variant 1
+  OK NEW: cartergrimmett@sbcglobal.net (Peoples UMC Detroit) - variant 2
+  OK NEW: scottumc@yahoo.com (Scott Memorial UMC) - variant 3
+  OK NEW: secondgrac@aol.com (Second Grace UMC) - variant 1
+  OK NEW: stpaulumcdet@aol.com (St Paul UMC Detroit) - variant 2
+  OK NEW: reveardley@gpumc.org (Grosse Pointe UMC) - variant 3
+  OK NEW: elizabeth@haumc.org (Hennepin Avenue UMC) - variant 1
+--- FOLLOW-UP contacts: 25 ---
+  OK FOLLOWUP: casafamiliarchurch@gmail.com (Casa Familiar Church)
+  OK FOLLOWUP: brent.bennett@cityofrefugenc.com (City of Refuge)
+  OK FOLLOWUP: office@cornerstoneseagrove.com (Cornerstone Church Seagrove)
+  OK FOLLOWUP: pastorbuck@covington.church (Covington Memorial Wesleyan)
+  OK FOLLOWUP: coach.jampatterson@gmail.com (Crestview Wesleyan Church)
+  OK FOLLOWUP: pcv@crosswindslive.com (Crosswinds Church)
+  OK FOLLOWUP: lee.henry72@gmail.com (Dan River Wesleyan Church)
+  OK FOLLOWUP: pastorroger4u@gmail.com (Faith Wesleyan Fayetteville)
+  OK FOLLOWUP: pastor@fwbnc.com (First Wesleyan Burlington)
+  OK FOLLOWUP: centerbaptistomaha@gmail.com (Center Baptist Church Omaha)
+  OK FOLLOWUP: dawsonumc@sbglobal.net (Dawson United Methodist)
+  OK FOLLOWUP: 4information@fbcnt.org (First Baptist Church North Tulsa)
+  OK FOLLOWUP: info@thenewbirthmbc.org (New Birth Missionary Baptist Church)
+  OK FOLLOWUP: etspivey@gmail.com (Vestavia Hills Baptist Church)
+  OK FOLLOWUP: rdaniels@livingstonestemple.org (Living Stones Temple)
+  OK FOLLOWUP: newhopebc1740@gmail.com (New Hope Baptist Church Birmingham)
+  OK FOLLOWUP: jcooley@fbcbhm.org (First Baptist Church Birmingham)
+  OK FOLLOWUP: ladara.lee@gmail.com (Mt. Mariah Baptist Church)
+  OK FOLLOWUP: nmsbc@netscape.net (New Morning Star Baptist Church Birmingham)
+  OK FOLLOWUP: secretary@christ1stchurch.org (Christ First Missionary Baptist Church)
+  OK FOLLOWUP: joel@gracebham.org (Grace Fellowship Birmingham)
+  OK FOLLOWUP: bcoc@bcoc.net (Baptist Church Of The Covenant)
+  OK FOLLOWUP: newlifebcfresno@gmail.com (New Life Baptist Church Fresno)
+  OK FOLLOWUP: pastor.bfbcsacramento@gmail.com (Bible Fellowship Baptist Church Sacramento)
+  OK FOLLOWUP: mtcalvaryeast@gmail.com (Mt. Calvary Missionary Baptist Church East)
+SUMMARY: Sent=50 Failed=0 Total_today=50
+New remaining: 250
+Followup remaining: 123
+
+[2026-06-16 00:22] === New short template (mode=both) ===
+--- NEW contacts: 80 ---
+  OK NEW: jay.r.ashcraft@gmail.com (First Light) - variant 1
+  OK NEW: joseantgomez@yahoo.es (Iglesia Bautista Paraiso de Dios) - variant 2
+  OK NEW: franciscolanciego@gmail.com (Casa Vida Church) - variant 3
+  OK NEW: alekskr@gmail.com (Cornerstone Slavic Baptist Church) - variant 1
+  OK NEW: icherishgod@yahoo.com (Encounter Church Sacramento) - variant 2
+  OK NEW: vl_kunets@yahoo.com (First Slavic Evangelical Baptist) - variant 3
+  OK NEW: transformationchurchsac@gmail.com (Transformation Church Sacramento) - variant 1
+  OK NEW: secretary@vpcchurch.org (Vintage Park Community Church) - variant 2
+  OK NEW: contact@cebc.net (Cornerstone Evangelical Baptist) - variant 3
+  OK NEW: info@cornerstonetrinity.org (Cornerstone Trinity Baptist Church) - variant 1
+  OK NEW: info@ctxchurch.org (Cornerstone Trinity Excelsior) - variant 2
+  OK NEW: info@bernalchurch.org (Bernal Bible Church) - variant 3
+  OK NEW: rbcsanfrancisco@gmail.com (Romanian Baptist Church of San Francisco) - variant 1
+  OK NEW: gcbc_office@goldcountrybaptist.org (Gold Country Baptist Church) - variant 2
+  OK NEW: rommelticas@gmail.com (Casa de Luz Stockton) - variant 3
+  OK NEW: welcome@valleytracy.org (Valley Christian Church) - variant 1
+  OK NEW: info@catalystwoodland.com (Catalyst Church) - variant 2
+  OK NEW: info@citywalkchurch.com (Citywalk Church) - variant 3
+  OK NEW: redeemedlife.oahu@gmail.com (Redeemed Life Church Oahu) - variant 1
+  OK NEW: bkearns133@gmail.com (Austin Wesleyan Church) - variant 2
+  OK NEW: magrudermd@aol.com (Bedford First Wesleyan Church) - variant 3
+  OK NEW: rezalute@gmail.com (Bicknell Wesleyan Church) - variant 1
+  OK NEW: cjbabcock35@gmail.com (Bloomfield Mt. Zion Wesleyan Church) - variant 2
+  OK NEW: gmontgomery@martincounty.in.gov (Bloomfield Southside Wesleyan Church) - variant 3
+  OK NEW: renuservices@aol.com (Blue River Wesleyan Church) - variant 1
+  OK NEW: pastorjoeatboonvillewesleyanchurch@protonmail.com (Boonville Wesleyan Church) - variant 2
+  OK NEW: holleydwh@aol.com (Brazil Jackson Street Wesleyan Church) - variant 3
+  OK NEW: dougstroud75@gmail.com (Carthage Living Waters Wesleyan Church) - variant 1
+  OK NEW: pwshelton@juno.com (Clear Fork Wesleyan Church) - variant 2
+  OK NEW: ghtilley@gmail.com (Columbus Bethel Wesleyan Church) - variant 3
+  OK NEW: wttcj94@att.net (Columbus Flintwood Wesleyan Church) - variant 1
+  OK NEW: cvcvandervort56@gmail.com (Concord Wesleyan Church) - variant 2
+  OK NEW: corydonnewhope1@gmail.com (Corydon New Hope Wesleyan Church) - variant 3
+  OK NEW: dmeriwether@embarqmail.com (East Enterprise Wesleyan Church) - variant 1
+  OK NEW: derekcarpenter1981@gmail.com (Edinburgh 500 North Wesleyan) - variant 2
+  OK NEW: rdillman49@gmail.com (English Wesleyan Church) - variant 3
+  OK NEW: duane@crosspointetrinity.com (CrossPointe Trinity Wesleyan Church) - variant 1
+  OK NEW: pastor.rayaustin@gmail.com (Forest Hills Wesleyan Church) - variant 2
+  OK NEW: shimbe22@yahoo.com (North Park Wesleyan Church) - variant 3
+  OK NEW: matthewlpresley@gmail.com (Fort Branch Wesleyan Church) - variant 1
+  OK NEW: donmjneal@yahoo.com (Franklin Wesleyan Church) - variant 2
+  OK NEW: june@bluemarble.net (French Lick Springs Valley Wesleyan Church) - variant 3
+  OK NEW: began.69wv@gmail.com (Gnaw Bone Wesleyan Church) - variant 1
+  OK NEW: jaleadingham@gmail.com (City Church Greenfield) - variant 2
+  OK NEW: gnmuncie@hotmail.com (Greensburg LifeLine Wesleyan Church) - variant 3
+  OK NEW: hughesjim007@gmail.com (Greenwood Wesleyan Church) - variant 1
+  OK NEW: adamstreeservice00@gmail.com (Holton Crossroads Community Wesleyan Church) - variant 2
+  OK NEW: jmarquis2013@gmail.com (Hope First Wesleyan Church) - variant 3
+  OK NEW: makessen@yahoo.com (Lawrenceburg Wesleyan Church) - variant 1
+  OK NEW: dgates@mwinet.net (Lewis Creek Wesleyan Church) - variant 2
+  OK NEW: bmoff_00@hotmail.com (Loogootee Mt. Zion Wesleyan Church) - variant 3
+  OK NEW: briar29@bellsouth.net (Madison Calvary Wesleyan Church) - variant 1
+  OK NEW: smokey03usa@aol.com (Martinsville Wesleyan Church) - variant 2
+  OK NEW: sokol08@msn.com (Martinsville Bethel Wesleyan Church) - variant 3
+  OK NEW: skbreeden@gmail.com (Medora Wesleyan Church) - variant 1
+  OK NEW: pastorhosier@gmail.com (Milan Wesleyan Church) - variant 2
+  OK NEW: srjjljbrk@frontier.com (Mitchell Wesleyan Church) - variant 3
+  OK NEW: pastormatthew@sullivanwesleyanchurch.org (Sullivan Wesleyan Church) - variant 1
+  OK NEW: arichmo2@gmail.com (Sylvania Wesleyan Church) - variant 2
+  OK NEW: stephencaniff@gmail.com (Salem Wesleyan Church) - variant 3
+  OK NEW: sixtysixbooks.matthew@aol.com (Seymour Wesleyan Church) - variant 1
+  OK NEW: pastorjoselwc@yahoo.com (Shelbyville Grace Wesleyan Church) - variant 2
+  OK NEW: rev.graden@yahoo.com (Shelbyville Westside Wesleyan Church) - variant 3
+  OK NEW: dbrandon6@frontier.com (Somerville Wesleyan Church) - variant 1
+  OK NEW: philkessen@yahoo.com (Southwind Wesleyan Church) - variant 2
+  OK NEW: knightjr47855@yahoo.com (Spencer Wesleyan Church) - variant 3
+  OK NEW: owcp@netsurfusa.net (Orleans Wesleyan Church) - variant 1
+  OK NEW: recmhedd@frontier.com (Sandford Wesleyan Church) - variant 2
+  OK NEW: lrm.hwy150@gmail.com (Paoli Wesleyan Church) - variant 3
+  OK NEW: dn.gormong@ma.rr.com (Poplar Grove Wesleyan Church) - variant 1
+  OK NEW: max@good.org (Good Samaritan UMC) - variant 2
+  OK NEW: scott@breakthroughmn.org (Breakthrough MN) - variant 3
+  OK NEW: brett@southeastchristianmn.org (Southeast Christian MN) - variant 1
+  OK NEW: revcgraham@gmail.com (Rev. Charles Graham) - variant 2
+  OK NEW: pastordavelarson@gmail.com (Pastor Dave Larson) - variant 3
+  OK NEW: anointednewlife@comcast.net (Anointed New Life Baptist Church) - variant 1
+  OK NEW: ctbeast@aol.com (Christian Tabernacle Baptist Church) - variant 2
+  OK NEW: info@exaltationchurch.com (Exaltation Church) - variant 3
+  OK NEW: office@ebenezerrva.org (Ebenezer Baptist Church Richmond) - variant 1
+  OK NEW: info@hrbcrichmond.org (Huguenot Road Baptist Church) - variant 2
+--- FOLLOW-UP contacts: 20 ---
+  OK FOLLOWUP: revholmes@uniongrovebaptist.org (Union Grove Baptist Church)
+  OK FOLLOWUP: savesomeministries@gmail.com (This Rock Baptist Church)
+  OK FOLLOWUP: trinity@trinity-baptist.com (Trinity Baptist Church Columbus)
+  OK FOLLOWUP: pastor@northcolumbusbaptist.org (North Columbus Baptist Church)
+  OK FOLLOWUP: jasonlapat@yahoo.com (Old Paths Baptist Church)
+  OK FOLLOWUP: bcgrovecity@yahoo.com (Bible Baptist Church Grove City)
+  OK FOLLOWUP: pastorlance@hotmail.com (Calvary Baptist Church Bucyrus)
+  OK FOLLOWUP: pastorferguson@gmail.com (Bible Baptist Temple Campbell)
+  OK FOLLOWUP: info@welcometoopendoor.com (Open Door Baptist Church)
+  OK FOLLOWUP: pastor@clevelandbaptist.org (Cleveland Baptist Church)
+  OK FOLLOWUP: heritagebapt@verizon.net (Heritage Baptist Church)
+  OK FOLLOWUP: pastorclick@fremontbaptisttemple.com (Fremont Baptist Temple)
+  OK FOLLOWUP: gracebaptist5@gmail.com (Grace Baptist Church Marietta)
+  OK FOLLOWUP: bettytedwhitely@aol.com (Calvary Detroit UMC)
+  OK FOLLOWUP: ccumcac@aol.com (Cass Community UMC)
+  OK FOLLOWUP: conantave@sbcglobal.net (Conant Avenue UMC)
+  OK FOLLOWUP: elbuenpastorumc@gmail.com (El Buen Pastor UMC)
+  OK FOLLOWUP: fordmemorialumc@yahoo.com (Ford Memorial UMC)
+  OK FOLLOWUP: serving@metroumc.org (Metropolitan UMC Detroit)
+  OK FOLLOWUP: cartergrimmett@sbcglobal.net (Peoples UMC Detroit)
+SUMMARY: Sent=100 Failed=0 Total_today=100
+New remaining: 240
+Followup remaining: 128

@@ -1,0 +1,72 @@
+=== ShepherdAI Cold Email Log - Day 7 ===
+Date: 2026-06-10
+Notes: New cities (Omaha/Tulsa/Milwaukee/Pittsburgh/Richmond/Minneapolis). Batch: 64
+
+  OK: info@convergechurchomaha.org (Converge Church Omaha) - variant 1
+  OK: stlukes@stlukesomaha.org (St. Luke's Lutheran Church Omaha) - variant 1
+  OK: info@achurch4life.net (Omaha Heritage Church) - variant 2
+  OK: womenunitedministry@yahoo.com (Omaha Parkway Church) - variant 3
+  OK: admin@bixby.church (Bixby Church) - variant 1
+  OK: contact@brokenricebaptist.church (Broken Rice Baptist Church) - variant 2
+  OK: mycitybaptist.church@gmail.com (City Baptist Church) - variant 3
+  OK: firstbaptist@fbcbixby.org (First Baptist Church Bixby) - variant 1
+  OK: info@nbchurch.info (New Beginnings Baptist Church Bixby) - variant 2
+  OK: shawn.sloan@riverview-church.org (Riverview Baptist Church) - variant 3
+  OK: agape@cox.net (Agape Chinese Baptist Church) - variant 1
+  OK: rjones@arrowheights.org (Arrow Heights Baptist Church) - variant 2
+  OK: info@aspenpark.church (Aspen Park Baptist Church) - variant 3
+  OK: clearviewbaptistba@outlook.com (Clearview Baptist Church) - variant 1
+  OK: vclark@fbcba.org (First Baptist Church Broken Arrow) - variant 2
+  OK: frbcba@yahoo.com (Forest Ridge Baptist Church) - variant 3
+  OK: seth@newlifeba.org (New Life Baptist Church BA) - variant 1
+  OK: sequoyahcreek@gmail.com (Sequoyah Creek Church) - variant 2
+  OK: sbabap@outlook.com (South Broken Arrow Baptist) - variant 3
+  OK: datcovenantbc@gmail.com (New Covenant Baptist Church) - variant 1
+  OK: office@ebchurch.org (Eastside Baptist Church) - variant 2
+  OK: v.long2356@gmail.com (First Baptist Church Collinsville) - variant 3
+  OK: bchurch@communitybaptist.org (Community Baptist Church Coweta) - variant 1
+  OK: info@fbcglenpool.com (First Baptist Church Glenpool) - variant 2
+  OK: bsbcjenks@yahoo.com (Beaver Street Baptist Church) - variant 3
+  OK: marta@fbcjenks.org (First Baptist Church Jenks) - variant 1
+  OK: amanda@southsidejenks.net (Southside Baptist Church Jenks) - variant 2
+  OK: fbcmannford@cimtel.net (First Baptist Church Mannford) - variant 3
+  OK: pastor@newhopemannford.com (New Hope Baptist Church Mannford) - variant 1
+  OK: ncc@newcommunitychurch.com (New Community Church Muskogee) - variant 2
+  OK: info@anguschurch.com (Angus Acres Baptist Church) - variant 3
+  OK: jnobles@broadwaybaptistchurch.com (Broadway Baptist Church) - variant 1
+  OK: calvarysandsprings@gmail.com (Calvary Baptist Church Sand Springs) - variant 2
+  OK: info@hillspring.tv (HillSpring Church) - variant 3
+  OK: keystonehills@sbcglobal.net (Keystone Hills Baptist Church) - variant 1
+  OK: fisherbaptistchurch@outlook.com (The Father's House) - variant 2
+  OK: pastormarty@joplins.com (Trinity Baptist Church Sand Springs) - variant 3
+  OK: faithsapulpa@sbcglobal.net (Faith Baptist Church Sapulpa) - variant 1
+  OK: jamie@fbcsapulpa.com (First Baptist Church Sapulpa) - variant 2
+  OK: info@foundationchurch.com (Foundation Church) - variant 3
+  OK: info@thewaychurch.church (The Way Baptist Church) - variant 1
+  OK: lsbc93@gmail.com (Lakeview Southern Baptist Church) - variant 2
+  OK: jstratton67@gmail.com (Riveted Church) - variant 3
+  OK: connie@fbcsperry.com (First Baptist Church Sperry) - variant 1
+  OK: brad@fbcowasso.org (First Baptist Church Owasso) - variant 2
+  OK: office@freedom-church.com (Freedom Church Owasso) - variant 3
+  OK: mark@therefugeowasso.com (The Refuge Owasso) - variant 1
+  OK: tbranch@netscape.com (Belview Baptist Church) - variant 2
+  OK: bbcsecretary@sbcglobal.net (Berryhill Baptist Church) - variant 3
+  OK: info@bradenpark.org (Braden Park Baptist Church) - variant 1
+  OK: info@brooksidechurchtulsa.com (Brookside Baptist Church Tulsa) - variant 2
+  OK: crchurch8550@yahoo.com (Canyon Road Baptist Church) - variant 3
+  OK: welcome@cognizantchurch.com (Cognizant Church) - variant 1
+  OK: concord1317@gmail.com (Concord Community Baptist Church) - variant 2
+  OK: ehbaptistchurch@att.net (Easton Heights Baptist Church) - variant 3
+  OK: steva@eastwoodtulsa.com (Eastwood Baptist Church) - variant 1
+  OK: sharon.scott@tulsafbc.org (First Baptist Church Tulsa) - variant 2
+  OK: gilcreasehillsbc@gmail.com (Gilcrease Hills Baptist Church) - variant 3
+  OK: info@goodnewschurch.info (Good News Church Tulsa) - variant 1
+  OK: connect@harborofgracechurch.org (Harbor of Grace Church) - variant 2
+  OK: habc.news@gmail.com (Harvard Avenue Baptist Church) - variant 3
+  OK: hopefellowshiphfc@gmail.com (Hope Fellowship Church Tulsa) - variant 1
+  OK: staff@memorialbaptist.com (Memorial Baptist Church Tulsa) - variant 2
+  OK: jeffretta55@yahoo.com (New Hope Community Church Tulsa) - variant 3
+  OK: newjoy@njfm.org (New Joy Fellowship Tulsa) - variant 1
+
+SUMMARY: Sent=65 Failed=0
+Completed: 2026-06-10 22:42:10

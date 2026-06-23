@@ -1,0 +1,47 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/check-emails",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/7day-feedback",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/daily-devotional-email",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-digest",
+      "schedule": "0 13 * * 1"
+    },
+    {
+      "path": "/api/cron/partner-commissions",
+      "schedule": "0 0 1 * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "shepherdaitech.com"
+        }
+      ],
+      "destination": "https://www.shepherdaitech.com/$1",
+      "statusCode": 301
+    },
+    {
+      "source": "/signup",
+      "destination": "/register",
+      "permanent": true
+    },
+    {
+      "source": "/church-discovery",
+      "destination": "/find-church",
+      "permanent": true
+    }
+  ]
+}

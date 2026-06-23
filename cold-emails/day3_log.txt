@@ -1,0 +1,116 @@
+=== ShepherdAI Cold Email Log - Day 3 ===
+Started: 2026-06-07 23:23:02
+
+--- Batch starting at index 0 ---
+Time: 2026-06-07 23:24:24
+✅ revholmes@uniongrovebaptist.org (Union Grove Baptist Church) - 22201930-a5b8-4915-afbf-b7f8ae05b252
+✅ savesomeministries@gmail.com (This Rock Baptist Church) - dd0ef40c-34d4-4223-b7b3-b7482158708c
+✅ trinity@trinity-baptist.com (Trinity Baptist Church Columbus) - 42f20bf9-da87-49a2-98ff-9631ff523972
+✅ pastor@northcolumbusbaptist.org (North Columbus Baptist Church) - 879d80ff-cbe3-4f5e-b7fd-a6bc55592b19
+✅ jasonlapat@yahoo.com (Old Paths Baptist Church) - 421ddba1-755e-4dd8-a90e-1f32e6d3dcc0
+✅ bcgrovecity@yahoo.com (Bible Baptist Church Grove City) - 7bbbdb9a-8979-4aab-a38c-eb0e2e489dde
+✅ pastorlance@hotmail.com (Calvary Baptist Church Bucyrus) - a041198b-1994-4e66-a328-dfc803de670f
+✅ pastorferguson@gmail.com (Bible Baptist Temple Campbell) - 83275fc8-ec45-4e38-ab83-d8be71022ef6
+✅ Info@WelcomeToOpenDoor.com (Open Door Baptist Church) - 1624a599-7e53-4445-b7de-d2a2e5a504e8
+✅ pastor@clevelandbaptist.org (Cleveland Baptist Church) - e5387a9f-3c54-4b38-9687-2d6d01c1aa7b
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 10 ---
+Time: 2026-06-07 23:25:53
+✅ heritagebapt@verizon.net (Heritage Baptist Church) - c0865eb5-5c73-46e2-a7fb-61813c0981fc
+✅ pastorclick@fremontbaptisttemple.com (Fremont Baptist Temple) - da0bb811-197a-466d-9a53-5d8a5bc85147
+✅ gracebaptist5@gmail.com (Grace Baptist Church Marietta) - 0d51fe2b-8f0c-4341-9a0d-e35c9a8c2fe1
+✅ bettytedwhitely@aol.com (Calvary Detroit UMC) - cd939389-8639-4198-a65a-a104b5c313cc
+✅ ccumcac@aol.com (Cass Community UMC) - 109ec049-39e0-48d5-9f91-013df254890d
+✅ conantave@sbcglobal.net (Conant Avenue UMC) - 355872a9-712e-4924-93ae-35a55524da38
+✅ ElBuenPastorUMC@gmail.com (El Buen Pastor UMC) - 30191374-35db-4206-b235-641e0edd4828
+✅ fordmemorialumc@yahoo.com (Ford Memorial UMC) - a6ada8de-3fd9-4af0-bc3d-2e5b003aaf66
+✅ serving@metroumc.org (Metropolitan UMC Detroit) - d9f075d0-1332-4ec5-9d35-2e2548faa2cc
+✅ cartergrimmett@sbcglobal.net (Peoples UMC Detroit) - fc240ce8-68a8-4225-b619-5a5a92022e25
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 20 ---
+Time: 2026-06-07 23:27:20
+✅ scottumc@yahoo.com (Scott Memorial UMC) - 4757079d-fa1c-4c3e-94f5-9223c2bf01d3
+✅ secondgrac@aol.com (Second Grace UMC) - e90a89ac-268e-4c04-9c0d-5a5f580c193c
+✅ StPaulUMCdet@aol.com (St Paul UMC Detroit) - 51c344b1-e222-4a17-b308-0bc495256d6f
+✅ reveardley@gpumc.org (Grosse Pointe UMC) - 59a6d25e-f38c-4e71-aef1-0dcb900abd48
+✅ elizabeth@haumc.org (Hennepin Avenue UMC) - e9569178-d27d-48a3-993a-7dbbeb2945bd
+✅ max@good.org (Good Samaritan UMC) - 57ca49c0-11a4-448f-85f7-c4a46340cebd
+✅ scott@breakthroughmn.org (Breakthrough MN) - 852bab16-9de0-4d80-83f8-d32755ca6f03
+✅ brett@southeastchristianmn.org (Southeast Christian MN) - 621c22c9-36a1-4cd0-8272-f474e293ca03
+✅ revcgraham@gmail.com (Rev. Charles Graham) - e96a3775-65ab-4de1-9ca3-04d09bfdb60b
+✅ pastordavelarson@gmail.com (Pastor Dave Larson) - 6f5b0cb9-ef1c-49fd-966a-5a1ef0b09584
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 30 ---
+Time: 2026-06-07 23:28:47
+✅ ANOINTEDNEWLIFE@COMCAST.NET (Anointed New Life Baptist Church) - 31d2a52d-6eb4-4bd3-9899-ef755e007033
+✅ ctbeast@aol.com (Christian Tabernacle Baptist Church) - 4889d3e9-ba4b-4aed-bc8b-4df636b3ecbc
+✅ info@exaltationchurch.com (Exaltation Church) - 554fc1c2-45db-419f-b8cc-4fd91e706694
+✅ office@ebenezerrva.org (Ebenezer Baptist Church Richmond) - a4fa81ea-dea2-41e1-b894-62df769392a7
+✅ info@hrbcrichmond.org (Huguenot Road Baptist Church) - 667085fc-57f6-47d5-859c-2b0279d2bfc5
+✅ kwells@ourfbc.com (Friendship Baptist Church) - 8924ce8e-deda-405b-932b-bc1a518cb18c
+✅ pastorbillrains@zoomtown.com (Mission Baptist Church Cincinnati) - f6820e5c-2d0e-4717-9954-ef06de33461b
+✅ rsims3452@aol.com (Bethesda Baptist Church) - b2cb0a5a-ac84-4434-9533-f7bf6f5fa101
+✅ willie0558@att.net (Upper Room Missionary Baptist Church) - 405a6fe2-9756-4762-9644-df14a87eee14
+✅ progressivebaptist@sbcglobal.net (Progressive Baptist Church Milwaukee) - 6f636d9b-4f5f-4825-9b56-82cad3f4f6f2
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 40 ---
+Time: 2026-06-07 23:30:17
+✅ metroumchurch@hotmail.com (Metropolitan UMC Buffalo) - 7e68b246-54a7-49db-8a4e-64391c8e8200
+✅ FirstChurch@firstumcbuffalo.org (First UMC Buffalo) - da81b6bc-e9cf-4c70-92b0-a7924443ebe0
+✅ office@CornerstoneOnCapen.com (Cornerstone Community Church) - 269ca055-4803-4fc4-b9bb-d2724719b2f1
+✅ pastor@freedomfellowship-ar.com (Freedom Fellowship) - 77492bbe-8560-4291-88ef-c939ed2ece47
+✅ jdyson63@hotmail.com (Freedom Worship Center) - a06dbfc8-a306-42e5-9eb6-be8173732e2a
+✅ wanda@graceconnectionchurch.com (Grace Connection Church) - 9c48d09d-8154-48b4-89fb-705daa1b10e4
+✅ tauanna@yahoo.com (Little Rock Christian Center) - 5c87b494-2522-4e52-860c-d77c7d9ee29f
+✅ mail@littlerockchurch.org (Little Rock Church) - d45f5ef2-596e-4f50-b40d-5c0cc1288002
+✅ mosaicchurchnet@aol.com (Mosaic Church Central AR) - 80292f06-ed00-48d6-a138-cd97b15f0e70
+✅ zoe1997@att.net (Zoe Bible Church) - 3a211768-3b89-4366-9b71-4f0ffe97438c
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 50 ---
+Time: 2026-06-07 23:31:47
+✅ Pastor@stonestreetbc.org (Stone Street Baptist Church) - e244cd7d-20e6-47fb-9a03-78ab50b06d3f
+✅ info@crossculture.net (Cross Culture Church Mobile) - dd3d01b7-554e-4248-9e3b-af7006cca6e6
+✅ steve@apostlesfellowship.org (Apostles Fellowship) - 959fc108-7d96-4539-b33c-3d723ab7382c
+✅ vobcmobile@gmail.com (Vietnamese Obedience Baptist Church) - 98929c0a-bbbf-4960-9d95-3374be9bbad3
+✅ semmesfirstbaptistchurch@gmail.com (Semmes First Baptist Church) - 008f4255-18a3-4fb0-a7b6-e7e1f99e08ad
+✅ jacobswellstl@yahoo.com (Jacob's Well St. Louis) - 93160adc-d0bf-40b5-9249-b63356592f48
+✅ shawnbarr099@gmail.com (Grace Fellowship Des Moines) - 92db7219-4e23-4536-8df4-402947daeae3
+✅ abttemple@yahoo.com (Albia Baptist Church) - 12457029-6bc5-4f28-abd7-823cd122d12d
+✅ biblebaptistott@yahoo.com (Bible Baptist Church Ottumwa) - 6293f1a7-0f0a-4362-9e56-4d939bf54dd6
+✅ RobPate@msn.com (Bible Community Baptist) - e5e8459e-a0e1-4b3e-8400-8f4f1d49326c
+Batch: Sent=10, Failed=0
+
+--- Batch starting at index 60 ---
+Time: 2026-06-07 23:33:17
+✅ pastor@faith1.org (Faith Baptist Church Ottumwa) - fa7c8a4a-dbc4-41eb-857f-e622f0d1960f
+✅ heartlandbaptist@churchames.org (Heartland Baptist Church) - d37eb809-6488-40bf-81ec-2ce741807a2d
+✅ hillcrestpastor@machlink.com (Hillcrest Baptist Church) - 5e8953f6-8fbb-4bdd-867d-420cb44cfb8f
+✅ MarkBaptistChurchIA@gmail.com (Mark Baptist Church) - b75d83a2-62e1-4719-97b6-5855d731032f
+✅ mbc@midwesternbaptistchurch.org (Midwestern Baptist Church) - 698c8212-fb3b-4f11-b89a-c7da5285d69c
+✅ zofinche@yahoo.com (Bethel Missionary Baptist Church) - e410f114-9399-4c25-b7fc-a63dc23e9d16
+✅ office@omahafbc.org (First Baptist Church Omaha) - 505b94dd-4490-44bf-a554-306095e0be1d
+❌ centerbaptistomaha@gmail.com (Center Baptist Church Omaha) - {"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_e
+❌ dawsonumc@sbglobal.net (Dawson United Methodist) - {"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_e
+❌ 4information@fbcnt.org (First Baptist Church North Tulsa) - {"statusCode":429,"message":"You have reached your daily email sending quota.","name":"daily_quota_e
+Batch: Sent=7, Failed=3
+
+============================================================
+SUMMARY
+============================================================
+Total contacts: 70
+Sent:   67
+Failed: 3 (Resend daily quota reached)
+Quota note: 1 test email + 67 sent = 68 Resend emails today
+Remaining 3 emails need to be sent after quota resets
+
+Failed emails (quota):
+1. centerbaptistomaha@gmail.com (Center Baptist Church Omaha)
+2. dawsonumc@sbglobal.net (Dawson United Methodist)
+3. 4information@fbcnt.org (First Baptist Church North Tulsa)
+
+Completed: 2026-06-07 23:33:30 CST

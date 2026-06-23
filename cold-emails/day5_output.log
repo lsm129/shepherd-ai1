@@ -1,0 +1,10 @@
+Already sent emails: 116
+Send queue: 139 emails (Retry:3 Day4:66 Day5:70)
+Progress: 5/139 sent=5 fail=0
+Progress: 10/139 sent=10 fail=0
+Progress: 15/139 sent=15 fail=0
+
+Final: Sent=16, Failed=1, Quota
+Final: Sent=20, Failed=1, QuotaHit=True
+
+Final: Sent=25, Failed=1, QuotaHit=True

@@ -1,0 +1,142 @@
+ShepherdAI Cold Email Log - Day 1
+Completed: 2026-06-05 23:34:30 CST
+============================================================
+
+✅ Sent to RevBJLyons@aol.com (St. John Missionary Baptist Church)
+✅ Sent to imageofgodbiblechurch@msn.com (Image of God Bible Church)
+✅ Sent to fellowshipofhope@ihfc.net (Inner-Strength Ministries)
+✅ Sent to joytemple@sbcglobal.net (Joy Temple Christian Center)
+✅ Sent to kingdom-ajm@yahoo.com (Kingdom Business Youth Ministries)
+✅ Sent to kwcc2005@aol.com (Kingdom Life Ministries)
+✅ Sent to A118@AOL.COM (Life Line Temple Ministries)
+✅ Sent to pmckinney67@hotmail.com (Holy Temple Evangelistic Ministries)
+✅ Sent to pastor@atlantafirstumc.org (Atlanta First United Methodist Church)
+✅ Sent to susan.gary.landry@ngumc.net (St. James UMC Atlanta)
+✅ Sent to info@koinonianashville.com (Koinonia Nashville)
+✅ Sent to paul@firstbaptistnashville.com (First Baptist Nashville)
+✅ Sent to faithnazareneac@gmail.com (Ashland City Faith Community)
+✅ Sent to erinnazarene@gmail.com (Erin Church of the Nazarene)
+✅ Sent to information@nfcn.org (Nashville First Church)
+✅ Sent to info@trevecca.church (Nashville Trevecca Community)
+✅ Sent to oldhickorynazarene@gmail.com (Old Hickory Church)
+✅ Sent to pastor@whitehousenaz.org (White House Church)
+✅ Sent to wcnazarene@bellsouth.net (Woodlawn Community Church)
+✅ Sent to Jerry@harvestcharlotte.com (Harvest Charlotte)
+✅ Sent to briandavis@plazabaptist.org (Plaza Baptist Church Charlotte)
+✅ Sent to info@gracecovenantcharlotte.com (Grace Covenant Charlotte)
+✅ Sent to warp@sllcs.org (St. Luke's Winter Springs)
+✅ Sent to abarcott@gmail.com (Holy Cross Satellite Orlando)
+✅ Sent to Jacob@thecross.family (theCross Eustis)
+✅ Sent to revcountryman@gmail.com (Faith Viera Rockledge)
+✅ Sent to tculbertson@sllcs.org (St. Luke's Winter Springs)
+✅ Sent to pastor.james@hope-brevard.org (Hope Viera Melbourne)
+✅ Sent to mathfitz@gmail.com (New City Church Ocoee)
+✅ Sent to sop.fellowship01@gmail.com (Sanctuary of Praise Ministries)
+✅ Sent to beawashere@gmail.com (Elmore Church)
+✅ Sent to brenda@clarksvillegrace.org (Clarksville Grace Church)
+✅ Sent to dcnaz3@comcast.net (Donelson Church Nashville)
+✅ Sent to bethelnaz455@gmail.com (Bethel Church Nashville)
+✅ Sent to nashvillegrace@gracenaz.com (Nashville Grace Church)
+✅ Sent to Welivetolove@yahoo.com (Love Alive Ministries)
+✅ Sent to ltdministry@aol.com (Love Temple Deliverance)
+✅ Sent to gmboone@aol.com (Kingdom Life Tabernacle)
+
+⏭️ Skipped (already sent previously): bris9850@yahoo.com (New Morning Star Missionary Baptist Church)
+❌ Failed: pilgrimrestdallas.org (Pilgrim Rest Dallas) - Invalid email format (no @ symbol, appears to be a website URL)
+
+============================================================
+SUMMARY
+============================================================
+Sent:   38
+Failed: 1 (invalid email - not an email address)
+Skipped: 1 (already sent)
+Total in CSV: 40
+Attempted: 39
+Sent to nashvillegrace@gracenaz.com (Nashville Grace Church)
+Sent to information@nfcn.org (Nashville First Church)
+Sent to paul@firstbaptistnashville.com (First Baptist Nashville)
+Sent to faithnazareneac@gmail.com (Ashland City Faith Community)
+Sent to erinnazarene@gmail.com (Erin Church of the Nazarene)
+Sent to information@nfcn.org (Nashville First Church)
+Failed: pilgrimrestdallas.org (Pilgrim Rest Dallas) - Invalid email format
+Sent to Welivetolove@yahoo.com (Love Alive Ministries)
+Sent to info@trevecca.church (Nashville Trevecca Community)
+Sent to ltdministry@aol.com (Love Temple Deliverance)
+Sent to oldhickorynazarene@gmail.com (Old Hickory Church)
+Sent to gmboone@aol.com (Kingdom Life Tabernacle)
+
+============================================================
+SUMMARY
+============================================================
+Sent:   38
+Failed: 1
+Skipped: 1 (already sent)
+Total in CSV: 40
+Attempted: 39
+Completed: 2026-06-05 23:37:23
+Sent to pastor@whitehousenaz.org (White House Church)
+Sent to wcnazarene@bellsouth.net (Woodlawn Community Church)
+Sent to info@trevecca.church (Nashville Trevecca Community)
+Sent to Jerry@harvestcharlotte.com (Harvest Charlotte)
+Sent to oldhickorynazarene@gmail.com (Old Hickory Church)
+Sent to pastor@whitehousenaz.org (White House Church)
+Sent to wcnazarene@bellsouth.net (Woodlawn Community Church)
+Sent to Jerry@harvestcharlotte.com (Harvest Charlotte)
+Sent to briandavis@plazabaptist.org (Plaza Baptist Church Charlotte)
+Sent to info@gracecovenantcharlotte.com (Grace Covenant Charlotte)
+Sent to warp@sllcs.org (St. Luke's Winter Springs)
+Sent to abarcott@gmail.com (Holy Cross Satellite Orlando)
+Failed: briandavis@plazabaptist.org (Plaza Baptist Church Charlotte) - You have reached your daily email sending quota.
+Failed: Jacob@thecross.family (theCross Eustis) - You have reached your daily email sending quota.
+Failed: info@gracecovenantcharlotte.com (Grace Covenant Charlotte) - You have reached your daily email sending quota.
+Failed: warp@sllcs.org (St. Luke's Winter Springs) - You have reached your daily email sending quota.
+Failed: abarcott@gmail.com (Holy Cross Satellite Orlando) - You have reached your daily email sending quota.
+Failed: Jacob@thecross.family (theCross Eustis) - You have reached your daily email sending quota.
+Failed: revcountryman@gmail.com (Faith Viera Rockledge) - You have reached your daily email sending quota.
+Failed: tculbertson@sllcs.org (St. Luke's Winter Springs) - You have reached your daily email sending quota.
+Failed: pastor.james@hope-brevard.org (Hope Viera Melbourne) - You have reached your daily email sending quota.
+Failed: mathfitz@gmail.com (New City Church Ocoee) - You have reached your daily email sending quota.
+Failed: revcountryman@gmail.com (Faith Viera Rockledge) - You have reached your daily email sending quota.
+Failed: sop.fellowship01@gmail.com (Sanctuary of Praise Ministries) - You have reached your daily email sending quota.
+Failed: tculbertson@sllcs.org (St. Luke's Winter Springs) - You have reached your daily email sending quota.
+Failed: pastor.james@hope-brevard.org (Hope Viera Melbourne) - You have reached your daily email sending quota.
+Failed: mathfitz@gmail.com (New City Church Ocoee) - You have reached your daily email sending quota.
+Failed: sop.fellowship01@gmail.com (Sanctuary of Praise Ministries) - You have reached your daily email sending quota.
+Failed: beawashere@gmail.com (Elmore Church) - You have reached your daily email sending quota.
+Failed: brenda@clarksvillegrace.org (Clarksville Grace Church) - You have reached your daily email sending quota.
+Failed: dcnaz3@comcast.net (Donelson Church Nashville) - You have reached your daily email sending quota.
+Failed: bethelnaz455@gmail.com (Bethel Church Nashville) - You have reached your daily email sending quota.
+Failed: beawashere@gmail.com (Elmore Church) - You have reached your daily email sending quota.
+Failed: nashvillegrace@gracenaz.com (Nashville Grace Church) - You have reached your daily email sending quota.
+Failed: brenda@clarksvillegrace.org (Clarksville Grace Church) - You have reached your daily email sending quota.
+Failed: dcnaz3@comcast.net (Donelson Church Nashville) - You have reached your daily email sending quota.
+Failed: bethelnaz455@gmail.com (Bethel Church Nashville) - You have reached your daily email sending quota.
+Failed: nashvillegrace@gracenaz.com (Nashville Grace Church) - You have reached your daily email sending quota.
+Failed: pilgrimrestdallas.org (Pilgrim Rest Dallas) - Invalid email format
+Failed: Welivetolove@yahoo.com (Love Alive Ministries) - You have reached your daily email sending quota.
+Failed: ltdministry@aol.com (Love Temple Deliverance) - You have reached your daily email sending quota.
+Failed: gmboone@aol.com (Kingdom Life Tabernacle) - You have reached your daily email sending quota.
+
+============================================================
+SUMMARY
+============================================================
+Sent:   24
+Failed: 15
+Skipped: 1 (already sent)
+Total in CSV: 40
+Attempted: 39
+Completed: 2026-06-05 23:49:08
+Failed: pilgrimrestdallas.org (Pilgrim Rest Dallas) - Invalid email format
+Failed: Welivetolove@yahoo.com (Love Alive Ministries) - You have reached your daily email sending quota.
+Failed: ltdministry@aol.com (Love Temple Deliverance) - You have reached your daily email sending quota.
+Failed: gmboone@aol.com (Kingdom Life Tabernacle) - You have reached your daily email sending quota.
+
+============================================================
+SUMMARY
+============================================================
+Sent:   20
+Failed: 19
+Skipped: 1 (already sent)
+Total in CSV: 40
+Attempted: 39
+Completed: 2026-06-05 23:50:19

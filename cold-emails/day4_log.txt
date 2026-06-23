@@ -1,0 +1,24 @@
+=== ShepherdAI Cold Email Log - Day 4 ===
+Date: 2026-06-08
+Notes: Day4 emails were sent during the Day5 send session. Day4 contacts from day4_contacts.csv.
+
+  Sent: info@thenewbirthmbc.org (New Birth Missionary Baptist Church) - 782488bf-173d-453a-a1a5-a0c30640fa10
+  Sent: etspivey@gmail.com (Vestavia Hills Baptist Church) - e1e6677c-da9b-4ffa-bd9a-b962ff4afc24
+  Sent: rdaniels@livingstonestemple.org (Living Stones Temple) - 0cbdb296-e986-459a-b437-1539b2902486
+  Sent: newhopebc1740@gmail.com (New Hope Baptist Church Birmingham) - 556a6400-32a0-4e0a-88fb-82f3860ee998
+  Sent: jcooley@fbcbhm.org (First Baptist Church Birmingham) - 6beabe89-6d14-42e0-bbc0-f7e95789cdb2
+  Sent: ladara.lee@gmail.com (Mt. Mariah Baptist Church) - 2b577e85-daa9-4193-80a2-307b4d439bd3
+  Sent: nmsbc@netscape.net (New Morning Star Baptist Church Birmingham) - a8c97fda-99b8-4a2d-b61b-c2e931d787df
+  Sent: secretary@christ1stchurch.org (Christ First Missionary Baptist Church) - 8ff5190a-eb18-4816-a235-5856e20a46ba
+  Sent: joel@gracebham.org (Grace Fellowship Birmingham) - 70e41e8c-fc1a-436f-8e8f-10c3587ba383
+  Sent: bcoc@bcoc.net (Baptist Church Of The Covenant) - 128e847a-ff46-4d45-9e9b-0987074be6e0
+  Sent: newlifebcfresno@gmail.com (New Life Baptist Church Fresno) - 70d31ed0-13c9-4521-8f6d-c1912cf4faf4
+  Sent: pastor.bfbcsacramento@gmail.com (Bible Fellowship Baptist Church Sacramento) - f86199a4-0a50-47f0-91af-91a91c7ec552
+  Sent: mtcalvaryeast@gmail.com (Mt. Calvary Missionary Baptist Church East) - 050992de-a751-4f22-b249-e93a3ec1391d
+  Sent: info@fbcj.org (First Baptist Church Flowood Jackson) - 705bd196-ee5d-45fc-8fe3-e99fe3892629
+  Sent: cstevens@firstbaptistjackson.org (First Baptist Church Jackson MS) - 207cfdfd-b10a-494e-ba23-a5297b23e74e
+  Sent: info@northminsterbaptist.org (Northminster Baptist Church Jackson) - 3762ca7c-2282-43b3-b0fa-6cba3351e34f
+  Sent: 1285njmbc@aol.com (New Jerusalem M.B. Church Jackson) - f0976c10-f8dc-4bb7-8cc6-c0af758424e5
+  Failed: info@briarwoodjackson.org (Briarwood Drive Baptist Church Jackson) - quota exceeded
+
+SUMMARY: Sent=17 Failed=1 Remaining=48

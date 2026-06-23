@@ -1,0 +1,78 @@
+=== ShepherdAI Cold Email Log - Day 6 ===
+Date: 2026-06-09
+Notes: Retry failed + new sends. Batch size: 60
+
+  ✅ Sent: info@briarwoodjackson.org (Briarwood Drive Baptist Church Jackson) - 95f8fcf5-4005-44ca-81fd-2bcbdbaf21ee
+  ✅ Sent: info@countrywoods.net (Country Woods Baptist Church Jackson) - 4161d864-a070-41a4-9917-b12436e465d4
+  ✅ Sent: info@danielbaptist.org (Daniel Memorial Baptist Church Jackson) - 083fc38f-f317-4820-9396-071b3a3cf00e
+  ✅ Sent: info@mthelm.org (Mount Helm Baptist Church Jackson) - 1640f603-560c-42ae-a666-bd470b4feacc
+  ✅ Sent: info@mountnebochurch.com (Mount Nebo Baptist Church Jackson) - 7497687d-b70d-4f69-8f90-75927cddc100
+  --- Batch 1 pause (60s) ---
+  ✅ Sent: info@collegehillchurch.org (College Hill Baptist Church Jackson) - 099e559e-573f-4776-ae11-5d668e782135
+  ✅ Sent: info@lbcflowood.org (Liberty Baptist Church Flowood) - c43fae85-85f4-40e3-8052-a38c2aaf4bd5
+  ✅ Sent: info@farishstreetbaptistchurch.org (Farish Street Baptist Church Jackson) - 57093144-c731-4f89-87f7-b5769e73a4ef
+  ✅ Sent: stpaulbcinc@gmail.com (Saint Paul Baptist Church Greensboro) - f5fae038-58e2-4ee6-a299-f2041c8b224e
+  ✅ Sent: rlevette@webtv.net (Revelation Temple Greensboro) - 783e88f5-d0f8-4489-a49f-fdff3caf16d7
+  --- Batch 2 pause (60s) ---
+  ✅ Sent: emrlevette@webtv.net (Revelation Temple Greensboro Co-Pastor) - a7b2ee06-13b3-4cb0-8444-3aeb3813ece4
+  ✅ Sent: info@fbclodi.org (First Baptist Church Lodi Sacramento area) - 9a4316bc-9c3f-434a-8e74-7fb7bbe8965d
+  ✅ Sent: office@antelopespringschurch.org (Antelope Springs Church Sacramento area) - 3b5a74d0-b67f-4514-88e9-0c599bec4367
+  ✅ Sent: john@hopeantelope.com (Hope Community Church Antelope) - 4a1c97aa-ca49-4f85-b85b-88bb4946e126
+  ✅ Sent: churchoffice@creeksideeg.com (Creekside Christian Church Elk Grove) - 41d006fb-19b2-4a1b-a6aa-33fcd02cbbf3
+  --- Batch 3 pause (60s) ---
+  ✅ Sent: office@oaktreeonline.org (Oak Tree Community Church) - c816b8b7-63e7-4c6e-81bf-996c5c05346a
+  ✅ Sent: info@sunrise.church (Sunrise Community Church Fair Oaks) - 90921c14-14c4-4c2c-bed8-68abf0156a7a
+  ✅ Sent: stephanie.valadez@oakhills.org (Oak Hills Church Folsom) - befe9e1b-5a01-4a3b-9368-4b8aaf21d53f
+  ✅ Sent: sacindian@gmail.com (Indian Christian Church Sacramento) - 2d177693-78d0-452b-a126-de39ef685c20
+  ✅ Sent: church@lhcc.us (Lincoln Hills Community Church) - 8984ae42-00ec-46b5-8650-e934a59fd6f9
+  --- Batch 4 pause (60s) ---
+  ✅ Sent: info@gracecollectivechurch.org (Grace Collective Roseville) - 54359b2c-1ae5-490c-a06b-5198f7f8f1c6
+  ✅ Sent: info@thelifehousechurch.com (The LIFEhouse Church Rocklin) - 15c82424-58b7-4678-891a-1b9dfba40ff6
+  ✅ Sent: info@gfchurch.com (Grace Family Church North Highlands) - d6cdeb57-7135-4ff4-b484-633f30c07bb9
+  ✅ Sent: markdahlin@yahoo.com (Living Hope Citrus Heights) - ae088e15-eca4-4502-a921-b165efd6590c
+  ✅ Sent: 1730pgccoffice@gmail.com (Pleasant Grove Community Church Roseville) - 9aaff0f9-0363-4772-9c30-21d0e912cc49
+  --- Batch 5 pause (60s) ---
+  ✅ Sent: doruanin@gmail.com (Bethel Romanian Baptist Church Sacramento) - 9e1739d5-7d28-454c-bb6a-f501a935456f
+  ✅ Sent: tcamposr@gmail.com (Casa de Luz Sacramento) - 8d1aa2f4-bf8d-4222-be9a-634fe1aa44ea
+  ✅ Sent: horizon@horizonweb.org (Horizon Community Church Galt) - b264db94-964a-42e4-9e65-e5ee4404c666
+  ✅ Sent: benkondor@yahoo.com (Light To The World Church Granite Bay) - fc6fbaeb-2c55-42b1-9786-8718dc52b02b
+  ✅ Sent: admin@secondslavic.com (Second Slavic Baptist Church North Highlands) - 0132e982-ebfd-4a1d-a824-b30cbaba2a77
+  --- Batch 6 pause (60s) ---
+  ✅ Sent: office@gracepointlodi.com (GracePoint Church Lodi) - 9cec4797-1f43-4ef9-b483-b802a7f62973
+  ✅ Sent: info@stmarkaugusta.org (St. Mark Methodist Church Augusta) - dd8201d5-50bf-4071-a64c-4dd0fb420a83
+  ✅ Sent: secretary@stjohnaugusta.org (St. John UMC Augusta) - 88cd4f43-cb68-4181-bc87-7af0330d9c68
+  ✅ Sent: slumcadmin@gmail.com (Saint Luke UMC Augusta) - 3b2e2f78-9dff-4764-99e8-d793ab7bff55
+  ✅ Sent: pastor@warren.church (Warren Baptist Church Augusta) - 75725dd4-e551-49fc-b346-4d4caf2a9516
+  --- Batch 7 pause (60s) ---
+  ✅ Sent: asburychurch1005@gmail.com (Asbury UMC Columbia SC) - 4e80b5a3-d2fb-4d3d-9b9a-0212490f57b7
+  ✅ Sent: james@trumc.org (Trenholm Road UMC Columbia) - 8d74692e-0388-43e9-b4db-fb7f8afad926
+  ✅ Sent: mollie@trumc.org (Trenholm Road UMC Associate) - 2144c426-c0ba-4e10-9ecd-fd3e9e18b671
+  ✅ Sent: jdsonger@umcsc.org (Bethel UMC Columbia) - 85b0c425-c3e0-4575-b644-ef00b05aaeb6
+  ✅ Sent: info@rumcsc.com (Rehoboth Columbia UMC) - f9662606-434e-4644-a7c1-ca225d7da75f
+  --- Batch 8 pause (60s) ---
+  ✅ Sent: donhargis@hotmail.com (Sierra Heights Baptist Church Fresno) - c4d2a96c-b07c-4c4c-839c-702cb455eb04
+  ✅ Sent: info@wichitafbc.org (Wichita KS Baptist Church) - 6e0a454b-c44f-46aa-937b-5df9087f3d90
+  ✅ Sent: fbcwichita@sbcglobal.net (First Baptist Church North Wichita) - 668efbe3-8aec-4cf6-95b6-0adcce1185b5
+  ✅ Sent: dennis@ststephensboise.org (St. Stephen's Episcopal Boise) - bab01e10-f16d-4b07-a6f6-74343d82cd86
+  ✅ Sent: info@oasiscity.church (Oasis City Church Boise) - aec5b50e-a4c2-45b4-beb0-299354ad2a3f
+  --- Batch 9 pause (60s) ---
+  ✅ Sent: info@truehopeboise.com (True Hope Church Boise) - 448b5f75-b568-4c3e-9fdf-2ff5ebcd267c
+  ✅ Sent: fallsibc@gmail.com (Falls International Baptist Church Sioux Falls) - 7cf2b70f-f588-4669-b34b-f4b85be7cdbf
+  ✅ Sent: pastordave@sio.midco.net (David Severtson Sioux Falls UMC) - 30210482-08ee-4eaa-8c4b-28e8863c7d96
+  ✅ Sent: pastor@firstuachurch.net (First UA Church Roseville) - c59f7805-5c03-4c97-adc6-44f1d4f4bd3a
+  ✅ Sent: info@evergreenmemphis.org (Evergreen Baptist Church Memphis) - 89ac20e6-bafd-4646-86d7-d657bd103b34
+  --- Batch 10 pause (60s) ---
+  ✅ Sent: jsalemi@fbcmemphis.org (First Baptist Church Memphis) - 5a0fa366-b12c-41dd-bf44-1312abf0c2d9
+  ✅ Sent: john@mycbcc.org (Covenant Baptist Church Memphis) - 3f2da09b-6730-4bae-ac37-e4071f09aeff
+  ✅ Sent: lwcministries1998@gmail.com (Living Water Baptist Church Memphis) - afb5dfbd-db00-49e2-aa44-b40e41952e6e
+  ✅ Sent: chuckh@fbchenderson.org (First Baptist Church Henderson Memphis area) - 6abbe266-48c3-4d6b-9d1d-942fb63a4a0d
+  ✅ Sent: darren@stpaulchurchky.org (St. Paul United Methodist Church Louisville) - df654788-b74e-46b4-923d-13126d49e290
+  --- Batch 11 pause (60s) ---
+  ✅ Sent: gfcdchurch@gmail.com (Greater Faith Church of Deliverance Louisville) - da816923-88c5-4303-a170-cb9976a506c4
+  ✅ Sent: info@audubonbaptist.org (Audubon Baptist Church Louisville) - 5ff9d9e7-8341-4709-a040-02cd4d0e7ed8
+  ✅ Sent: info@beechlandbaptist.org (Beechland Baptist Church Louisville) - dbc3ac07-2b15-4162-8566-610e0e72edd6
+  ✅ Sent: info@bbclouisville.org (Beechmont Baptist Church Louisville) - ba59c5c5-73c2-45b7-941d-0aa34a48b80b
+  ✅ Sent: info@beechwoodbaptist.com (Beechwood Baptist Church Louisville) - 28e9967c-83be-4940-8516-a4cbc91ea3c7
+
+SUMMARY: Sent=60 Failed=0 Skipped=0 Remaining=0
+Completed: 2026-06-09 22:51:48
