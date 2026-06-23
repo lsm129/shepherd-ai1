@@ -14,9 +14,9 @@ export default function LanguageSwitcher({ className = '' }: { className?: strin
   
   if (isPT) {
     // PT → EN: strip /pt prefix
-    targetHref = pathname.replace(/^\/pt/, '') || '/blog';
-    // Default to /blog if root was requested
-    if (targetHref === '/blog') targetHref = '/blog';
+    targetHref = pathname.replace(/^\/pt/, '') || '/';
+    // Default to / if empty (PT homepage → EN homepage)
+    if (targetHref === '') targetHref = '/';
   } else {
     // EN → PT: add /pt prefix
     // For homepage: go to /pt/blog
