@@ -88,6 +88,18 @@ export default async function BlogPage() {
             ))}
           </div>
 
+          {/* 🌎 PT Blog Banner */}
+          <div className="mt-16 bg-emerald-50 rounded-xl p-8 text-center border border-emerald-100">
+            <div style={{ fontSize: '32px', marginBottom: '8px' }}>🌎</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">🇧🇷 Leia nossos artigos em Português!</h3>
+            <p className="text-gray-600 mb-4">Conteúdo exclusivo para igrejas brasileiras — dicas de gestão, liderança pastoral, e muito mais.</p>
+            <a href="https://www.shepherdaitech.com/pt/blog" className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+              🇧🇷 Blog em Português &rarr;
+            </a>
+            <div className="mt-3 text-sm text-gray-500">
+              Junte-se a centenas de pastores brasileiros usando IA na sua igreja!
+            </div>
+          </div>
           {/* CTA */}
           <div className="mt-16 bg-blue-50 rounded-xl p-8 text-center border border-blue-100">
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Ready to Automate Your Church?</h3>

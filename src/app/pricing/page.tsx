@@ -68,7 +68,7 @@ const plans = [
     name: 'Growth — Full Automation',
     price: '$79',
     period: '/mo',
-    desc: 'Let AI run your entire ministry. White-label everything.',
+    desc: 'Let AI run your entire ministry. White-label everything. Limited Founding spots!',
     bestValue: true,
     features: [
       'Unlimited AI generations',
@@ -209,7 +209,31 @@ export default function PricingPage() {
         </section>
       </section>
 
-      {/* FAQ Section */}
+      {/* 🆕 Founding Member Urgency Banner */}
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 40px' }}>
+        <div style={{ background: 'linear-gradient(135deg, #fef3c7, #fde68a)', border: '2px solid #f59e0b', borderRadius: 16, padding: '28px 32px', textAlign: 'center' }}>
+          <div style={{ fontSize: 36, marginBottom: 8 }}>⭐</div>
+          <h2 style={{ fontSize: 22, fontWeight: '800', color: '#92400e', marginBottom: 8 }}>
+            Founding Church Program — Limited to 10 Churches!
+          </h2>
+          <p style={{ fontSize: 15, color: '#92400e', lineHeight: 1.6, maxWidth: 600, margin: '0 auto 16px' }}>
+            Get <strong>50% off lifetime</strong> on any plan, early access to new features, direct roadmap input, 
+            and a <strong>Founding Church badge</strong> on your church page. 
+            Only <strong className="text-red-600 font-bold">10 founding spots</strong> available — and they&quot;re going fast!
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="/register" style={{ display: 'inline-block', padding: '12px 28px', background: '#1e3a5f', color: 'white', borderRadius: 10, fontWeight: '700', fontSize: 15, textDecoration: 'none' }}>
+              🚀 Claim Your Founding Spot
+            </a>
+            <a href="/founding-church" style={{ display: 'inline-block', padding: '12px 28px', background: 'rgba(30,58,95,0.1)', color: '#1e3a5f', borderRadius: 10, fontWeight: '600', fontSize: 15, textDecoration: 'none', border: '1px solid #1e3a5f' }}>
+              Learn More →
+            </a>
+          </div>
+          <div style={{ marginTop: 12, fontSize: 13, color: '#92400e', opacity: 0.8 }}>
+            ⚡ 0 founding spots claimed so far — be the first!
+          </div>
+        </div>
+      </section>      {/* FAQ Section */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 60px' }}>
         <h2 style={{ fontSize: 28, fontWeight: 'bold', color: '#1e3a5f', textAlign: 'center', marginBottom: 32 }}>Frequently Asked Questions</h2>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

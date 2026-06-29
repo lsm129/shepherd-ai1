@@ -152,6 +152,13 @@ export default function ChurchBudgetTemplatePage() {
           </p>
           <div style={{ marginTop: '12px', fontSize: '13px', color: remaining > 0 ? '#10b981' : '#ef4444', fontWeight: '600' }}>
             {remaining > 0 ? `${remaining} free generations left today` : 'Daily limit reached'}
+        {/* 🆕 Pre-limit warning: show when only 1 use left */}
+        {remaining === 1 && !result && (
+          <div style={{ marginTop: "12px", padding: "8px 14px", background: "#fef3c7", borderRadius: "8px", fontSize: "13px", color: "#92400e", display: "flex", alignItems: "center", gap: "8px", justifyContent: "center" }}>
+            <span>⚠️</span>
+            <span>Only <strong>1 free budget left</strong> today.{" "}<Link href="/register" style={{ color: "#1e3a5f", fontWeight: "700", textDecoration: "underline" }}>Sign up free</Link> for unlimited budget reports!</span>
+          </div>
+        )}
           </div>
         </div>
 
